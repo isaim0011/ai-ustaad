@@ -1,4 +1,4 @@
-# AI Ustaad (AI Mastery Platform) 🎓🚀
+# AI Ustaad (AI Mastery Platform) 
 
 > **Production-grade AI Engineering Learning Platform** taught in Roman Urdu & English, built with **SvelteKit 2 (Svelte 5 Runes) + TailwindCSS v4**, backed by **Supabase PostgreSQL & Auth**, and powered by a high-performance **Rust Axum DiagramKit backend**.
 
@@ -8,7 +8,7 @@
 
 ---
 
-## 🌟 Overview
+##  Overview
 
 **AI Ustaad** is designed to take engineers from zero to deploying production-grade AI systems, LLM architectures, RAG pipelines, fine-tuning, and multi-agent swarms. Every concept is explained with deep conceptual clarity, architectural diagrams, and interactive quizzes.
 
@@ -22,7 +22,7 @@
 
 ---
 
-## 🏗️ Project Architecture
+## ️ Project Architecture
 
 ```
 ai-mastery-platform/
@@ -42,7 +42,7 @@ ai-mastery-platform/
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 - Node.js 18+ & npm
@@ -66,13 +66,13 @@ cargo run
 
 ---
 
-## 🌐 Deployment
+##  Deployment
 
 - **Frontend**: Deployed to [Cloudflare Pages](https://ai-ustaad.pages.dev) via `@sveltejs/adapter-cloudflare`.
 - **Database & Auth**: Hosted on [Supabase](https://supabase.com).
 
 ---
 
-## 👨‍💻 Author
+## ‍ Author
 
 Built with ❤️ by **[Bimo (@isaim0011)](https://github.com/isaim0011)**.

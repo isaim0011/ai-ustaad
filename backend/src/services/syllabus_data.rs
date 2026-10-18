@@ -1,5 +1,5 @@
 use crate::models::{
-    BadgeDefinition, CodeSnippet, CourseOverview, DesignPrinciple, EngineeringBlog, Lesson, Module,
+    BadgeDefinition, CodeSnippet, CourseOverview, DesignPrinciple, EngineeringBlog, HfSubproject, Lesson, Module,
     Phase, PhaseSummary, PracticeCheckpoint, ProjectBrief, Quiz, QuizQuestion, ResourceLink,
     SpecializationTrack, WeeklyChallenge, ZeroGpuGuide, ZeroGpuRecipe,
 };
@@ -196,7 +196,7 @@ fn build_syllabus() -> (
             title: "Python Ka Ustaad".to_string(),
             urdu_title: "Python Ninja (Async & Performance)".to_string(),
             description: "Awarded after completing Module 1: Python Mastery for AI Engineers with high distinction.".to_string(),
-            icon: "🐍".to_string(),
+            icon: "terminal".to_string(),
             xp_requirement: 500,
             module_requirement: Some("python-mastery".to_string()),
         },
@@ -205,7 +205,7 @@ fn build_syllabus() -> (
             title: "Matrix & Tensor Badshah".to_string(),
             urdu_title: "Tensors & Vector Geometry Expert".to_string(),
             description: "Awarded after completing Module 2: Mathematics, Vectors & Tensors.".to_string(),
-            icon: "📐".to_string(),
+            icon: "layers".to_string(),
             xp_requirement: 1000,
             module_requirement: Some("math-vectors-tensors".to_string()),
         },
@@ -214,7 +214,7 @@ fn build_syllabus() -> (
             title: "PyTorch Ka Hero".to_string(),
             urdu_title: "Deep Learning & Autograd Master".to_string(),
             description: "Awarded after training neural networks from scratch in PyTorch (Module 4).".to_string(),
-            icon: "🔥".to_string(),
+            icon: "flame".to_string(),
             xp_requirement: 2000,
             module_requirement: Some("deep-learning-pytorch".to_string()),
         },
@@ -232,7 +232,7 @@ fn build_syllabus() -> (
             title: "RAG Mastermind".to_string(),
             urdu_title: "Zero Hallucination Hybrid RAG Architect".to_string(),
             description: "Awarded after building enterprise hybrid search with re-ranking (Module 9).".to_string(),
-            icon: "🔍".to_string(),
+            icon: "search".to_string(),
             xp_requirement: 4500,
             module_requirement: Some("production-rag".to_string()),
         },
@@ -241,7 +241,7 @@ fn build_syllabus() -> (
             title: "Fine-Tuning Champion".to_string(),
             urdu_title: "PEFT & QLoRA Specialist".to_string(),
             description: "Awarded after fine-tuning an 8B LLM on custom domain data (Module 10).".to_string(),
-            icon: "🎯".to_string(),
+            icon: "target".to_string(),
             xp_requirement: 6000,
             module_requirement: Some("llm-fine-tuning".to_string()),
         },
@@ -250,7 +250,7 @@ fn build_syllabus() -> (
             title: "Autonomous Agent Operator".to_string(),
             urdu_title: "ReAct & LangGraph Architect".to_string(),
             description: "Awarded after building self-correcting multi-agent graphs (Module 11).".to_string(),
-            icon: "🤖".to_string(),
+            icon: "bot".to_string(),
             xp_requirement: 7500,
             module_requirement: Some("autonomous-agents".to_string()),
         },
@@ -259,7 +259,7 @@ fn build_syllabus() -> (
             title: "Production Deployment Guru".to_string(),
             urdu_title: "vLLM, TensorRT & Kubernetes Serving Pro".to_string(),
             description: "Awarded after deploying high-throughput LLM gateway (Module 13).".to_string(),
-            icon: "🚀".to_string(),
+            icon: "rocket".to_string(),
             xp_requirement: 9000,
             module_requirement: Some("mlops-deployment".to_string()),
         },
@@ -268,7 +268,7 @@ fn build_syllabus() -> (
             title: "7-Day Streak Warrior".to_string(),
             urdu_title: "Lagaataar 7 Din Ka Champion".to_string(),
             description: "Completed lessons for 7 consecutive days without breaking streak.".to_string(),
-            icon: "🔥".to_string(),
+            icon: "flame".to_string(),
             xp_requirement: 1500,
             module_requirement: None,
         },
@@ -277,7 +277,7 @@ fn build_syllabus() -> (
             title: "AI Mastery Grandmaster".to_string(),
             urdu_title: "AI Engineer Grandmaster (All 14 Modules Complete)".to_string(),
             description: "Successfully completed the entire 20-week curriculum and defended Capstone!".to_string(),
-            icon: "🏆".to_string(),
+            icon: "trophy".to_string(),
             xp_requirement: 12000,
             module_requirement: Some("capstone-production".to_string()),
         },
@@ -330,8 +330,14 @@ fn render_svg_or_fallback(script: &str) -> Option<String> {
 }
 
 
+fn get_hf_subproject(mod_num: usize) -> Option<HfSubproject> {
+    static RAW_JSON: &str = include_str!("../../../supabase/hf_subprojects.json");
+    let all: Vec<HfSubproject> = serde_json::from_str(RAW_JSON).ok()?;
+    all.into_iter().find(|p| p.module_number as usize == mod_num)
+}
+
 fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
-    match mod_num {
+    let mut cp = match mod_num {
         0 => PracticeCheckpoint {
             title: "Chai Shop Billing & Khata Management Engine".to_string(),
             urdu_title: "Chai Dhaba Billing & Munshi CLI".to_string(),
@@ -346,6 +352,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 100,
             badge_name: "chai-munshi".to_string(),
+            hf_subproject: None,
         },
         1 => PracticeCheckpoint {
             title: "Biryani vs Pulao Sentiment & Price Vectorizer".to_string(),
@@ -360,6 +367,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 150,
             badge_name: "biryani-analyst".to_string(),
+            hf_subproject: None,
         },
         2 => PracticeCheckpoint {
             title: "Rishta Matcher & Bio Compatibility Algorithm".to_string(),
@@ -374,6 +382,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 150,
             badge_name: "rishta-whisperer".to_string(),
+            hf_subproject: None,
         },
         3 => PracticeCheckpoint {
             title: "PSL/IPL Match Outcome & Cricketer Performance Predictor".to_string(),
@@ -388,6 +397,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 150,
             badge_name: "toss-ka-badshah".to_string(),
+            hf_subproject: None,
         },
         4 => PracticeCheckpoint {
             title: "Desi Meme Classifier & Sarcastic Roast Bot".to_string(),
@@ -402,6 +412,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 200,
             badge_name: "meme-roaster".to_string(),
+            hf_subproject: None,
         },
         5 => PracticeCheckpoint {
             title: "Mirza Ghalib vs Allama Iqbal Urdu Poetry Rhyme Engine".to_string(),
@@ -416,6 +427,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 200,
             badge_name: "shayar-e-ai".to_string(),
+            hf_subproject: None,
         },
         6 => PracticeCheckpoint {
             title: "Ami Ka WhatsApp Auto-Responder Bot".to_string(),
@@ -430,6 +442,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 200,
             badge_name: "farmanbardar-beta".to_string(),
+            hf_subproject: None,
         },
         7 => PracticeCheckpoint {
             title: "Grandma's Secret Biryani Recipe RAG Engine".to_string(),
@@ -444,6 +457,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 250,
             badge_name: "bawarchi-rag".to_string(),
+            hf_subproject: None,
         },
         8 => PracticeCheckpoint {
             title: "Aggressive Salary Negotiation AI Agent Swarm".to_string(),
@@ -458,6 +472,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 250,
             badge_name: "dollar-earner".to_string(),
+            hf_subproject: None,
         },
         9 => PracticeCheckpoint {
             title: "Roman Urdu Sarcasm & Roast Fine-Tuning Engine".to_string(),
@@ -472,6 +487,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 300,
             badge_name: "taana-master".to_string(),
+            hf_subproject: None,
         },
         10 => PracticeCheckpoint {
             title: "Phuppo-Proof Family Group Content Guardrail Firewall".to_string(),
@@ -486,6 +502,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 300,
             badge_name: "sulah-joo".to_string(),
+            hf_subproject: None,
         },
         11 => PracticeCheckpoint {
             title: "Sub-50ms High-Scale AI Microservice Gateway".to_string(),
@@ -500,6 +517,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 350,
             badge_name: "rocket-engineer".to_string(),
+            hf_subproject: None,
         },
         12 => PracticeCheckpoint {
             title: "Handwritten Doctor Prescription & Urdu Audio Transcriber".to_string(),
@@ -514,6 +532,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 350,
             badge_name: "hakeem-ai".to_string(),
+            hf_subproject: None,
         },
         13 => PracticeCheckpoint {
             title: "100% Offline Exam Crammer Chatbot".to_string(),
@@ -528,6 +547,7 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 400,
             badge_name: "bijli-proof".to_string(),
+            hf_subproject: None,
         },
         14 => PracticeCheckpoint {
             title: "Global AI Micro-SaaS Capstone Defense".to_string(),
@@ -542,9 +562,12 @@ fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
             ],
             xp_reward: 500,
             badge_name: "unicorn-founder".to_string(),
+            hf_subproject: None,
         },
         _ => panic!("Invalid module number"),
-    }
+    };
+    cp.hf_subproject = get_hf_subproject(mod_num);
+    cp
 }
 
 fn build_phase_1() -> Phase {

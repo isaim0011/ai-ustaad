@@ -19,6 +19,18 @@ def main():
     
     all_modules = get_modules_phase1_2() + get_modules_phase3_5()
     
+    # Inject 15 Hugging Face interactive sub-projects into practice_checkpoint
+    hf_path = os.path.join(cur_dir, "hf_subprojects.json")
+    if os.path.exists(hf_path):
+        with open(hf_path, "r", encoding="utf-8") as f:
+            hf_map = {item["module_number"]: item for item in json.load(f)}
+        for m in all_modules:
+            num = m.get("module_number")
+            if num in hf_map:
+                if "practice_checkpoint" not in m or not isinstance(m["practice_checkpoint"], dict):
+                    m["practice_checkpoint"] = {}
+                m["practice_checkpoint"]["hf_subproject"] = hf_map[num]
+    
     lines.append("\n-- 0. SCHEMA UPGRADES")
     lines.append("alter table public.modules add column if not exists practice_checkpoint jsonb default '{}'::jsonb;\n")
 

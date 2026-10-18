@@ -146,6 +146,29 @@ pub struct Module {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct HfSubproject {
+    pub module_number: u32,
+    pub module_slug: String,
+    pub project_title: String,
+    pub project_slug: String,
+    pub hf_model: String,
+    pub hf_model_url: String,
+    pub hf_dataset: String,
+    pub hf_dataset_url: String,
+    pub colab_url: String,
+    pub colab_notebook_url: String,
+    pub kaggle_url: String,
+    pub kaggle_notebook_url: String,
+    pub hardware_requirement: String,
+    pub estimated_runtime_seconds: String,
+    pub key_learning_takeaway: String,
+    pub starter_code: String,
+    pub runnable_starter_code: String,
+    pub gradio_code: String,
+    pub gradio_demo_code: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PracticeCheckpoint {
     pub title: String,
     pub urdu_title: String,
@@ -154,6 +177,8 @@ pub struct PracticeCheckpoint {
     pub checklist: Vec<String>,
     pub xp_reward: u32,
     pub badge_name: String,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub hf_subproject: Option<HfSubproject>,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

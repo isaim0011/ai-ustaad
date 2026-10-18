@@ -63,6 +63,20 @@ fn test_syllabus_completeness() {
     assert_eq!(m.slug, "nlp-transformers");
     assert!(l.code_snippet.is_some());
     assert!(!l.explanation_urdu.is_empty());
+
+    // 9. Verify 15 Hugging Face interactive sub-projects
+    for m in &all_modules {
+        assert!(m.practice_checkpoint.is_some(), "Module {} must have practice_checkpoint", m.slug);
+        let cp = m.practice_checkpoint.as_ref().unwrap();
+        assert!(cp.hf_subproject.is_some(), "Module {} must have hf_subproject", m.slug);
+        let hf = cp.hf_subproject.as_ref().unwrap();
+        assert!(!hf.hf_model.is_empty(), "HF model must not be empty for {}", m.slug);
+        assert!(!hf.hf_dataset.is_empty(), "HF dataset must not be empty for {}", m.slug);
+        assert!(!hf.colab_url.is_empty(), "Colab URL must not be empty for {}", m.slug);
+        assert!(!hf.kaggle_url.is_empty(), "Kaggle URL must not be empty for {}", m.slug);
+        assert!(!hf.starter_code.is_empty(), "Starter code must not be empty for {}", m.slug);
+        assert!(!hf.gradio_code.is_empty(), "Gradio code must not be empty for {}", m.slug);
+    }
 }
 
 #[test]

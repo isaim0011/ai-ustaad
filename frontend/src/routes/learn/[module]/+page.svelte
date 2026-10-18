@@ -2,7 +2,8 @@
 	import { ArrowRight, CheckCircle2, Circle, Clock, Sparkles, Cpu, Layers, HelpCircle, ExternalLink, Award, Play } from 'lucide-svelte';
 	import Diagram from '$lib/components/Diagram.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
-	import { getPracticeProject } from '$lib/data/fallback';
+	import HfSubprojectCard from '$lib/components/HfSubprojectCard.svelte';
+	import { getPracticeProject, getHfSubproject } from '$lib/data/fallback';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -25,6 +26,12 @@
 
 	const practiceProject = $derived(
 		mod.practice_project || getPracticeProject(mod.slug || mod.module_number)
+	);
+
+	const hfSubproject = $derived(
+		mod.practice_checkpoint?.hf_subproject ||
+		practiceProject?.hf_subproject ||
+		getHfSubproject(mod.slug || mod.module_number)
 	);
 </script>
 
@@ -145,6 +152,11 @@
 				</div>
 			{/if}
 		</div>
+	{/if}
+
+	<!-- Hugging Face Interactive Lab & Open-Source Sub-Project -->
+	{#if hfSubproject}
+		<HfSubprojectCard subproject={hfSubproject} moduleNumber={mod.module_number} />
 	{/if}
 
 	<!-- Zero-GPU Recipe -->

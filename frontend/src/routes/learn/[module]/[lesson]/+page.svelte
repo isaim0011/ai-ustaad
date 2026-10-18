@@ -5,7 +5,8 @@
 	import Markdown from '$lib/components/Markdown.svelte';
 	import Diagram from '$lib/components/Diagram.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
-	import { getPracticeProject } from '$lib/data/fallback';
+	import HfSubprojectCard from '$lib/components/HfSubprojectCard.svelte';
+	import { getPracticeProject, getHfSubproject } from '$lib/data/fallback';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -20,6 +21,11 @@
 
 	const isCompleted = $derived(isOptimisticCompleted || data.isCompleted || form?.success);
 	const practiceProject = $derived(getPracticeProject(mod.slug || mod.module_number));
+	const hfSubproject = $derived(
+		(mod as any).practice_checkpoint?.hf_subproject ||
+		practiceProject?.hf_subproject ||
+		getHfSubproject(mod.slug || mod.module_number)
+	);
 </script>
 
 <div class="flex min-h-[calc(100vh-4rem)]">
@@ -170,6 +176,13 @@
 					<p class="mt-2 text-xs leading-relaxed text-[#6f6e69] dark:text-[#a19f97]">
 						{practiceProject.description_roman_urdu}
 					</p>
+				</div>
+			{/if}
+
+			<!-- Hugging Face Interactive Sub-Project & Real-Time Lab -->
+			{#if hfSubproject}
+				<div class="my-8">
+					<HfSubprojectCard subproject={hfSubproject} moduleNumber={mod.module_number} />
 				</div>
 			{/if}
 

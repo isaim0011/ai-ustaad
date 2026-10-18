@@ -25,18 +25,18 @@ def get_base_sql():
     # 1. Badges
     lines.append("-- 1. GAMIFICATION BADGES")
     badges = [
-        ("chai-munshi", "Chai Wala Munshi", "Python Zero Se Hero", "Completed Module 0: Python Zero Se Hero and solved the Chai Shop billing checkpoint!", "☕", 100, {"type": "module_complete", "module_slug": "python-zero-se-hero"}),
-        ("pehla-prompt", "Pehla Prompt", "Safar Ka Aaghaz", "Completed your very first lesson on AI Ustaad!", "🚀", 50, {"type": "lesson_count", "threshold": 1}),
-        ("prompt-rookie", "Prompt Rookie", "Prompts Ka Ustaad", "Mastered zero-shot, few-shot, CoT and prompt engineering patterns.", "🎯", 100, {"type": "module_complete", "module_slug": "prompt-engineering-and-llm-mental-models"}),
-        ("ml-practitioner", "ML Practitioner", "Data Se Model Tak", "Mastered classical machine learning, feature pipelines, and metrics.", "📊", 150, {"type": "module_complete", "module_slug": "classical-machine-learning"}),
-        ("transformer-expert", "Transformer Expert", "Attention Is All You Need", "Built multi-head attention and transformer blocks from raw tensors.", "🧠", 200, {"type": "module_complete", "module_slug": "attention-and-transformers-under-the-hood"}),
-        ("app-builder", "App Builder", "Full-Stack AI Creator", "Shipped production-grade AI applications and streaming APIs.", "⚡", 250, {"type": "module_complete", "module_slug": "building-ai-applications-and-apis"}),
-        ("rag-master", "RAG Master", "Context & Retrieval Wizard", "Architected advanced hybrid RAG pipelines with ColPali and reranking.", "🔍", 300, {"type": "module_complete", "module_slug": "vector-databases-and-modern-rag"}),
-        ("agent-architect", "Agent Architect", "Autonomous Systems Master", "Created autonomous multi-agent swarms with Anthropic MCP and smolagents.", "🤖", 350, {"type": "module_complete", "module_slug": "autonomous-agents-and-tool-use"}),
-        ("finetuning-pro", "Fine-tuning Pro", "LoRA & Unsloth Wizard", "Fine-tuned open-source models with Unsloth and DeepSeek-R1 GRPO.", "🔥", 400, {"type": "module_complete", "module_slug": "fine-tuning-and-model-adaptation"}),
-        ("production-ready", "Production Ready", "0 to 1 Million Requests", "Deployed low-latency LLM microservices with vLLM, Docker and Rust.", "🛡️", 450, {"type": "module_complete", "module_slug": "production-ai-engineering-mlops"}),
-        ("ai-graduate", "AI Graduate", "Hero Ban Gaye!", "Successfully completed the entire AI Ustaad curriculum and Capstone project.", "🎓", 1000, {"type": "module_complete", "module_slug": "enterprise-capstone-and-career-launch"}),
-        ("top-performer", "Top Performer", "90%+ Quiz Score Champion", "Achieved 90% or higher score on a module quiz.", "👑", 200, {"type": "quiz_score", "min_score": 90}),
+        ("chai-munshi", "Chai Wala Munshi", "Python Zero Se Hero", "Completed Module 0: Python Zero Se Hero and solved the Chai Shop billing checkpoint!", "coffee", 100, {"type": "module_complete", "module_slug": "python-zero-se-hero"}),
+        ("pehla-prompt", "Pehla Prompt", "Safar Ka Aaghaz", "Completed your very first lesson on AI Ustaad!", "rocket", 50, {"type": "lesson_count", "threshold": 1}),
+        ("prompt-rookie", "Prompt Rookie", "Prompts Ka Ustaad", "Mastered zero-shot, few-shot, CoT and prompt engineering patterns.", "target", 100, {"type": "module_complete", "module_slug": "prompt-engineering-and-llm-mental-models"}),
+        ("ml-practitioner", "ML Practitioner", "Data Se Model Tak", "Mastered classical machine learning, feature pipelines, and metrics.", "chart", 150, {"type": "module_complete", "module_slug": "classical-machine-learning"}),
+        ("transformer-expert", "Transformer Expert", "Attention Is All You Need", "Built multi-head attention and transformer blocks from raw tensors.", "brain", 200, {"type": "module_complete", "module_slug": "attention-and-transformers-under-the-hood"}),
+        ("app-builder", "App Builder", "Full-Stack AI Creator", "Shipped production-grade AI applications and streaming APIs.", "zap", 250, {"type": "module_complete", "module_slug": "building-ai-applications-and-apis"}),
+        ("rag-master", "RAG Master", "Context & Retrieval Wizard", "Architected advanced hybrid RAG pipelines with ColPali and reranking.", "search", 300, {"type": "module_complete", "module_slug": "vector-databases-and-modern-rag"}),
+        ("agent-architect", "Agent Architect", "Autonomous Systems Master", "Created autonomous multi-agent swarms with Anthropic MCP and smolagents.", "bot", 350, {"type": "module_complete", "module_slug": "autonomous-agents-and-tool-use"}),
+        ("finetuning-pro", "Fine-tuning Pro", "LoRA & Unsloth Wizard", "Fine-tuned open-source models with Unsloth and DeepSeek-R1 GRPO.", "flame", 400, {"type": "module_complete", "module_slug": "fine-tuning-and-model-adaptation"}),
+        ("production-ready", "Production Ready", "0 to 1 Million Requests", "Deployed low-latency LLM microservices with vLLM, Docker and Rust.", "shield", 450, {"type": "module_complete", "module_slug": "production-ai-engineering-mlops"}),
+        ("ai-graduate", "AI Graduate", "Hero Ban Gaye!", "Successfully completed the entire AI Ustaad curriculum and Capstone project.", "award", 1000, {"type": "module_complete", "module_slug": "enterprise-capstone-and-career-launch"}),
+        ("top-performer", "Top Performer", "90%+ Quiz Score Champion", "Achieved 90% or higher score on a module quiz.", "crown", 200, {"type": "quiz_score", "min_score": 90}),
     ]
 
     for b in badges:

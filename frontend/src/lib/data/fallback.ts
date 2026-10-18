@@ -1,71 +1,25 @@
 // Fallback syllabus and content for standalone deployment (ai-ustaad.pages.dev)
 // Ensures 100% production-ready rich UI even if Supabase is offline or not configured.
 
-export interface PracticeProject {
-	title: string;
-	humorous_badge: string;
-	description_roman_urdu: string;
-	colab_url: string;
-	xp_reward: number;
-	checklist: string[];
-}
+import type {
+	HfSubproject,
+	PracticeProject,
+	PracticeCheckpoint,
+	ZeroGpuRecipe,
+	LessonData,
+	ModuleData,
+	PhaseData
+} from '$lib/types';
 
-export interface ZeroGpuRecipe {
-	platform: string;
-	vram_required: string;
-	estimated_cost: string;
-	compute_units_tip: string;
-	one_click_command: string;
-	unassign_code: string;
-}
-
-export interface LessonData {
-	id: string;
-	module_id: string;
-	lesson_code: string;
-	slug: string;
-	title: string;
-	duration_minutes: number;
-	lesson_type: string;
-	roman_urdu_content: string;
-	english_summary: string;
-	code_example: string;
-	xp_reward: number;
-	order_index: number;
-}
-
-export interface ModuleData {
-	id: string;
-	phase_id?: string;
-	module_number: number;
-	slug: string;
-	title: string;
-	weeks_range: string;
-	estimated_hours: number;
-	real_world_deliverable: string;
-	badge_slug?: string;
-	order_index: number;
-	diagram_script?: string;
-	diagram_preset?: string;
-	diagram_animation?: string;
-	zero_gpu_recipe?: ZeroGpuRecipe;
-	practice_project?: PracticeProject;
-	learning_outcomes?: string[];
-	practical_tasks?: string[];
-	lessons?: LessonData[];
-}
-
-export interface PhaseData {
-	id: string;
-	phase_number: number;
-	slug: string;
-	title: string;
-	weeks_range: string;
-	level: string;
-	description: string;
-	order_index: number;
-	modules: ModuleData[];
-}
+export type {
+	HfSubproject,
+	PracticeProject,
+	PracticeCheckpoint,
+	ZeroGpuRecipe,
+	LessonData,
+	ModuleData,
+	PhaseData
+};
 
 export const FALLBACK_COURSE = {
 	title: 'AI Ustaad — Zero se Production tak',
@@ -1078,152 +1032,551 @@ export const FALLBACK_BLOGS = [
   }
 ];
 
+
+export const HF_SUBPROJECTS: Record<number, HfSubproject> = {
+	0: {
+  "module_number": 0,
+  "module_slug": "python-zero-se-hero",
+  "project_title": "Chai Dhaba Customer Sentiment & Order Billing Engine",
+  "project_slug": "chai-dhaba-billing-sentiment",
+  "hf_model": "distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+  "hf_model_url": "https://huggingface.co/distilbert/distilbert-base-uncased-finetuned-sst-2-english",
+  "hf_dataset": "rotten_tomatoes",
+  "hf_dataset_url": "https://huggingface.co/datasets/rotten_tomatoes",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_00_chai_dhaba_sentiment.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_00_chai_dhaba_sentiment.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-00-chai-dhaba-billing-sentiment",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-00-chai-dhaba-billing-sentiment",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (0.3 GB VRAM)",
+  "estimated_runtime_seconds": "< 15s cold load, < 0.2s inference",
+  "key_learning_takeaway": "Combines Python dictionaries, OOP data structures, and Hugging Face pre-trained sentiment pipelines to analyze real-world consumer feedback with zero API costs.",
+  "starter_code": "# Module 0: Chai Dhaba Fast Sentiment & Bill Analyzer\nfrom transformers import pipeline\nfrom datasets import load_dataset\n\n# 1. Load tiny 260MB model (< 15 seconds on CPU/T4)\nclassifier = pipeline(\"sentiment-analysis\", model=\"distilbert/distilbert-base-uncased-finetuned-sst-2-english\")\n\n# 2. Stream 3 customer reviews from HF datasets\ndataset = load_dataset(\"rotten_tomatoes\", split=\"test\", streaming=True)\nsample_reviews = [item[\"text\"] for item in dataset.take(3)]\n\n# 3. Analyze Dhaba Customer Orders & Feedback\ncustomer_orders = [\n    {\"customer\": \"Aslam\", \"item\": \"Doodh Patti & Paratha\", \"review\": \"The tea was scalding hot, perfectly sweet, and the paratha was delightfully crisp!\"},\n    {\"customer\": \"Bilal\", \"item\": \"Karak Chai\", \"review\": \"Cold tea, way too much sugar, and stale biscuits. Terrible service.\"}\n]\n\nprint(\"--- Dhaba Customer Feedback Analysis ---\")\nfor order in customer_orders:\n    result = classifier(order[\"review\"])[0]\n    print(f\"Customer: {order['customer']} ({order['item']})\")\n    print(f\"Feedback: {order['review']}\")\n    print(f\"Sentiment: {result['label']} (Confidence: {result['score']:.4f})\\n\")\n",
+  "runnable_starter_code": "# Module 0: Chai Dhaba Fast Sentiment & Bill Analyzer\nfrom transformers import pipeline\nfrom datasets import load_dataset\n\n# 1. Load tiny 260MB model (< 15 seconds on CPU/T4)\nclassifier = pipeline(\"sentiment-analysis\", model=\"distilbert/distilbert-base-uncased-finetuned-sst-2-english\")\n\n# 2. Stream 3 customer reviews from HF datasets\ndataset = load_dataset(\"rotten_tomatoes\", split=\"test\", streaming=True)\nsample_reviews = [item[\"text\"] for item in dataset.take(3)]\n\n# 3. Analyze Dhaba Customer Orders & Feedback\ncustomer_orders = [\n    {\"customer\": \"Aslam\", \"item\": \"Doodh Patti & Paratha\", \"review\": \"The tea was scalding hot, perfectly sweet, and the paratha was delightfully crisp!\"},\n    {\"customer\": \"Bilal\", \"item\": \"Karak Chai\", \"review\": \"Cold tea, way too much sugar, and stale biscuits. Terrible service.\"}\n]\n\nprint(\"--- Dhaba Customer Feedback Analysis ---\")\nfor order in customer_orders:\n    result = classifier(order[\"review\"])[0]\n    print(f\"Customer: {order['customer']} ({order['item']})\")\n    print(f\"Feedback: {order['review']}\")\n    print(f\"Sentiment: {result['label']} (Confidence: {result['score']:.4f})\\n\")\n",
+  "gradio_code": "import gradio as gr\nfrom transformers import pipeline\n\nclf = pipeline(\"sentiment-analysis\", model=\"distilbert/distilbert-base-uncased-finetuned-sst-2-english\")\n\ndef analyze_review(customer_name, review_text):\n    res = clf(review_text)[0]\n    emoji = \"[POSITIVE] Zabardast!\" if res[\"label\"] == \"POSITIVE\" else \"⚠️ Shikayat (Negative)!\"\n    return f\"{emoji} Score: {res['score']:.2%}\"\n\ndemo = gr.Interface(\n    fn=analyze_review,\n    inputs=[gr.Textbox(label=\"Customer Name\", value=\"Hamza\"), gr.Textbox(label=\"Dhaba Feedback\", value=\"Best Doodh Patti in town!\")],\n    outputs=gr.Textbox(label=\"AI Sentiment Verdict\"),\n    title=\"Chai Dhaba Sentiment Munshi\"\n)\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom transformers import pipeline\n\nclf = pipeline(\"sentiment-analysis\", model=\"distilbert/distilbert-base-uncased-finetuned-sst-2-english\")\n\ndef analyze_review(customer_name, review_text):\n    res = clf(review_text)[0]\n    emoji = \"[POSITIVE] Zabardast!\" if res[\"label\"] == \"POSITIVE\" else \"⚠️ Shikayat (Negative)!\"\n    return f\"{emoji} Score: {res['score']:.2%}\"\n\ndemo = gr.Interface(\n    fn=analyze_review,\n    inputs=[gr.Textbox(label=\"Customer Name\", value=\"Hamza\"), gr.Textbox(label=\"Dhaba Feedback\", value=\"Best Doodh Patti in town!\")],\n    outputs=gr.Textbox(label=\"AI Sentiment Verdict\"),\n    title=\"Chai Dhaba Sentiment Munshi\"\n)\ndemo.launch()\n"
+},
+	1: {
+  "module_number": 1,
+  "module_slug": "python-for-ai-and-fast-math",
+  "project_title": "Biryani vs Pulao Cosine Semantic Vectorizer",
+  "project_slug": "biryani-pulao-semantic-vectorizer",
+  "hf_model": "sentence-transformers/all-MiniLM-L6-v2",
+  "hf_model_url": "https://huggingface.co/sentence-transformers/all-MiniLM-L6-v2",
+  "hf_dataset": "rotten_tomatoes",
+  "hf_dataset_url": "https://huggingface.co/datasets/rotten_tomatoes",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_01_biryani_vector_math.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_01_biryani_vector_math.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-01-biryani-pulao-vectorizer",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-01-biryani-pulao-vectorizer",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (0.1 GB VRAM)",
+  "estimated_runtime_seconds": "< 5s load, < 0.1s vector dot-product",
+  "key_learning_takeaway": "First-principles linear algebra in action: dense sentence embeddings, vector dot-products, Euclidean norms, and SIMD cosine similarity ranking with zero loop overhead.",
+  "starter_code": "# Module 1: Vector Spaces & Cosine Similarity with NumPy\nimport numpy as np\nfrom sentence_transformers import SentenceTransformer\n\n# 1. Load lightweight 80MB embedding model (384-dimensional vector space)\nembedder = SentenceTransformer(\"sentence-transformers/all-MiniLM-L6-v2\")\n\n# 2. Target query and food review corpus\nquery = \"Spicy Karachi beef biryani with lots of aloo and aroma\"\nreviews = [\n    \"Hot spicy beef biryani with succulent potatoes and golden rice.\",\n    \"Mild chicken yakhni pulao with cardamom and delicate spices.\",\n    \"Sweet carrot halwa with desi ghee, almonds, and pistachios.\",\n    \"Crisp fried fish with tangy lemon garlic tartar sauce.\"\n]\n\n# 3. Vectorize text into 2D NumPy float32 matrix\nquery_vec = embedder.encode(query)\ncorpus_vecs = embedder.encode(reviews)\n\n# 4. Pure NumPy SIMD Cosine Similarity: (A . B) / (||A|| * ||B||)\ndot_products = np.dot(corpus_vecs, query_vec)\nnorms = np.linalg.norm(corpus_vecs, axis=1) * np.linalg.norm(query_vec)\nsimilarities = dot_products / norms\n\nprint(f\"Target Query: '{query}'\\n\" + \"=\"*50)\nfor idx in np.argsort(-similarities):\n    print(f\"Score: {similarities[idx]:.4f} | Review: {reviews[idx]}\")\n",
+  "runnable_starter_code": "# Module 1: Vector Spaces & Cosine Similarity with NumPy\nimport numpy as np\nfrom sentence_transformers import SentenceTransformer\n\n# 1. Load lightweight 80MB embedding model (384-dimensional vector space)\nembedder = SentenceTransformer(\"sentence-transformers/all-MiniLM-L6-v2\")\n\n# 2. Target query and food review corpus\nquery = \"Spicy Karachi beef biryani with lots of aloo and aroma\"\nreviews = [\n    \"Hot spicy beef biryani with succulent potatoes and golden rice.\",\n    \"Mild chicken yakhni pulao with cardamom and delicate spices.\",\n    \"Sweet carrot halwa with desi ghee, almonds, and pistachios.\",\n    \"Crisp fried fish with tangy lemon garlic tartar sauce.\"\n]\n\n# 3. Vectorize text into 2D NumPy float32 matrix\nquery_vec = embedder.encode(query)\ncorpus_vecs = embedder.encode(reviews)\n\n# 4. Pure NumPy SIMD Cosine Similarity: (A . B) / (||A|| * ||B||)\ndot_products = np.dot(corpus_vecs, query_vec)\nnorms = np.linalg.norm(corpus_vecs, axis=1) * np.linalg.norm(query_vec)\nsimilarities = dot_products / norms\n\nprint(f\"Target Query: '{query}'\\n\" + \"=\"*50)\nfor idx in np.argsort(-similarities):\n    print(f\"Score: {similarities[idx]:.4f} | Review: {reviews[idx]}\")\n",
+  "gradio_code": "import gradio as gr\nimport numpy as np\nfrom sentence_transformers import SentenceTransformer\n\nmodel = SentenceTransformer(\"sentence-transformers/all-MiniLM-L6-v2\")\n\ndef rank_similarity(query_text, candidate_items):\n    cands = [c.strip() for c in candidate_items.split(\"\\n\") if c.strip()]\n    if not cands: return \"Please enter candidates!\"\n    q_vec = model.encode(query_text)\n    c_vecs = model.encode(cands)\n    sims = np.dot(c_vecs, q_vec) / (np.linalg.norm(c_vecs, axis=1) * np.linalg.norm(q_vec))\n    ranked = sorted(zip(cands, sims), key=lambda x: -x[1])\n    return \"\\n\".join([f\"Rank {i+1} [{s:.2%}]: {text}\" for i, (text, s) in enumerate(ranked)])\n\ndemo = gr.Interface(\n    fn=rank_similarity,\n    inputs=[gr.Textbox(label=\"Query Sentence\", value=\"Tez Masalaydaar Biryani\"), gr.Textbox(label=\"Candidates (one per line)\", lines=4, value=\"Spicy beef biryani\\nMild white pulao\\nCold ice cream\")],\n    outputs=gr.Textbox(label=\"Cosine Similarity Rankings\"),\n    title=\"Vector Math & Cosine Similarity Inspector\"\n)\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nimport numpy as np\nfrom sentence_transformers import SentenceTransformer\n\nmodel = SentenceTransformer(\"sentence-transformers/all-MiniLM-L6-v2\")\n\ndef rank_similarity(query_text, candidate_items):\n    cands = [c.strip() for c in candidate_items.split(\"\\n\") if c.strip()]\n    if not cands: return \"Please enter candidates!\"\n    q_vec = model.encode(query_text)\n    c_vecs = model.encode(cands)\n    sims = np.dot(c_vecs, q_vec) / (np.linalg.norm(c_vecs, axis=1) * np.linalg.norm(q_vec))\n    ranked = sorted(zip(cands, sims), key=lambda x: -x[1])\n    return \"\\n\".join([f\"Rank {i+1} [{s:.2%}]: {text}\" for i, (text, s) in enumerate(ranked)])\n\ndemo = gr.Interface(\n    fn=rank_similarity,\n    inputs=[gr.Textbox(label=\"Query Sentence\", value=\"Tez Masalaydaar Biryani\"), gr.Textbox(label=\"Candidates (one per line)\", lines=4, value=\"Spicy beef biryani\\nMild white pulao\\nCold ice cream\")],\n    outputs=gr.Textbox(label=\"Cosine Similarity Rankings\"),\n    title=\"Vector Math & Cosine Similarity Inspector\"\n)\ndemo.launch()\n"
+},
+	2: {
+  "module_number": 2,
+  "module_slug": "prompt-engineering-and-llm-mental-models",
+  "project_title": "SmolLM2 Rishta Matchmaker & Chain-of-Thought Evaluator",
+  "project_slug": "smollm2-rishta-cot-evaluator",
+  "hf_model": "HuggingFaceTB/SmolLM2-360M-Instruct",
+  "hf_model_url": "https://huggingface.co/HuggingFaceTB/SmolLM2-360M-Instruct",
+  "hf_dataset": "fka/awesome-chatgpt-prompts",
+  "hf_dataset_url": "https://huggingface.co/datasets/fka/awesome-chatgpt-prompts",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_02_smollm2_prompt_eval.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_02_smollm2_prompt_eval.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-02-smollm2-cot-matchmaker",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-02-smollm2-cot-matchmaker",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (0.8 GB VRAM)",
+  "estimated_runtime_seconds": "< 20s load, < 2s token generation",
+  "key_learning_takeaway": "Autoregressive next-token prediction dynamics, temperature sampling effects on creativity, system prompt steering, and Chain-of-Thought (CoT) reasoning.",
+  "starter_code": "# Module 2: Chain-of-Thought (CoT) Prompting with SmolLM2-360M\nimport torch\nfrom transformers import pipeline\n\n# 1. Load HF's modern open-weight SmolLM2-360M-Instruct\npipe = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\", torch_dtype=torch.float32)\n\n# 2. Format chat with System Persona and Step-by-Step Chain-of-Thought\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a witty, analytical Pakistani Rishta Matchmaker auntie. Think step-by-step and provide a compatibility score (0-100%) in clean JSON.\"},\n    {\"role\": \"user\", \"content\": \"Candidate 1: Software Engineer, introverted, loves biryani and gaming at 2 AM.\\nCandidate 2: Clinical Doctor, extroverted, loves hiking, hates fast food.\\nAre they compatible?\"}\n]\n\n# 3. Generate response with controlled temperature\nprompt = pipe.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)\noutputs = pipe(prompt, max_new_tokens=220, temperature=0.6, do_sample=True, top_p=0.9)\ngenerated_text = outputs[0][\"generated_text\"][len(prompt):]\n\nprint(\"=== SmolLM2 Rishta Matchmaker CoT Output ===\")\nprint(generated_text.strip())\n",
+  "runnable_starter_code": "# Module 2: Chain-of-Thought (CoT) Prompting with SmolLM2-360M\nimport torch\nfrom transformers import pipeline\n\n# 1. Load HF's modern open-weight SmolLM2-360M-Instruct\npipe = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\", torch_dtype=torch.float32)\n\n# 2. Format chat with System Persona and Step-by-Step Chain-of-Thought\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a witty, analytical Pakistani Rishta Matchmaker auntie. Think step-by-step and provide a compatibility score (0-100%) in clean JSON.\"},\n    {\"role\": \"user\", \"content\": \"Candidate 1: Software Engineer, introverted, loves biryani and gaming at 2 AM.\\nCandidate 2: Clinical Doctor, extroverted, loves hiking, hates fast food.\\nAre they compatible?\"}\n]\n\n# 3. Generate response with controlled temperature\nprompt = pipe.tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)\noutputs = pipe(prompt, max_new_tokens=220, temperature=0.6, do_sample=True, top_p=0.9)\ngenerated_text = outputs[0][\"generated_text\"][len(prompt):]\n\nprint(\"=== SmolLM2 Rishta Matchmaker CoT Output ===\")\nprint(generated_text.strip())\n",
+  "gradio_code": "import gradio as gr\nfrom transformers import pipeline\n\npipe = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\n\ndef evaluate_prompt(system_prompt, user_query, temp):\n    chat = [{\"role\": \"system\", \"content\": system_prompt}, {\"role\": \"user\", \"content\": user_query}]\n    prompt = pipe.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\n    out = pipe(prompt, max_new_tokens=180, temperature=float(temp), do_sample=temp > 0.0)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ndemo = gr.Interface(\n    fn=evaluate_prompt,\n    inputs=[gr.Textbox(label=\"System Persona\", value=\"You are a strict code reviewer.\"), gr.Textbox(label=\"User Prompt\", value=\"Why is O(N^2) bad in production?\"), gr.Slider(0.1, 1.2, value=0.7, label=\"Temperature\")],\n    outputs=gr.Textbox(label=\"SmolLM2 Response\", lines=6),\n    title=\"SmolLM2 Interactive Prompt Engineering Lab\"\n)\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom transformers import pipeline\n\npipe = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\n\ndef evaluate_prompt(system_prompt, user_query, temp):\n    chat = [{\"role\": \"system\", \"content\": system_prompt}, {\"role\": \"user\", \"content\": user_query}]\n    prompt = pipe.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\n    out = pipe(prompt, max_new_tokens=180, temperature=float(temp), do_sample=temp > 0.0)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ndemo = gr.Interface(\n    fn=evaluate_prompt,\n    inputs=[gr.Textbox(label=\"System Persona\", value=\"You are a strict code reviewer.\"), gr.Textbox(label=\"User Prompt\", value=\"Why is O(N^2) bad in production?\"), gr.Slider(0.1, 1.2, value=0.7, label=\"Temperature\")],\n    outputs=gr.Textbox(label=\"SmolLM2 Response\", lines=6),\n    title=\"SmolLM2 Interactive Prompt Engineering Lab\"\n)\ndemo.launch()\n"
+},
+	3: {
+  "module_number": 3,
+  "module_slug": "classical-machine-learning",
+  "project_title": "AG News Real-Time Topic & Clickbait Classifier",
+  "project_slug": "agnews-clickbait-classifier",
+  "hf_model": "distilbert/distilbert-base-uncased",
+  "hf_model_url": "https://huggingface.co/distilbert/distilbert-base-uncased",
+  "hf_dataset": "ag_news",
+  "hf_dataset_url": "https://huggingface.co/datasets/ag_news",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_03_ag_news_classifier.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_03_ag_news_classifier.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-03-agnews-fast-classifier",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-03-agnews-fast-classifier",
+  "hardware_requirement": "Free Colab CPU (0.2 GB RAM)",
+  "estimated_runtime_seconds": "< 10s dataset streaming + training, < 0.05s inference",
+  "key_learning_takeaway": "Memory-efficient streaming of Hugging Face Hub datasets, TF-IDF n-gram feature extraction, Logistic Regression decision boundaries, and multi-class classification reporting.",
+  "starter_code": "# Module 3: Streaming HF Dataset + Scikit-Learn Fast Classical ML\nfrom datasets import load_dataset\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import classification_report\n\n# 1. Stream train/test splits directly from Hugging Face Hub (Zero RAM explosion)\ndataset = load_dataset(\"ag_news\", split=\"train\", streaming=True)\ntest_dataset = load_dataset(\"ag_news\", split=\"test\", streaming=True)\n\n# 2. Extract 2,000 training and 500 testing samples in seconds\ntrain_samples = list(dataset.take(2000))\ntest_samples = list(test_dataset.take(500))\n\nX_train = [item[\"text\"] for item in train_samples]\ny_train = [item[\"label\"] for item in train_samples] # 0:World, 1:Sports, 2:Business, 3:Sci/Tech\nX_test = [item[\"text\"] for item in test_samples]\ny_test = [item[\"label\"] for item in test_samples]\n\n# 3. Train TF-IDF + Logistic Regression Classifier (< 2 seconds on CPU)\nvectorizer = TfidfVectorizer(max_features=5000, stop_words=\"english\", ngram_range=(1, 2))\nX_train_vec = vectorizer.fit_transform(X_train)\nX_test_vec = vectorizer.transform(X_test)\n\nclf = LogisticRegression(max_iter=300)\nclf.fit(X_train_vec, y_train)\n\n# 4. Evaluate Test Set Performance\npreds = clf.predict(X_test_vec)\ntarget_names = [\"World\", \"Sports\", \"Business\", \"Sci/Tech\"]\nprint(classification_report(y_test, preds, target_names=target_names, digits=3))\n",
+  "runnable_starter_code": "# Module 3: Streaming HF Dataset + Scikit-Learn Fast Classical ML\nfrom datasets import load_dataset\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\nfrom sklearn.metrics import classification_report\n\n# 1. Stream train/test splits directly from Hugging Face Hub (Zero RAM explosion)\ndataset = load_dataset(\"ag_news\", split=\"train\", streaming=True)\ntest_dataset = load_dataset(\"ag_news\", split=\"test\", streaming=True)\n\n# 2. Extract 2,000 training and 500 testing samples in seconds\ntrain_samples = list(dataset.take(2000))\ntest_samples = list(test_dataset.take(500))\n\nX_train = [item[\"text\"] for item in train_samples]\ny_train = [item[\"label\"] for item in train_samples] # 0:World, 1:Sports, 2:Business, 3:Sci/Tech\nX_test = [item[\"text\"] for item in test_samples]\ny_test = [item[\"label\"] for item in test_samples]\n\n# 3. Train TF-IDF + Logistic Regression Classifier (< 2 seconds on CPU)\nvectorizer = TfidfVectorizer(max_features=5000, stop_words=\"english\", ngram_range=(1, 2))\nX_train_vec = vectorizer.fit_transform(X_train)\nX_test_vec = vectorizer.transform(X_test)\n\nclf = LogisticRegression(max_iter=300)\nclf.fit(X_train_vec, y_train)\n\n# 4. Evaluate Test Set Performance\npreds = clf.predict(X_test_vec)\ntarget_names = [\"World\", \"Sports\", \"Business\", \"Sci/Tech\"]\nprint(classification_report(y_test, preds, target_names=target_names, digits=3))\n",
+  "gradio_code": "import gradio as gr\nfrom datasets import load_dataset\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\n\nds = load_dataset(\"ag_news\", split=\"train\", streaming=True)\ndata = list(ds.take(1500))\nvec = TfidfVectorizer(max_features=3000, stop_words=\"english\")\nX = vec.fit_transform([d[\"text\"] for d in data])\nclf = LogisticRegression().fit(X, [d[\"label\"] for d in data])\nlabels = [\"World News\", \"Sports\", \"Business & Finance\", \"Sci/Tech & AI\"]\n\ndef classify_headline(text):\n    prob = clf.predict_proba(vec.transform([text]))[0]\n    return {labels[i]: float(prob[i]) for i in range(4)}\n\ndemo = gr.Interface(fn=classify_headline, inputs=gr.Textbox(label=\"News Headline\", value=\"Nvidia launches new Blackwell GPU for AI servers\"), outputs=gr.Label(label=\"Topic Prediction\"), title=\"AG News Fast Topic Classifier\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom datasets import load_dataset\nfrom sklearn.feature_extraction.text import TfidfVectorizer\nfrom sklearn.linear_model import LogisticRegression\n\nds = load_dataset(\"ag_news\", split=\"train\", streaming=True)\ndata = list(ds.take(1500))\nvec = TfidfVectorizer(max_features=3000, stop_words=\"english\")\nX = vec.fit_transform([d[\"text\"] for d in data])\nclf = LogisticRegression().fit(X, [d[\"label\"] for d in data])\nlabels = [\"World News\", \"Sports\", \"Business & Finance\", \"Sci/Tech & AI\"]\n\ndef classify_headline(text):\n    prob = clf.predict_proba(vec.transform([text]))[0]\n    return {labels[i]: float(prob[i]) for i in range(4)}\n\ndemo = gr.Interface(fn=classify_headline, inputs=gr.Textbox(label=\"News Headline\", value=\"Nvidia launches new Blackwell GPU for AI servers\"), outputs=gr.Label(label=\"Topic Prediction\"), title=\"AG News Fast Topic Classifier\")\ndemo.launch()\n"
+},
+	4: {
+  "module_number": 4,
+  "module_slug": "deep-learning-and-pytorch-foundations",
+  "project_title": "PyTorch Autograd & MLP Sentiment Classifier from Scratch",
+  "project_slug": "pytorch-autograd-mlp-sentiment",
+  "hf_model": "distilbert/distilbert-base-uncased",
+  "hf_model_url": "https://huggingface.co/distilbert/distilbert-base-uncased",
+  "hf_dataset": "rotten_tomatoes",
+  "hf_dataset_url": "https://huggingface.co/datasets/rotten_tomatoes",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_04_pytorch_mlp_classifier.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_04_pytorch_mlp_classifier.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-04-pytorch-autograd-mlp",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-04-pytorch-autograd-mlp",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (0.5 GB VRAM)",
+  "estimated_runtime_seconds": "< 15s tokenization + 5-epoch training loop",
+  "key_learning_takeaway": "Building custom PyTorch nn.Module architectures from scratch, tensor batching, autograd backpropagation, AdamW parameter updates, and loss curve convergence.",
+  "starter_code": "# Module 4: Custom PyTorch Neural Network MLP trained on HF Dataset\nimport torch\nimport torch.nn as nn\nfrom datasets import load_dataset\nfrom transformers import AutoTokenizer\n\n# 1. Load Tokenizer & Stream Dataset\ntokenizer = AutoTokenizer.from_pretrained(\"distilbert/distilbert-base-uncased\")\ndataset = load_dataset(\"rotten_tomatoes\", split=\"train\", streaming=True)\nbatch = list(dataset.take(200))\n\n# 2. Tokenize inputs into PyTorch Tensors\nencodings = tokenizer([b[\"text\"] for b in batch], padding=True, truncation=True, max_length=64, return_tensors=\"pt\")\nlabels = torch.tensor([b[\"label\"] for b in batch], dtype=torch.long)\n\n# 3. Define 3-Layer Deep Neural Network with PyTorch nn.Module\nclass SentimentMLP(nn.Module):\n    def __init__(self, vocab_size=30522, embed_dim=32, hidden_dim=64):\n        super().__init__()\n        self.embedding = nn.Embedding(vocab_size, embed_dim)\n        self.fc1 = nn.Linear(embed_dim, hidden_dim)\n        self.relu = nn.ReLU()\n        self.dropout = nn.Dropout(0.2)\n        self.fc2 = nn.Linear(hidden_dim, 2)\n    def forward(self, input_ids):\n        x = self.embedding(input_ids).mean(dim=1)\n        return self.fc2(self.dropout(self.relu(self.fc1(x))))\n\nmodel = SentimentMLP()\noptimizer = torch.optim.AdamW(model.parameters(), lr=0.01)\ncriterion = nn.CrossEntropyLoss()\n\n# 4. Run 5 Training Epochs with PyTorch Autograd\nfor epoch in range(5):\n    optimizer.zero_grad()\n    logits = model(encodings[\"input_ids\"])\n    loss = criterion(logits, labels)\n    loss.backward()\n    optimizer.step()\n    acc = (logits.argmax(dim=1) == labels).float().mean()\n    print(f\"Epoch {epoch+1}/5 | CrossEntropy Loss: {loss.item():.4f} | Batch Accuracy: {acc*100:.1f}%\")\n",
+  "runnable_starter_code": "# Module 4: Custom PyTorch Neural Network MLP trained on HF Dataset\nimport torch\nimport torch.nn as nn\nfrom datasets import load_dataset\nfrom transformers import AutoTokenizer\n\n# 1. Load Tokenizer & Stream Dataset\ntokenizer = AutoTokenizer.from_pretrained(\"distilbert/distilbert-base-uncased\")\ndataset = load_dataset(\"rotten_tomatoes\", split=\"train\", streaming=True)\nbatch = list(dataset.take(200))\n\n# 2. Tokenize inputs into PyTorch Tensors\nencodings = tokenizer([b[\"text\"] for b in batch], padding=True, truncation=True, max_length=64, return_tensors=\"pt\")\nlabels = torch.tensor([b[\"label\"] for b in batch], dtype=torch.long)\n\n# 3. Define 3-Layer Deep Neural Network with PyTorch nn.Module\nclass SentimentMLP(nn.Module):\n    def __init__(self, vocab_size=30522, embed_dim=32, hidden_dim=64):\n        super().__init__()\n        self.embedding = nn.Embedding(vocab_size, embed_dim)\n        self.fc1 = nn.Linear(embed_dim, hidden_dim)\n        self.relu = nn.ReLU()\n        self.dropout = nn.Dropout(0.2)\n        self.fc2 = nn.Linear(hidden_dim, 2)\n    def forward(self, input_ids):\n        x = self.embedding(input_ids).mean(dim=1)\n        return self.fc2(self.dropout(self.relu(self.fc1(x))))\n\nmodel = SentimentMLP()\noptimizer = torch.optim.AdamW(model.parameters(), lr=0.01)\ncriterion = nn.CrossEntropyLoss()\n\n# 4. Run 5 Training Epochs with PyTorch Autograd\nfor epoch in range(5):\n    optimizer.zero_grad()\n    logits = model(encodings[\"input_ids\"])\n    loss = criterion(logits, labels)\n    loss.backward()\n    optimizer.step()\n    acc = (logits.argmax(dim=1) == labels).float().mean()\n    print(f\"Epoch {epoch+1}/5 | CrossEntropy Loss: {loss.item():.4f} | Batch Accuracy: {acc*100:.1f}%\")\n",
+  "gradio_code": "import gradio as gr, torch, torch.nn as nn\nfrom transformers import AutoTokenizer\n\ntok = AutoTokenizer.from_pretrained(\"distilbert/distilbert-base-uncased\")\nclass MLP(nn.Module):\n    def __init__(self): super().__init__(); self.emb = nn.Embedding(30522, 32); self.fc = nn.Linear(32, 2)\n    def forward(self, x): return self.fc(self.emb(x).mean(dim=1))\nnet = MLP().eval()\n\ndef predict_sentiment(text):\n    ids = tok(text, return_tensors=\"pt\")[\"input_ids\"]\n    with torch.no_grad():\n        probs = torch.softmax(net(ids), dim=-1)[0]\n    return {\"Negative\": float(probs[0]), \"Positive\": float(probs[1])}\n\ndemo = gr.Interface(fn=predict_sentiment, inputs=gr.Textbox(value=\"This movie was pure cinematic poetry!\"), outputs=gr.Label(), title=\"PyTorch Custom Neural Network Classifier\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr, torch, torch.nn as nn\nfrom transformers import AutoTokenizer\n\ntok = AutoTokenizer.from_pretrained(\"distilbert/distilbert-base-uncased\")\nclass MLP(nn.Module):\n    def __init__(self): super().__init__(); self.emb = nn.Embedding(30522, 32); self.fc = nn.Linear(32, 2)\n    def forward(self, x): return self.fc(self.emb(x).mean(dim=1))\nnet = MLP().eval()\n\ndef predict_sentiment(text):\n    ids = tok(text, return_tensors=\"pt\")[\"input_ids\"]\n    with torch.no_grad():\n        probs = torch.softmax(net(ids), dim=-1)[0]\n    return {\"Negative\": float(probs[0]), \"Positive\": float(probs[1])}\n\ndemo = gr.Interface(fn=predict_sentiment, inputs=gr.Textbox(value=\"This movie was pure cinematic poetry!\"), outputs=gr.Label(), title=\"PyTorch Custom Neural Network Classifier\")\ndemo.launch()\n"
+},
+	5: {
+  "module_number": 5,
+  "module_slug": "attention-and-transformers-under-the-hood",
+  "project_title": "Transformer Attention Matrix & Token Saliency Visualizer",
+  "project_slug": "transformer-attention-saliency-visualizer",
+  "hf_model": "gpt2",
+  "hf_model_url": "https://huggingface.co/gpt2",
+  "hf_dataset": "wikitext",
+  "hf_dataset_url": "https://huggingface.co/datasets/wikitext",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_05_attention_matrix.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_05_attention_matrix.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-05-attention-visualizer",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-05-attention-visualizer",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (0.5 GB VRAM)",
+  "estimated_runtime_seconds": "< 15s load, < 0.5s attention tensor extraction",
+  "key_learning_takeaway": "Deconstructing self-attention tensors: Query-Key dot products, softmax scaling, attention head routing, and token saliency visualization.",
+  "starter_code": "# Module 5: Extracting and Inspecting Self-Attention Tensors in Transformers\nimport torch\nfrom transformers import AutoTokenizer, AutoModelForCausalLM\n\n# 1. Load GPT-2 with output_attentions enabled (100% Free on CPU)\nmodel_name = \"gpt2\"\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForCausalLM.from_pretrained(model_name, output_attentions=True)\nmodel.eval()\n\n# 2. Tokenize prompt sentence\ntext = \"The Transformer attention mechanism replaced recurrence with parallel matrix math\"\ninputs = tokenizer(text, return_tensors=\"pt\")\ntokens = tokenizer.convert_ids_to_tokens(inputs[\"input_ids\"][0])\n\n# 3. Forward pass extracting Multi-Head Attention weights\nwith torch.no_grad():\n    outputs = model(**inputs)\n\n# Shape: (num_layers=12, batch=1, num_heads=12, seq_len, seq_len)\nlast_layer_attn = outputs.attentions[-1][0] # Shape: (12, seq_len, seq_len)\navg_attn_heads = last_layer_attn.mean(dim=0) # Average across 12 heads\n\n# 4. Display which past tokens the final token attends to most!\nlast_token_idx = len(tokens) - 1\nattended_weights = avg_attn_heads[last_token_idx].numpy()\n\nprint(f\"Token: '{tokens[last_token_idx]}' attends to earlier tokens:\")\nfor tok, weight in sorted(zip(tokens, attended_weights), key=lambda x: -x[1])[:5]:\n    print(f\"  -> '{tok:15s}': Attention Weight {weight:.4f}\")\n",
+  "runnable_starter_code": "# Module 5: Extracting and Inspecting Self-Attention Tensors in Transformers\nimport torch\nfrom transformers import AutoTokenizer, AutoModelForCausalLM\n\n# 1. Load GPT-2 with output_attentions enabled (100% Free on CPU)\nmodel_name = \"gpt2\"\ntokenizer = AutoTokenizer.from_pretrained(model_name)\nmodel = AutoModelForCausalLM.from_pretrained(model_name, output_attentions=True)\nmodel.eval()\n\n# 2. Tokenize prompt sentence\ntext = \"The Transformer attention mechanism replaced recurrence with parallel matrix math\"\ninputs = tokenizer(text, return_tensors=\"pt\")\ntokens = tokenizer.convert_ids_to_tokens(inputs[\"input_ids\"][0])\n\n# 3. Forward pass extracting Multi-Head Attention weights\nwith torch.no_grad():\n    outputs = model(**inputs)\n\n# Shape: (num_layers=12, batch=1, num_heads=12, seq_len, seq_len)\nlast_layer_attn = outputs.attentions[-1][0] # Shape: (12, seq_len, seq_len)\navg_attn_heads = last_layer_attn.mean(dim=0) # Average across 12 heads\n\n# 4. Display which past tokens the final token attends to most!\nlast_token_idx = len(tokens) - 1\nattended_weights = avg_attn_heads[last_token_idx].numpy()\n\nprint(f\"Token: '{tokens[last_token_idx]}' attends to earlier tokens:\")\nfor tok, weight in sorted(zip(tokens, attended_weights), key=lambda x: -x[1])[:5]:\n    print(f\"  -> '{tok:15s}': Attention Weight {weight:.4f}\")\n",
+  "gradio_code": "import gradio as gr, torch\nfrom transformers import AutoTokenizer, AutoModelForCausalLM\n\ntok = AutoTokenizer.from_pretrained(\"gpt2\")\nmod = AutoModelForCausalLM.from_pretrained(\"gpt2\", output_attentions=True).eval()\n\ndef inspect_attention(sentence):\n    inp = tok(sentence, return_tensors=\"pt\")\n    t = tok.convert_ids_to_tokens(inp[\"input_ids\"][0])\n    with torch.no_grad(): att = mod(**inp).attentions[-1][0].mean(dim=0)[-1]\n    top = sorted(zip(t, att.tolist()), key=lambda x: -x[1])[:5]\n    return \"\\n\".join([f\"'{tok_name}': {w:.2%}\" for tok_name, w in top])\n\ndemo = gr.Interface(fn=inspect_attention, inputs=gr.Textbox(value=\"Artificial intelligence has transformed modern software development\"), outputs=gr.Textbox(label=\"Top Attended Tokens by Last Token\"), title=\"Self-Attention Head Inspector\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr, torch\nfrom transformers import AutoTokenizer, AutoModelForCausalLM\n\ntok = AutoTokenizer.from_pretrained(\"gpt2\")\nmod = AutoModelForCausalLM.from_pretrained(\"gpt2\", output_attentions=True).eval()\n\ndef inspect_attention(sentence):\n    inp = tok(sentence, return_tensors=\"pt\")\n    t = tok.convert_ids_to_tokens(inp[\"input_ids\"][0])\n    with torch.no_grad(): att = mod(**inp).attentions[-1][0].mean(dim=0)[-1]\n    top = sorted(zip(t, att.tolist()), key=lambda x: -x[1])[:5]\n    return \"\\n\".join([f\"'{tok_name}': {w:.2%}\" for tok_name, w in top])\n\ndemo = gr.Interface(fn=inspect_attention, inputs=gr.Textbox(value=\"Artificial intelligence has transformed modern software development\"), outputs=gr.Textbox(label=\"Top Attended Tokens by Last Token\"), title=\"Self-Attention Head Inspector\")\ndemo.launch()\n"
+},
+	6: {
+  "module_number": 6,
+  "module_slug": "building-ai-applications-and-apis",
+  "project_title": "Ami Ka WhatsApp Auto-Responder & Streaming Bot",
+  "project_slug": "whatsapp-auto-responder-streamer",
+  "hf_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "hf_model_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
+  "hf_dataset": "daily_dialog",
+  "hf_dataset_url": "https://huggingface.co/datasets/daily_dialog",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_06_streaming_ai_bot.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_06_streaming_ai_bot.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-06-whatsapp-streaming-responder",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-06-whatsapp-streaming-responder",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (1.0 GB VRAM)",
+  "estimated_runtime_seconds": "< 25s load, real-time token streaming",
+  "key_learning_takeaway": "Implementing asynchronous token streaming via TextIteratorStreamer, conversation state management, and real-time interactive chat interfaces.",
+  "starter_code": "# Module 6: Real-time Token Streaming AI API with Qwen2.5-0.5B\nimport threading\nfrom transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer\n\n# 1. Load ultra-efficient SOTA Qwen2.5-0.5B-Instruct (Zero API key needed)\nmodel_id = \"Qwen/Qwen2.5-0.5B-Instruct\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id)\n\n# 2. System prompt injecting persona and instructions\nchat = [\n    {\"role\": \"system\", \"content\": \"Aap ek fikar-mand Pakistani Ammi hain jo Roman Urdu mein loving aur thori strict nasihat karti hain. Jawab mukhtasar dein.\"},\n    {\"role\": \"user\", \"content\": \"Ammi mein raat 2 baje doston ke sath chai peene ja raha hoon.\"}\n]\nprompt = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\ninputs = tokenizer(prompt, return_tensors=\"pt\")\n\n# 3. Stream tokens asynchronously using TextIteratorStreamer\nstreamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)\nthread = threading.Thread(target=model.generate, kwargs={**inputs, \"streamer\": streamer, \"max_new_tokens\": 120, \"temperature\": 0.7})\nthread.start()\n\nprint(\"Streaming Ammi's WhatsApp Response:\")\nfor token in streamer:\n    print(token, end=\"\", flush=True)\nprint(\"\\n[Stream Finished]\")\n",
+  "runnable_starter_code": "# Module 6: Real-time Token Streaming AI API with Qwen2.5-0.5B\nimport threading\nfrom transformers import AutoModelForCausalLM, AutoTokenizer, TextIteratorStreamer\n\n# 1. Load ultra-efficient SOTA Qwen2.5-0.5B-Instruct (Zero API key needed)\nmodel_id = \"Qwen/Qwen2.5-0.5B-Instruct\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id)\n\n# 2. System prompt injecting persona and instructions\nchat = [\n    {\"role\": \"system\", \"content\": \"Aap ek fikar-mand Pakistani Ammi hain jo Roman Urdu mein loving aur thori strict nasihat karti hain. Jawab mukhtasar dein.\"},\n    {\"role\": \"user\", \"content\": \"Ammi mein raat 2 baje doston ke sath chai peene ja raha hoon.\"}\n]\nprompt = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\ninputs = tokenizer(prompt, return_tensors=\"pt\")\n\n# 3. Stream tokens asynchronously using TextIteratorStreamer\nstreamer = TextIteratorStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)\nthread = threading.Thread(target=model.generate, kwargs={**inputs, \"streamer\": streamer, \"max_new_tokens\": 120, \"temperature\": 0.7})\nthread.start()\n\nprint(\"Streaming Ammi's WhatsApp Response:\")\nfor token in streamer:\n    print(token, end=\"\", flush=True)\nprint(\"\\n[Stream Finished]\")\n",
+  "gradio_code": "import gradio as gr\nfrom transformers import pipeline\n\nbot = pipeline(\"text-generation\", model=\"Qwen/Qwen2.5-0.5B-Instruct\")\n\ndef ammi_reply(message, history):\n    chat = [{\"role\": \"system\", \"content\": \"Aap fikar-mand Ammi hain jo Roman Urdu mein humorous nasihat karti hain.\"}]\n    for u, a in history:\n        chat.extend([{\"role\": \"user\", \"content\": u}, {\"role\": \"assistant\", \"content\": a}])\n    chat.append({\"role\": \"user\", \"content\": message})\n    prompt = bot.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\n    out = bot(prompt, max_new_tokens=100, temperature=0.7, do_sample=True)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ngr.ChatInterface(fn=ammi_reply, title=\"Ami Ka WhatsApp Auto-Responder Bot\").launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom transformers import pipeline\n\nbot = pipeline(\"text-generation\", model=\"Qwen/Qwen2.5-0.5B-Instruct\")\n\ndef ammi_reply(message, history):\n    chat = [{\"role\": \"system\", \"content\": \"Aap fikar-mand Ammi hain jo Roman Urdu mein humorous nasihat karti hain.\"}]\n    for u, a in history:\n        chat.extend([{\"role\": \"user\", \"content\": u}, {\"role\": \"assistant\", \"content\": a}])\n    chat.append({\"role\": \"user\", \"content\": message})\n    prompt = bot.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\n    out = bot(prompt, max_new_tokens=100, temperature=0.7, do_sample=True)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ngr.ChatInterface(fn=ammi_reply, title=\"Ami Ka WhatsApp Auto-Responder Bot\").launch()\n"
+},
+	7: {
+  "module_number": 7,
+  "module_slug": "vector-databases-and-modern-rag",
+  "project_title": "Grandma's Secret Biryani Recipe RAG Engine",
+  "project_slug": "biryani-recipe-rag-engine",
+  "hf_model": "BAAI/bge-small-en-v1.5",
+  "hf_model_url": "https://huggingface.co/BAAI/bge-small-en-v1.5",
+  "hf_dataset": "m-ric/huggingface_doc",
+  "hf_dataset_url": "https://huggingface.co/datasets/m-ric/huggingface_doc",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_07_vector_rag_engine.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_07_vector_rag_engine.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-07-recipe-rag-vector-search",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-07-recipe-rag-vector-search",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (1.2 GB VRAM)",
+  "estimated_runtime_seconds": "< 25s total load, < 1s retrieval + generation",
+  "key_learning_takeaway": "Building an end-to-end Retrieval-Augmented Generation (RAG) system with dense BGE embeddings, Top-K semantic similarity search, and hallucination-free generation.",
+  "starter_code": "# Module 7: In-Memory Vector RAG with BGE Embeddings + SmolLM2 Generation\nimport numpy as np\nfrom sentence_transformers import SentenceTransformer\nfrom transformers import pipeline\n\n# 1. Load BGE Embedding model (384-dim) & Generator model (SmolLM2-360M)\nembedder = SentenceTransformer(\"BAAI/bge-small-en-v1.5\")\ngenerator = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\n\n# 2. Knowledge Base Chunks (Grandma's Secret Recipes)\nknowledge_base = [\n    \"Grandma's secret for beef biryani is adding 4 drops of kewra water and dried plums (aloo bukhara) during the dum phase.\",\n    \"For soft and crispy parathas, knead the dough with warm milk, a pinch of salt, and rest it for 30 minutes before ghee layering.\",\n    \"The secret to rich haleem is slow cooking 4 different lentils and barley with shredded mutton for 6 hours.\"\n]\nkb_embeddings = embedder.encode(knowledge_base)\n\n# 3. Retrieve relevant context via Cosine Vector Search\nquery = \"What makes grandma's beef biryani taste so authentic and special?\"\nquery_emb = embedder.encode(query)\nsimilarities = np.dot(kb_embeddings, query_emb) / (np.linalg.norm(kb_embeddings, axis=1) * np.linalg.norm(query_emb))\nbest_chunk = knowledge_base[int(np.argmax(similarities))]\n\n# 4. Synthesize Answer Grounded in Retrieved Context\nprompt = f\"Context: {best_chunk}\\n\\nQuestion: {query}\\nAnswer based strictly on the context:\"\nresponse = generator(prompt, max_new_tokens=60, temperature=0.3)[0][\"generated_text\"][len(prompt):]\nprint(f\"Retrieved Context: {best_chunk}\\n\" + \"-\"*50 + f\"\\nRAG Answer: {response.strip()}\")\n",
+  "runnable_starter_code": "# Module 7: In-Memory Vector RAG with BGE Embeddings + SmolLM2 Generation\nimport numpy as np\nfrom sentence_transformers import SentenceTransformer\nfrom transformers import pipeline\n\n# 1. Load BGE Embedding model (384-dim) & Generator model (SmolLM2-360M)\nembedder = SentenceTransformer(\"BAAI/bge-small-en-v1.5\")\ngenerator = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\n\n# 2. Knowledge Base Chunks (Grandma's Secret Recipes)\nknowledge_base = [\n    \"Grandma's secret for beef biryani is adding 4 drops of kewra water and dried plums (aloo bukhara) during the dum phase.\",\n    \"For soft and crispy parathas, knead the dough with warm milk, a pinch of salt, and rest it for 30 minutes before ghee layering.\",\n    \"The secret to rich haleem is slow cooking 4 different lentils and barley with shredded mutton for 6 hours.\"\n]\nkb_embeddings = embedder.encode(knowledge_base)\n\n# 3. Retrieve relevant context via Cosine Vector Search\nquery = \"What makes grandma's beef biryani taste so authentic and special?\"\nquery_emb = embedder.encode(query)\nsimilarities = np.dot(kb_embeddings, query_emb) / (np.linalg.norm(kb_embeddings, axis=1) * np.linalg.norm(query_emb))\nbest_chunk = knowledge_base[int(np.argmax(similarities))]\n\n# 4. Synthesize Answer Grounded in Retrieved Context\nprompt = f\"Context: {best_chunk}\\n\\nQuestion: {query}\\nAnswer based strictly on the context:\"\nresponse = generator(prompt, max_new_tokens=60, temperature=0.3)[0][\"generated_text\"][len(prompt):]\nprint(f\"Retrieved Context: {best_chunk}\\n\" + \"-\"*50 + f\"\\nRAG Answer: {response.strip()}\")\n",
+  "gradio_code": "import gradio as gr, numpy as np\nfrom sentence_transformers import SentenceTransformer\nfrom transformers import pipeline\n\nemb = SentenceTransformer(\"BAAI/bge-small-en-v1.5\")\ngen = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\ndocs = [\"Kewra water and aloo bukhara make beef biryani legendary.\", \"Knead paratha dough with warm milk and pure desi ghee.\", \"Haleem requires slow-cooked wheat, barley and shredded beef.\"]\ndoc_vecs = emb.encode(docs)\n\ndef ask_rag(question):\n    q_vec = emb.encode(question)\n    top_doc = docs[int(np.argmax(np.dot(doc_vecs, q_vec)))]\n    prompt = f\"Context: {top_doc}\\nQuestion: {question}\\nAnswer:\"\n    res = gen(prompt, max_new_tokens=40, temperature=0.2)[0][\"generated_text\"][len(prompt):]\n    return f\"Retrieved: {top_doc}\\n\\nAnswer: {res.strip()}\"\n\ndemo = gr.Interface(fn=ask_rag, inputs=gr.Textbox(value=\"How to make biryani taste special?\"), outputs=gr.Textbox(), title=\"Grandma's Secret Recipe RAG Assistant\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr, numpy as np\nfrom sentence_transformers import SentenceTransformer\nfrom transformers import pipeline\n\nemb = SentenceTransformer(\"BAAI/bge-small-en-v1.5\")\ngen = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\ndocs = [\"Kewra water and aloo bukhara make beef biryani legendary.\", \"Knead paratha dough with warm milk and pure desi ghee.\", \"Haleem requires slow-cooked wheat, barley and shredded beef.\"]\ndoc_vecs = emb.encode(docs)\n\ndef ask_rag(question):\n    q_vec = emb.encode(question)\n    top_doc = docs[int(np.argmax(np.dot(doc_vecs, q_vec)))]\n    prompt = f\"Context: {top_doc}\\nQuestion: {question}\\nAnswer:\"\n    res = gen(prompt, max_new_tokens=40, temperature=0.2)[0][\"generated_text\"][len(prompt):]\n    return f\"Retrieved: {top_doc}\\n\\nAnswer: {res.strip()}\"\n\ndemo = gr.Interface(fn=ask_rag, inputs=gr.Textbox(value=\"How to make biryani taste special?\"), outputs=gr.Textbox(), title=\"Grandma's Secret Recipe RAG Assistant\")\ndemo.launch()\n"
+},
+	8: {
+  "module_number": 8,
+  "module_slug": "autonomous-agents-and-tool-use",
+  "project_title": "Aggressive Salary Negotiation AI Agent Swarm",
+  "project_slug": "salary-negotiation-smolagent",
+  "hf_model": "Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "hf_model_url": "https://huggingface.co/Qwen/Qwen2.5-Coder-1.5B-Instruct",
+  "hf_dataset": "Open-Orca/OpenOrca",
+  "hf_dataset_url": "https://huggingface.co/datasets/Open-Orca/OpenOrca",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_08_smolagents_tools.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_08_smolagents_tools.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-08-salary-negotiation-agent",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-08-salary-negotiation-agent",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (3.0 GB VRAM or HF Inference API)",
+  "estimated_runtime_seconds": "< 40s load, dynamic agentic loop execution",
+  "key_learning_takeaway": "Autonomous tool calling using Hugging Face smolagents CodeAgent: writing and executing Python calculations dynamically to solve multi-step problems.",
+  "starter_code": "# Module 8: Autonomous Agent with Custom Python Tools using smolagents\nfrom smolagents import CodeAgent, HfApiModel, tool\n\n# 1. Define custom python tool with typed docstring for the agent\n@tool\ndef calculate_counter_offer(current_salary: float, target_increase_pct: float, inflation_rate: float) -> str:\n    \"\"\"Calculates optimal counter-offer salary and monthly take-home.\n    Args:\n        current_salary: Current annual compensation in USD\n        target_increase_pct: Desired raise percentage (e.g. 20.0)\n        inflation_rate: Current annual inflation rate (e.g. 5.5)\n    \"\"\"\n    adjusted_raise = target_increase_pct + inflation_rate\n    counter = current_salary * (1 + adjusted_raise / 100.0)\n    return f\"Proposed Counter-Offer: ${counter:,.2f} (Total Raise: {adjusted_raise:.1f}%)\"\n\n# 2. Instantiate CodeAgent powered by Qwen2.5-Coder-1.5B\nmodel = HfApiModel(model_id=\"Qwen/Qwen2.5-Coder-1.5B-Instruct\")\nagent = CodeAgent(tools=[calculate_counter_offer], model=model, add_base_tools=False)\n\n# 3. Agent writes and runs code autonomously to fulfill goal\ntask = \"I make $85,000 as a Senior AI Engineer. Compute my counter-offer with 25% target raise and 6% inflation, and write a firm negotiation rationale.\"\nprint(\"=== smolagents Autonomous Execution ===\")\nresponse = agent.run(task)\nprint(response)\n",
+  "runnable_starter_code": "# Module 8: Autonomous Agent with Custom Python Tools using smolagents\nfrom smolagents import CodeAgent, HfApiModel, tool\n\n# 1. Define custom python tool with typed docstring for the agent\n@tool\ndef calculate_counter_offer(current_salary: float, target_increase_pct: float, inflation_rate: float) -> str:\n    \"\"\"Calculates optimal counter-offer salary and monthly take-home.\n    Args:\n        current_salary: Current annual compensation in USD\n        target_increase_pct: Desired raise percentage (e.g. 20.0)\n        inflation_rate: Current annual inflation rate (e.g. 5.5)\n    \"\"\"\n    adjusted_raise = target_increase_pct + inflation_rate\n    counter = current_salary * (1 + adjusted_raise / 100.0)\n    return f\"Proposed Counter-Offer: ${counter:,.2f} (Total Raise: {adjusted_raise:.1f}%)\"\n\n# 2. Instantiate CodeAgent powered by Qwen2.5-Coder-1.5B\nmodel = HfApiModel(model_id=\"Qwen/Qwen2.5-Coder-1.5B-Instruct\")\nagent = CodeAgent(tools=[calculate_counter_offer], model=model, add_base_tools=False)\n\n# 3. Agent writes and runs code autonomously to fulfill goal\ntask = \"I make $85,000 as a Senior AI Engineer. Compute my counter-offer with 25% target raise and 6% inflation, and write a firm negotiation rationale.\"\nprint(\"=== smolagents Autonomous Execution ===\")\nresponse = agent.run(task)\nprint(response)\n",
+  "gradio_code": "import gradio as gr\nfrom smolagents import CodeAgent, HfApiModel, tool\n\n@tool\ndef salary_math(base: float, raise_pct: float) -> str:\n    \"\"\"Calculates new salary given base and desired raise percentage.\"\"\"\n    return f\"Target: ${base * (1 + raise_pct/100):,.2f}\"\n\nagent = CodeAgent(tools=[salary_math], model=HfApiModel(\"Qwen/Qwen2.5-Coder-1.5B-Instruct\"))\n\ndef negotiate(role, current_comp, raise_wanted):\n    query = f\"I am a {role} earning ${current_comp}. Calculate my target at {raise_wanted}% raise and give a negotiation pitch.\"\n    return str(agent.run(query))\n\ndemo = gr.Interface(fn=negotiate, inputs=[\"Senior Dev\", 90000, 20], outputs=gr.Textbox(lines=8), title=\"AI Salary Negotiation Agent (smolagents)\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom smolagents import CodeAgent, HfApiModel, tool\n\n@tool\ndef salary_math(base: float, raise_pct: float) -> str:\n    \"\"\"Calculates new salary given base and desired raise percentage.\"\"\"\n    return f\"Target: ${base * (1 + raise_pct/100):,.2f}\"\n\nagent = CodeAgent(tools=[salary_math], model=HfApiModel(\"Qwen/Qwen2.5-Coder-1.5B-Instruct\"))\n\ndef negotiate(role, current_comp, raise_wanted):\n    query = f\"I am a {role} earning ${current_comp}. Calculate my target at {raise_wanted}% raise and give a negotiation pitch.\"\n    return str(agent.run(query))\n\ndemo = gr.Interface(fn=negotiate, inputs=[\"Senior Dev\", 90000, 20], outputs=gr.Textbox(lines=8), title=\"AI Salary Negotiation Agent (smolagents)\")\ndemo.launch()\n"
+},
+	9: {
+  "module_number": 9,
+  "module_slug": "fine-tuning-and-model-adaptation",
+  "project_title": "Roman Urdu Sarcasm & Roast LoRA Fine-Tuning Engine",
+  "project_slug": "roman-urdu-lora-sft-engine",
+  "hf_model": "Qwen/Qwen2.5-0.5B-Instruct",
+  "hf_model_url": "https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct",
+  "hf_dataset": "tatsu-lab/alpaca",
+  "hf_dataset_url": "https://huggingface.co/datasets/tatsu-lab/alpaca",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_09_lora_qlora_sft.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_09_lora_qlora_sft.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-09-roman-urdu-lora-finetuning",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-09-roman-urdu-lora-finetuning",
+  "hardware_requirement": "Free Colab T4 GPU (1.8 GB VRAM)",
+  "estimated_runtime_seconds": "< 30s model load, < 1 min LoRA fine-tuning run",
+  "key_learning_takeaway": "Parameter-Efficient Fine-Tuning (PEFT) mechanics: injecting low-rank decomposition matrices (LoRA) into attention projections and training with TRL SFTTrainer on free T4 hardware.",
+  "starter_code": "# Module 9: Parameter-Efficient Fine-Tuning (PEFT) with LoRA & TRL SFTTrainer\nimport torch\nfrom datasets import Dataset\nfrom peft import LoraConfig, get_peft_model, TaskType\nfrom transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments\nfrom trl import SFTTrainer\n\n# 1. Load Lightweight Base Model (Runs in < 2GB VRAM on Colab T4)\nmodel_id = \"Qwen/Qwen2.5-0.5B-Instruct\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32)\n\n# 2. Attach LoRA Adapter (< 1% trainable parameters!)\npeft_config = LoraConfig(\n    task_type=TaskType.CAUSAL_LM,\n    r=8, lora_alpha=16, lora_dropout=0.05,\n    target_modules=[\"q_proj\", \"v_proj\"]\n)\nmodel = get_peft_model(model, peft_config)\nmodel.print_trainable_parameters()\n\n# 3. Create synthetic Roman Urdu instruction dataset\ndata = [\n    {\"prompt\": \"User: Dost ne udhaar manga hai, kya kahun?\\nRoast Bot:\", \"completion\": \" Keh do ke paise to nahi hain, par duaon mein hamesha yaad rakhunga!\"},\n    {\"prompt\": \"User: Shaadi mein khana kaisa tha?\\nRoast Bot:\", \"completion\": \" Biryani mein boti dhoondna NASA ke mars mission se zyada mushkil tha.\"}\n]\ndataset = Dataset.from_list([{\"text\": d[\"prompt\"] + d[\"completion\"]} for d in data])\n\n# 4. Configure Fast SFT Trainer (1 Epoch in < 10 seconds)\ntrain_args = TrainingArguments(output_dir=\"./lora_out\", max_steps=3, per_device_train_batch_size=2, logging_steps=1)\ntrainer = SFTTrainer(model=model, train_dataset=dataset, dataset_text_field=\"text\", args=train_args)\ntrainer.train()\nprint(\"LoRA Fine-Tuning completed successfully on Free Tier!\")\n",
+  "runnable_starter_code": "# Module 9: Parameter-Efficient Fine-Tuning (PEFT) with LoRA & TRL SFTTrainer\nimport torch\nfrom datasets import Dataset\nfrom peft import LoraConfig, get_peft_model, TaskType\nfrom transformers import AutoModelForCausalLM, AutoTokenizer, TrainingArguments\nfrom trl import SFTTrainer\n\n# 1. Load Lightweight Base Model (Runs in < 2GB VRAM on Colab T4)\nmodel_id = \"Qwen/Qwen2.5-0.5B-Instruct\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32)\n\n# 2. Attach LoRA Adapter (< 1% trainable parameters!)\npeft_config = LoraConfig(\n    task_type=TaskType.CAUSAL_LM,\n    r=8, lora_alpha=16, lora_dropout=0.05,\n    target_modules=[\"q_proj\", \"v_proj\"]\n)\nmodel = get_peft_model(model, peft_config)\nmodel.print_trainable_parameters()\n\n# 3. Create synthetic Roman Urdu instruction dataset\ndata = [\n    {\"prompt\": \"User: Dost ne udhaar manga hai, kya kahun?\\nRoast Bot:\", \"completion\": \" Keh do ke paise to nahi hain, par duaon mein hamesha yaad rakhunga!\"},\n    {\"prompt\": \"User: Shaadi mein khana kaisa tha?\\nRoast Bot:\", \"completion\": \" Biryani mein boti dhoondna NASA ke mars mission se zyada mushkil tha.\"}\n]\ndataset = Dataset.from_list([{\"text\": d[\"prompt\"] + d[\"completion\"]} for d in data])\n\n# 4. Configure Fast SFT Trainer (1 Epoch in < 10 seconds)\ntrain_args = TrainingArguments(output_dir=\"./lora_out\", max_steps=3, per_device_train_batch_size=2, logging_steps=1)\ntrainer = SFTTrainer(model=model, train_dataset=dataset, dataset_text_field=\"text\", args=train_args)\ntrainer.train()\nprint(\"LoRA Fine-Tuning completed successfully on Free Tier!\")\n",
+  "gradio_code": "import gradio as gr\nfrom transformers import pipeline\n\nroast_bot = pipeline(\"text-generation\", model=\"Qwen/Qwen2.5-0.5B-Instruct\")\n\ndef generate_roast(situation):\n    prompt = f\"Act as a hilarious sarcastic Pakistani friend replying in witty Roman Urdu.\\nSituation: {situation}\\nSarcastic Reply:\"\n    out = roast_bot(prompt, max_new_tokens=60, temperature=0.8, do_sample=True)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ndemo = gr.Interface(\n    fn=generate_roast,\n    inputs=gr.Textbox(label=\"Daily Life Situation\", value=\"Friend asks for free AI advice at 3 AM\"),\n    outputs=gr.Textbox(label=\"Witty Roman Urdu Roast\"),\n    title=\"Roman Urdu Roast & Sarcasm AI Engine\"\n)\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom transformers import pipeline\n\nroast_bot = pipeline(\"text-generation\", model=\"Qwen/Qwen2.5-0.5B-Instruct\")\n\ndef generate_roast(situation):\n    prompt = f\"Act as a hilarious sarcastic Pakistani friend replying in witty Roman Urdu.\\nSituation: {situation}\\nSarcastic Reply:\"\n    out = roast_bot(prompt, max_new_tokens=60, temperature=0.8, do_sample=True)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ndemo = gr.Interface(\n    fn=generate_roast,\n    inputs=gr.Textbox(label=\"Daily Life Situation\", value=\"Friend asks for free AI advice at 3 AM\"),\n    outputs=gr.Textbox(label=\"Witty Roman Urdu Roast\"),\n    title=\"Roman Urdu Roast & Sarcasm AI Engine\"\n)\ndemo.launch()\n"
+},
+	10: {
+  "module_number": 10,
+  "module_slug": "ai-safety-evals-and-guardrails",
+  "project_title": "Phuppo-Proof Family WhatsApp Content Guardrail Firewall",
+  "project_slug": "family-guardrail-firewall",
+  "hf_model": "unitary/toxic-bert",
+  "hf_model_url": "https://huggingface.co/unitary/toxic-bert",
+  "hf_dataset": "oxford-nlp/toxic-conversations-50k",
+  "hf_dataset_url": "https://huggingface.co/datasets/oxford-nlp/toxic-conversations-50k",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_10_guardrails_safety.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_10_guardrails_safety.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-10-phuppo-proof-guardrail",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-10-phuppo-proof-guardrail",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (1.2 GB VRAM)",
+  "estimated_runtime_seconds": "< 20s load, < 0.2s guardrail check",
+  "key_learning_takeaway": "Implementing programmatic AI safety guardrails: pre-generation toxicity filtering with Toxic-BERT, thresholding, and responsible AI system architecture.",
+  "starter_code": "# Module 10: Two-Stage AI Safety Guardrail Pipeline (Toxic-BERT + Clean Synthesis)\nfrom transformers import pipeline\n\n# 1. Load Pre-Trained Toxicity Guardrail Model (Classifies 6 categories of harm)\nguardrail = pipeline(\"text-classification\", model=\"unitary/toxic-bert\", top_k=None)\ngenerator = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\n\n# 2. Test candidate messages (benign vs hostile prompt injection)\ntest_messages = [\n    \"Khala jaan ki beti ki shaadi pe bohot mubarakbaad sab ko!\",\n    \"I will hack your account and post humiliating insults in the family group right now.\"\n]\n\ndef family_firewall(message: str) -> dict:\n    scores = {item[\"label\"]: item[\"score\"] for item in guardrail(message)[0]}\n    is_unsafe = scores.get(\"toxic\", 0.0) > 0.6 or scores.get(\"threat\", 0.0) > 0.5\n    if is_unsafe:\n        return {\"status\": \"BLOCKED ❌\", \"reason\": \"High toxicity / threat score\", \"scores\": scores}\n    # Pass to LLM generator if safe\n    response = generator(f\"Polite reply to: {message}\", max_new_tokens=40)[0][\"generated_text\"]\n    return {\"status\": \"ALLOWED ✅\", \"ai_response\": response, \"scores\": scores}\n\nprint(\"=== Family Group Safety Guardrail Firewall ===\")\nfor msg in test_messages:\n    result = family_firewall(msg)\n    print(f\"\\nMessage: '{msg}'\\nDecision: {result['status']}\")\n    if \"reason\" in result:\n        print(f\"Reason: {result['reason']} (Toxic Score: {result['scores']['toxic']:.4f})\")\n",
+  "runnable_starter_code": "# Module 10: Two-Stage AI Safety Guardrail Pipeline (Toxic-BERT + Clean Synthesis)\nfrom transformers import pipeline\n\n# 1. Load Pre-Trained Toxicity Guardrail Model (Classifies 6 categories of harm)\nguardrail = pipeline(\"text-classification\", model=\"unitary/toxic-bert\", top_k=None)\ngenerator = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\n\n# 2. Test candidate messages (benign vs hostile prompt injection)\ntest_messages = [\n    \"Khala jaan ki beti ki shaadi pe bohot mubarakbaad sab ko!\",\n    \"I will hack your account and post humiliating insults in the family group right now.\"\n]\n\ndef family_firewall(message: str) -> dict:\n    scores = {item[\"label\"]: item[\"score\"] for item in guardrail(message)[0]}\n    is_unsafe = scores.get(\"toxic\", 0.0) > 0.6 or scores.get(\"threat\", 0.0) > 0.5\n    if is_unsafe:\n        return {\"status\": \"BLOCKED ❌\", \"reason\": \"High toxicity / threat score\", \"scores\": scores}\n    # Pass to LLM generator if safe\n    response = generator(f\"Polite reply to: {message}\", max_new_tokens=40)[0][\"generated_text\"]\n    return {\"status\": \"ALLOWED ✅\", \"ai_response\": response, \"scores\": scores}\n\nprint(\"=== Family Group Safety Guardrail Firewall ===\")\nfor msg in test_messages:\n    result = family_firewall(msg)\n    print(f\"\\nMessage: '{msg}'\\nDecision: {result['status']}\")\n    if \"reason\" in result:\n        print(f\"Reason: {result['reason']} (Toxic Score: {result['scores']['toxic']:.4f})\")\n",
+  "gradio_code": "import gradio as gr\nfrom transformers import pipeline\n\nguard = pipeline(\"text-classification\", model=\"unitary/toxic-bert\", top_k=None)\n\ndef test_guardrail(chat_message):\n    scores = {res[\"label\"]: res[\"score\"] for res in guard(chat_message)[0]}\n    toxic = scores.get(\"toxic\", 0.0)\n    verdict = \"[BLOCKED] Inappropriate Content!\" if toxic > 0.5 else \"✅ APPROVED: Family Friendly\"\n    return f\"{verdict}\\n\\nToxicity Score: {toxic:.2%}\\nInsult Score: {scores.get('insult', 0.0):.2%}\"\n\ndemo = gr.Interface(fn=test_guardrail, inputs=gr.Textbox(value=\"You all are terrible people!\"), outputs=gr.Textbox(), title=\"Family WhatsApp Guardrail Firewall\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom transformers import pipeline\n\nguard = pipeline(\"text-classification\", model=\"unitary/toxic-bert\", top_k=None)\n\ndef test_guardrail(chat_message):\n    scores = {res[\"label\"]: res[\"score\"] for res in guard(chat_message)[0]}\n    toxic = scores.get(\"toxic\", 0.0)\n    verdict = \"[BLOCKED] Inappropriate Content!\" if toxic > 0.5 else \"✅ APPROVED: Family Friendly\"\n    return f\"{verdict}\\n\\nToxicity Score: {toxic:.2%}\\nInsult Score: {scores.get('insult', 0.0):.2%}\"\n\ndemo = gr.Interface(fn=test_guardrail, inputs=gr.Textbox(value=\"You all are terrible people!\"), outputs=gr.Textbox(), title=\"Family WhatsApp Guardrail Firewall\")\ndemo.launch()\n"
+},
+	11: {
+  "module_number": 11,
+  "module_slug": "production-ai-engineering-mlops",
+  "project_title": "DeepSeek-R1 Sub-50ms Low-Latency Inference Benchmark",
+  "project_slug": "deepseek-r1-latency-benchmark",
+  "hf_model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+  "hf_model_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+  "hf_dataset": "gsm8k",
+  "hf_dataset_url": "https://huggingface.co/datasets/gsm8k",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_11_production_benchmark.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_11_production_benchmark.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-11-deepseek-r1-inference-benchmark",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-11-deepseek-r1-inference-benchmark",
+  "hardware_requirement": "Free Colab T4 GPU (3.2 GB VRAM FP16)",
+  "estimated_runtime_seconds": "< 35s load, 45+ tokens/second throughput",
+  "key_learning_takeaway": "Benchmarking inference throughput (tokens/sec), latency profiling, memory consumption telemetry, and comparing FP16 vs quantized execution on production open-weight models.",
+  "starter_code": "# Module 11: High-Performance Latency & Throughput Benchmark on DeepSeek-R1 Distill\nimport time\nimport torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\n# 1. Load SOTA 2025 DeepSeek-R1 Reasoning Distill Model in 16-bit float\nmodel_id = \"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\"\ndevice = \"cuda\" if torch.cuda.is_available() else \"cpu\"\ndtype = torch.float16 if torch.cuda.is_available() else torch.float32\n\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=dtype).to(device)\n\n# 2. Grade School Math Reasoning Prompt (GSM8K format)\nprompt = \"Question: A train travels 120 km in 2 hours. It then increases speed by 20 km/h for the next 3 hours. What is the total distance traveled?\\nThink step-by-step:\"\ninputs = tokenizer(prompt, return_tensors=\"pt\").to(device)\n\n# 3. Benchmark Warm-Up & High-Precision Timing\nt0 = time.perf_counter()\nwith torch.no_grad():\n    output_tokens = model.generate(**inputs, max_new_tokens=100, do_sample=False)\nlatency = time.perf_counter() - t0\n\n# 4. Measure Throughput (Tokens per Second)\nnum_generated = output_tokens.shape[1] - inputs[\"input_ids\"].shape[1]\ntps = num_generated / latency\nprint(f\"Device: {device.upper()} | Model: {model_id}\")\nprint(f\"Tokens Generated: {num_generated} | Total Latency: {latency:.3f}s\")\nprint(f\"Throughput: {tps:.2f} tokens/second\")\nprint(\"\\nGenerated Reasoning:\\n\" + tokenizer.decode(output_tokens[0][inputs[\"input_ids\"].shape[1]:], skip_special_tokens=True))\n",
+  "runnable_starter_code": "# Module 11: High-Performance Latency & Throughput Benchmark on DeepSeek-R1 Distill\nimport time\nimport torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\n# 1. Load SOTA 2025 DeepSeek-R1 Reasoning Distill Model in 16-bit float\nmodel_id = \"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\"\ndevice = \"cuda\" if torch.cuda.is_available() else \"cpu\"\ndtype = torch.float16 if torch.cuda.is_available() else torch.float32\n\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=dtype).to(device)\n\n# 2. Grade School Math Reasoning Prompt (GSM8K format)\nprompt = \"Question: A train travels 120 km in 2 hours. It then increases speed by 20 km/h for the next 3 hours. What is the total distance traveled?\\nThink step-by-step:\"\ninputs = tokenizer(prompt, return_tensors=\"pt\").to(device)\n\n# 3. Benchmark Warm-Up & High-Precision Timing\nt0 = time.perf_counter()\nwith torch.no_grad():\n    output_tokens = model.generate(**inputs, max_new_tokens=100, do_sample=False)\nlatency = time.perf_counter() - t0\n\n# 4. Measure Throughput (Tokens per Second)\nnum_generated = output_tokens.shape[1] - inputs[\"input_ids\"].shape[1]\ntps = num_generated / latency\nprint(f\"Device: {device.upper()} | Model: {model_id}\")\nprint(f\"Tokens Generated: {num_generated} | Total Latency: {latency:.3f}s\")\nprint(f\"Throughput: {tps:.2f} tokens/second\")\nprint(\"\\nGenerated Reasoning:\\n\" + tokenizer.decode(output_tokens[0][inputs[\"input_ids\"].shape[1]:], skip_special_tokens=True))\n",
+  "gradio_code": "import gradio as gr, time, torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\nmid = \"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\"\ntok = AutoTokenizer.from_pretrained(mid)\nmod = AutoModelForCausalLM.from_pretrained(mid, torch_dtype=torch.float32)\n\ndef benchmark_inference(prompt):\n    inp = tok(prompt, return_tensors=\"pt\")\n    t0 = time.perf_counter()\n    with torch.no_grad(): out = mod.generate(**inp, max_new_tokens=75)\n    t = time.perf_counter() - t0\n    toks = out.shape[1] - inp[\"input_ids\"].shape[1]\n    ans = tok.decode(out[0][inp[\"input_ids\"].shape[1]:], skip_special_tokens=True)\n    return ans, f\"{toks/t:.1f} tokens/sec ({t:.2f}s total)\"\n\ndemo = gr.Interface(fn=benchmark_inference, inputs=gr.Textbox(value=\"Calculate: 25 * 14 + 180\"), outputs=[gr.Textbox(label=\"Reasoning Solution\"), gr.Textbox(label=\"Latency Telemetry\")], title=\"DeepSeek-R1 Latency Benchmark\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr, time, torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\nmid = \"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\"\ntok = AutoTokenizer.from_pretrained(mid)\nmod = AutoModelForCausalLM.from_pretrained(mid, torch_dtype=torch.float32)\n\ndef benchmark_inference(prompt):\n    inp = tok(prompt, return_tensors=\"pt\")\n    t0 = time.perf_counter()\n    with torch.no_grad(): out = mod.generate(**inp, max_new_tokens=75)\n    t = time.perf_counter() - t0\n    toks = out.shape[1] - inp[\"input_ids\"].shape[1]\n    ans = tok.decode(out[0][inp[\"input_ids\"].shape[1]:], skip_special_tokens=True)\n    return ans, f\"{toks/t:.1f} tokens/sec ({t:.2f}s total)\"\n\ndemo = gr.Interface(fn=benchmark_inference, inputs=gr.Textbox(value=\"Calculate: 25 * 14 + 180\"), outputs=[gr.Textbox(label=\"Reasoning Solution\"), gr.Textbox(label=\"Latency Telemetry\")], title=\"DeepSeek-R1 Latency Benchmark\")\ndemo.launch()\n"
+},
+	12: {
+  "module_number": 12,
+  "module_slug": "multimodal-ai-and-vision",
+  "project_title": "Doctor Prescription OCR & Audio Transcriber",
+  "project_slug": "prescription-ocr-audio-transcriber",
+  "hf_model": "openai/whisper-tiny",
+  "hf_model_url": "https://huggingface.co/openai/whisper-tiny",
+  "hf_dataset": "mozilla-foundation/common_voice_11_0",
+  "hf_dataset_url": "https://huggingface.co/datasets/mozilla-foundation/common_voice_11_0",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_12_whisper_multimodal.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_12_whisper_multimodal.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-12-audio-vision-transcriber",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-12-audio-vision-transcriber",
+  "hardware_requirement": "Free Colab CPU / T4 GPU (1.5 GB VRAM)",
+  "estimated_runtime_seconds": "< 30s load, < 2s audio transcription",
+  "key_learning_takeaway": "Multimodal AI orchestration: unifying Automatic Speech Recognition (Whisper) and image-to-text vision models (BLIP) with an LLM clinical summarizer.",
+  "starter_code": "# Module 12: Multimodal Speech Recognition with Whisper + Vision Summary\nimport torch\nfrom transformers import pipeline\n\n# 1. Load Whisper-Tiny Speech-to-Text Pipeline (Tiny 150MB model, runs in < 2s on CPU/T4)\ntranscriber = pipeline(\"automatic-speech-recognition\", model=\"openai/whisper-tiny\")\n\n# 2. Simulate Clinical Audio / Medical Voice Note\nsample_audio_url = \"https://huggingface.co/datasets/Narsil/asr_dummy/raw/main/1.flac\"\naudio_transcription = transcriber(sample_audio_url)[\"text\"]\n\n# 3. Generate Clinical Diagnostic Summary with SmolLM2\nsummary_pipeline = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\nprompt = f\"Patient Voice Note Transcription: '{audio_transcription}'\\nProvide 2 clinical follow-up recommendations in concise bullet points:\"\nsummary = summary_pipeline(prompt, max_new_tokens=70)[0][\"generated_text\"][len(prompt):]\n\nprint(\"=== Multimodal Audio-Text Diagnostic Engine ===\")\nprint(f\"Transcribed Audio: {audio_transcription}\")\nprint(f\"\\nAI Doctor Follow-up:\\n{summary.strip()}\")\n",
+  "runnable_starter_code": "# Module 12: Multimodal Speech Recognition with Whisper + Vision Summary\nimport torch\nfrom transformers import pipeline\n\n# 1. Load Whisper-Tiny Speech-to-Text Pipeline (Tiny 150MB model, runs in < 2s on CPU/T4)\ntranscriber = pipeline(\"automatic-speech-recognition\", model=\"openai/whisper-tiny\")\n\n# 2. Simulate Clinical Audio / Medical Voice Note\nsample_audio_url = \"https://huggingface.co/datasets/Narsil/asr_dummy/raw/main/1.flac\"\naudio_transcription = transcriber(sample_audio_url)[\"text\"]\n\n# 3. Generate Clinical Diagnostic Summary with SmolLM2\nsummary_pipeline = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-360M-Instruct\")\nprompt = f\"Patient Voice Note Transcription: '{audio_transcription}'\\nProvide 2 clinical follow-up recommendations in concise bullet points:\"\nsummary = summary_pipeline(prompt, max_new_tokens=70)[0][\"generated_text\"][len(prompt):]\n\nprint(\"=== Multimodal Audio-Text Diagnostic Engine ===\")\nprint(f\"Transcribed Audio: {audio_transcription}\")\nprint(f\"\\nAI Doctor Follow-up:\\n{summary.strip()}\")\n",
+  "gradio_code": "import gradio as gr\nfrom transformers import pipeline\n\nwhisper = pipeline(\"automatic-speech-recognition\", model=\"openai/whisper-tiny\")\nblip = pipeline(\"image-to-text\", model=\"Salesforce/blip-image-captioning-base\")\n\ndef multimodal_scan(audio_path, image):\n    report = []\n    if audio_path:\n        report.append(f\"[Audio Transcript]: {whisper(audio_path)['text']}\")\n    if image:\n        report.append(f\"[Image Caption]: {blip(image)[0]['generated_text']}\")\n    return \"\\n\\n\".join(report) if report else \"Please provide audio or image!\"\n\ndemo = gr.Interface(fn=multimodal_scan, inputs=[gr.Audio(type=\"filepath\"), gr.Image(type=\"pil\")], outputs=gr.Textbox(label=\"Multimodal Diagnostic\"), title=\"Doctor Voice & Prescription Scanner\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom transformers import pipeline\n\nwhisper = pipeline(\"automatic-speech-recognition\", model=\"openai/whisper-tiny\")\nblip = pipeline(\"image-to-text\", model=\"Salesforce/blip-image-captioning-base\")\n\ndef multimodal_scan(audio_path, image):\n    report = []\n    if audio_path:\n        report.append(f\"[Audio Transcript]: {whisper(audio_path)['text']}\")\n    if image:\n        report.append(f\"[Image Caption]: {blip(image)[0]['generated_text']}\")\n    return \"\\n\\n\".join(report) if report else \"Please provide audio or image!\"\n\ndemo = gr.Interface(fn=multimodal_scan, inputs=[gr.Audio(type=\"filepath\"), gr.Image(type=\"pil\")], outputs=gr.Textbox(label=\"Multimodal Diagnostic\"), title=\"Doctor Voice & Prescription Scanner\")\ndemo.launch()\n"
+},
+	13: {
+  "module_number": 13,
+  "module_slug": "local-ai-and-edge-devices",
+  "project_title": "100% Offline Exam Crammer & Flashcard Generator",
+  "project_slug": "offline-exam-crammer-slm",
+  "hf_model": "HuggingFaceTB/SmolLM2-135M-Instruct",
+  "hf_model_url": "https://huggingface.co/HuggingFaceTB/SmolLM2-135M-Instruct",
+  "hf_dataset": "samsum",
+  "hf_dataset_url": "https://huggingface.co/datasets/samsum",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_13_local_edge_slm.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_13_local_edge_slm.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-13-offline-exam-crammer",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-13-offline-exam-crammer",
+  "hardware_requirement": "Free Colab CPU / Any laptop (0.15 GB RAM)",
+  "estimated_runtime_seconds": "< 5s load, < 0.5s generation",
+  "key_learning_takeaway": "Edge Small Language Models (SLMs) execution: running SmolLM2-135M entirely in CPU memory under 150MB RAM for complete privacy, zero cost, and offline edge resilience.",
+  "starter_code": "# Module 13: 100% Offline Edge Inference with SmolLM2-135M (Under 150MB RAM!)\nimport torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\n# 1. Load SmolLM2-135M (The world's smallest viable modern instruct SLM)\nmodel_id = \"HuggingFaceTB/SmolLM2-135M-Instruct\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32)\n\n# 2. Format Rapid-Fire Exam Revision Chat\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a concise exam crammer tutor. Turn complex concepts into 3 rapid bullet-point flashcards.\"},\n    {\"role\": \"user\", \"content\": \"Explain Backpropagation and Gradient Descent for tomorrow's final exam!\"}\n]\nprompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)\ninputs = tokenizer(prompt, return_tensors=\"pt\")\n\n# 3. Generate instant offline flashcards (< 1 second on low-end CPU)\nwith torch.no_grad():\n    outputs = model.generate(**inputs, max_new_tokens=140, temperature=0.5, do_sample=True)\n\nresponse = tokenizer.decode(outputs[0][inputs[\"input_ids\"].shape[1]:], skip_special_tokens=True)\nprint(\"=== 100% Offline Edge Flashcards (135M SLM) ===\")\nprint(response.strip())\n",
+  "runnable_starter_code": "# Module 13: 100% Offline Edge Inference with SmolLM2-135M (Under 150MB RAM!)\nimport torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\n# 1. Load SmolLM2-135M (The world's smallest viable modern instruct SLM)\nmodel_id = \"HuggingFaceTB/SmolLM2-135M-Instruct\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32)\n\n# 2. Format Rapid-Fire Exam Revision Chat\nmessages = [\n    {\"role\": \"system\", \"content\": \"You are a concise exam crammer tutor. Turn complex concepts into 3 rapid bullet-point flashcards.\"},\n    {\"role\": \"user\", \"content\": \"Explain Backpropagation and Gradient Descent for tomorrow's final exam!\"}\n]\nprompt = tokenizer.apply_chat_template(messages, tokenize=False, add_generation_prompt=True)\ninputs = tokenizer(prompt, return_tensors=\"pt\")\n\n# 3. Generate instant offline flashcards (< 1 second on low-end CPU)\nwith torch.no_grad():\n    outputs = model.generate(**inputs, max_new_tokens=140, temperature=0.5, do_sample=True)\n\nresponse = tokenizer.decode(outputs[0][inputs[\"input_ids\"].shape[1]:], skip_special_tokens=True)\nprint(\"=== 100% Offline Edge Flashcards (135M SLM) ===\")\nprint(response.strip())\n",
+  "gradio_code": "import gradio as gr\nfrom transformers import pipeline\n\ncrammer = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-135M-Instruct\")\n\ndef generate_flashcards(exam_topic):\n    chat = [{\"role\": \"system\", \"content\": \"You are an offline exam study coach. Write 3 quick flashcards.\"}, {\"role\": \"user\", \"content\": f\"Topic: {exam_topic}\"}]\n    prompt = crammer.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\n    out = crammer(prompt, max_new_tokens=120, temperature=0.4)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ndemo = gr.Interface(fn=generate_flashcards, inputs=gr.Textbox(value=\"Operating Systems Deadlocks\"), outputs=gr.Textbox(lines=6), title=\"Offline Edge Exam Crammer (135M SLM)\")\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr\nfrom transformers import pipeline\n\ncrammer = pipeline(\"text-generation\", model=\"HuggingFaceTB/SmolLM2-135M-Instruct\")\n\ndef generate_flashcards(exam_topic):\n    chat = [{\"role\": \"system\", \"content\": \"You are an offline exam study coach. Write 3 quick flashcards.\"}, {\"role\": \"user\", \"content\": f\"Topic: {exam_topic}\"}]\n    prompt = crammer.tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=True)\n    out = crammer(prompt, max_new_tokens=120, temperature=0.4)\n    return out[0][\"generated_text\"][len(prompt):].strip()\n\ndemo = gr.Interface(fn=generate_flashcards, inputs=gr.Textbox(value=\"Operating Systems Deadlocks\"), outputs=gr.Textbox(lines=6), title=\"Offline Edge Exam Crammer (135M SLM)\")\ndemo.launch()\n"
+},
+	14: {
+  "module_number": 14,
+  "module_slug": "enterprise-capstone-and-career-launch",
+  "project_title": "Global AI Micro-SaaS Capstone Defense",
+  "project_slug": "global-ai-microsaas-capstone",
+  "hf_model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+  "hf_model_url": "https://huggingface.co/deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+  "hf_dataset": "open-thoughts/OpenThoughts-114k",
+  "hf_dataset_url": "https://huggingface.co/datasets/open-thoughts/OpenThoughts-114k",
+  "colab_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_14_enterprise_capstone.ipynb",
+  "colab_notebook_url": "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_14_enterprise_capstone.ipynb",
+  "kaggle_url": "https://www.kaggle.com/code/isaim0011/module-14-enterprise-microsaas-capstone",
+  "kaggle_notebook_url": "https://www.kaggle.com/code/isaim0011/module-14-enterprise-microsaas-capstone",
+  "hardware_requirement": "Free Colab T4 GPU (3.2 GB VRAM) / Free Kaggle Dual-T4",
+  "estimated_runtime_seconds": "< 35s load, full enterprise multi-tenant simulation",
+  "key_learning_takeaway": "Architecting a multi-tenant enterprise AI system: combining SOTA reasoning models (DeepSeek-R1), strict latency SLAs, production telemetry, and interactive Gradio 5 showcase.",
+  "starter_code": "# Module 14: Full-Stack Micro-SaaS AI Core with SOTA Reasoning & Telemetry\nimport time\nimport torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\n# 1. Load DeepSeek-R1 Distill Qwen-1.5B SOTA Open-Weight Reasoning Engine\nmodel_id = \"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\"\ndevice = \"cuda\" if torch.cuda.is_available() else \"cpu\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32).to(device)\n\n# 2. Production Multi-Tenant Request Simulator with Audit Telemetry\ndef serve_enterprise_tenant(tenant_id: str, business_problem: str):\n    prompt = f\"<system>You are a CTO Enterprise AI Strategist.</system><user>Analyze this business case and propose technical architecture: {business_problem}</user>\"\n    inputs = tokenizer(prompt, return_tensors=\"pt\").to(device)\n    \n    t0 = time.perf_counter()\n    with torch.no_grad():\n        outputs = model.generate(**inputs, max_new_tokens=150, temperature=0.6, do_sample=True)\n    latency = time.perf_counter() - t0\n    \n    response = tokenizer.decode(outputs[0][inputs[\"input_ids\"].shape[1]:], skip_special_tokens=True)\n    tokens_generated = outputs.shape[1] - inputs[\"input_ids\"].shape[1]\n    \n    return {\n        \"tenant_id\": tenant_id,\n        \"tokens_per_sec\": round(tokens_generated / latency, 1),\n        \"total_latency_sec\": round(latency, 3),\n        \"ai_architecture_proposal\": response.strip()\n    }\n\ntelemetry = serve_enterprise_tenant(\"tenant_fintech_001\", \"Design high-scale automated fraud detection API handling 10,000 req/sec\")\nprint(f\"=== Enterprise Tenant {telemetry['tenant_id']} ===\")\nprint(f\"Telemetry: {telemetry['tokens_per_sec']} tok/sec | Latency: {telemetry['total_latency_sec']}s\")\nprint(f\"\\nArchitecture Defense:\\n{telemetry['ai_architecture_proposal']}\")\n",
+  "runnable_starter_code": "# Module 14: Full-Stack Micro-SaaS AI Core with SOTA Reasoning & Telemetry\nimport time\nimport torch\nfrom transformers import AutoModelForCausalLM, AutoTokenizer\n\n# 1. Load DeepSeek-R1 Distill Qwen-1.5B SOTA Open-Weight Reasoning Engine\nmodel_id = \"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\"\ndevice = \"cuda\" if torch.cuda.is_available() else \"cpu\"\ntokenizer = AutoTokenizer.from_pretrained(model_id)\nmodel = AutoModelForCausalLM.from_pretrained(model_id, torch_dtype=torch.float32).to(device)\n\n# 2. Production Multi-Tenant Request Simulator with Audit Telemetry\ndef serve_enterprise_tenant(tenant_id: str, business_problem: str):\n    prompt = f\"<system>You are a CTO Enterprise AI Strategist.</system><user>Analyze this business case and propose technical architecture: {business_problem}</user>\"\n    inputs = tokenizer(prompt, return_tensors=\"pt\").to(device)\n    \n    t0 = time.perf_counter()\n    with torch.no_grad():\n        outputs = model.generate(**inputs, max_new_tokens=150, temperature=0.6, do_sample=True)\n    latency = time.perf_counter() - t0\n    \n    response = tokenizer.decode(outputs[0][inputs[\"input_ids\"].shape[1]:], skip_special_tokens=True)\n    tokens_generated = outputs.shape[1] - inputs[\"input_ids\"].shape[1]\n    \n    return {\n        \"tenant_id\": tenant_id,\n        \"tokens_per_sec\": round(tokens_generated / latency, 1),\n        \"total_latency_sec\": round(latency, 3),\n        \"ai_architecture_proposal\": response.strip()\n    }\n\ntelemetry = serve_enterprise_tenant(\"tenant_fintech_001\", \"Design high-scale automated fraud detection API handling 10,000 req/sec\")\nprint(f\"=== Enterprise Tenant {telemetry['tenant_id']} ===\")\nprint(f\"Telemetry: {telemetry['tokens_per_sec']} tok/sec | Latency: {telemetry['total_latency_sec']}s\")\nprint(f\"\\nArchitecture Defense:\\n{telemetry['ai_architecture_proposal']}\")\n",
+  "gradio_code": "import gradio as gr, time\nfrom transformers import pipeline\n\nsaas_core = pipeline(\"text-generation\", model=\"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\")\n\ndef enterprise_advisor(client_org, problem_statement):\n    t0 = time.perf_counter()\n    prompt = f\"Client: {client_org}\\nChallenge: {problem_statement}\\nExecutive Solution:\"\n    out = saas_core(prompt, max_new_tokens=120, temperature=0.6, do_sample=True)\n    t = time.perf_counter() - t0\n    return out[0][\"generated_text\"][len(prompt):].strip(), f\"Processed in {t:.2f}s (Enterprise SLA: <3.0s)\"\n\ndemo = gr.Interface(\n    fn=enterprise_advisor,\n    inputs=[gr.Textbox(label=\"Client Organization\", value=\"HBL Digital Banking\"), gr.Textbox(label=\"Enterprise Challenge\", value=\"Automate loan document underwriting\")],\n    outputs=[gr.Textbox(label=\"Strategic Solution\"), gr.Textbox(label=\"Telemetry Audit\")],\n    title=\"Enterprise AI Micro-SaaS Capstone Portal\"\n)\ndemo.launch()\n",
+  "gradio_demo_code": "import gradio as gr, time\nfrom transformers import pipeline\n\nsaas_core = pipeline(\"text-generation\", model=\"deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B\")\n\ndef enterprise_advisor(client_org, problem_statement):\n    t0 = time.perf_counter()\n    prompt = f\"Client: {client_org}\\nChallenge: {problem_statement}\\nExecutive Solution:\"\n    out = saas_core(prompt, max_new_tokens=120, temperature=0.6, do_sample=True)\n    t = time.perf_counter() - t0\n    return out[0][\"generated_text\"][len(prompt):].strip(), f\"Processed in {t:.2f}s (Enterprise SLA: <3.0s)\"\n\ndemo = gr.Interface(\n    fn=enterprise_advisor,\n    inputs=[gr.Textbox(label=\"Client Organization\", value=\"HBL Digital Banking\"), gr.Textbox(label=\"Enterprise Challenge\", value=\"Automate loan document underwriting\")],\n    outputs=[gr.Textbox(label=\"Strategic Solution\"), gr.Textbox(label=\"Telemetry Audit\")],\n    title=\"Enterprise AI Micro-SaaS Capstone Portal\"\n)\ndemo.launch()\n"
+},
+};
+
 export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	'0': {
-		title: 'Chai Dhaba Billing & Khata System',
-		humorous_badge: 'Dhabay Ka Pythoneer',
-		description_roman_urdu: 'CLI application jo customer orders calculate kare, dost-yaar discounts lagaye, aur JSON khata file update kare.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 150,
+		title: "Chai Dhaba Customer Sentiment & Order Billing Engine",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Combines Python dictionaries, OOP data structures, and Hugging Face pre-trained sentiment pipelines to analyze real-world consumer feedback with zero API costs.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_00_chai_dhaba_sentiment.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'User se terminal par order input lena (Chai, Paratha, Bun Kabab, Samosay)',
-			'Class CustomerKhata banana with @dataclass for balance & debt tracking',
-			'Dost-yaar discount code ("BHAI_KA_KHATA" = 15% discount) apply karna',
-			'JSON file mein customer ka khata serialize aur reload karna',
-			'CLI colored receipt generate karna with timestamp aur tax calculation'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[0]
 	},
 	'1': {
-		title: 'Biryani vs Pulao Sentiment Analyzer',
-		humorous_badge: 'Biryani Scientist',
-		description_roman_urdu: 'Twitter/X aur food reviews dataset se Biryani vs Pulao ki sentimental jung analyze karein using fast vectorized NumPy operations.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 175,
+		title: "Biryani vs Pulao Cosine Semantic Vectorizer",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "First-principles linear algebra in action: dense sentence embeddings, vector dot-products, Euclidean norms, and SIMD cosine similarity ranking with zero loop overhead.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_01_biryani_vector_math.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'Food review dataset tokenize karna (Karachi, Lahore & Rawalpindi reviews)',
-			'NumPy vectorized bag-of-words frequency matrix banana',
-			'Cosine similarity dot product se sentiment score calculate karna',
-			'Biryani vs Pulao sentiment polarity leaderboard print karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[1]
 	},
 	'2': {
-		title: 'Rishta Matcher Algorithm',
-		humorous_badge: 'Rishta Optimizer',
-		description_roman_urdu: 'Candidate bios aur mother-in-law (Ami) ki strict criteria ke darmiyan Cosine similarity vector distance calculate karein.',
-		colab_url: 'https://colab.research.google.com/#create=true',
+		title: "SmolLM2 Rishta Matchmaker & Chain-of-Thought Evaluator",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Autoregressive next-token prediction dynamics, temperature sampling effects on creativity, system prompt steering, and Chain-of-Thought (CoT) reasoning.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_02_smollm2_prompt_eval.ipynb",
 		xp_reward: 200,
 		checklist: [
-			'Candidate profiles ka feature vector banana (Chai making, Salary, Humor, Punctuality)',
-			'Ami ka ideal candidate vector formulate karna',
-			'High-dimensional normalized cosine distance compute karna',
-			'Top-3 approved candidates ki leaderboard generate karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[2]
 	},
 	'3': {
-		title: 'Cricketer Performance Predictor',
-		humorous_badge: 'PSL Analyst',
-		description_roman_urdu: 'PSL / IPL match outcome aur player score predictor with LightGBM & regression.',
-		colab_url: 'https://colab.research.google.com/#create=true',
+		title: "AG News Real-Time Topic & Clickbait Classifier",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Memory-efficient streaming of Hugging Face Hub datasets, TF-IDF n-gram feature extraction, Logistic Regression decision boundaries, and multi-class classification reporting.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_03_ag_news_classifier.ipynb",
 		xp_reward: 200,
 		checklist: [
-			'Ball-by-ball match dataset load karna',
-			'Pitch conditions & strike-rate momentum features engineer karna',
-			'Custom neural net / gradient boosting model train karna',
-			'Live match win-probability chart predict karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[3]
 	},
 	'4': {
-		title: 'Meme Classifier & Roast Bot',
-		humorous_badge: 'Meme Lord',
-		description_roman_urdu: 'PyTorch CNN jo spicy memes vs wholesome cat pictures classify kare aur automatically funny roasts generate kare.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 225,
+		title: "PyTorch Autograd & MLP Sentiment Classifier from Scratch",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Building custom PyTorch nn.Module architectures from scratch, tensor batching, autograd backpropagation, AdamW parameter updates, and loss curve convergence.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_04_pytorch_mlp_classifier.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'Custom PyTorch Dataset & DataLoader likhna',
-			'Convolutional + BatchNorm layers implement karna',
-			'Classification evaluation metric evaluate karna',
-			'Roast bot prompt loop attach karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[4]
 	},
 	'5': {
-		title: 'Biryani Recipe RAG with Exact Spices',
-		humorous_badge: 'Nani Ammi Approved',
-		description_roman_urdu: 'Vector search system jo dadi/nani ki handwritten recipe book se exact page aur grams of aloo bukhara cite kare.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 260,
+		title: "Transformer Attention Matrix & Token Saliency Visualizer",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Deconstructing self-attention tensors: Query-Key dot products, softmax scaling, attention head routing, and token saliency visualization.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_05_attention_matrix.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'Recipe PDF parse karke text & tables extract karna',
-			'pgvector HNSW index create karna',
-			'BM25 sparse search aur dense embeddings fuse karna',
-			'Exact source page and spice grams verify karke answer dena'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[5]
 	},
 	'6': {
-		title: 'Ami Ka WhatsApp Reply Bot',
-		humorous_badge: 'Farmanbardar Beta',
-		description_roman_urdu: 'FastAPI streaming auto-responder for family groups with respectful polite excuses.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 220,
+		title: "Ami Ka WhatsApp Auto-Responder & Streaming Bot",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Implementing asynchronous token streaming via TextIteratorStreamer, conversation state management, and real-time interactive chat interfaces.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_06_streaming_ai_bot.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'FastAPI async SSE endpoint banana',
-			'Pakistani family respectful tone system prompt craft karna',
-			'Tool call se calendar check karke legitimate excuses schedule karna',
-			'Response streaming under 200ms latency maintain karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[6]
 	},
 	'7': {
-		title: 'Roman Urdu Sarcasm Detector',
-		humorous_badge: 'Tanz Specialist',
-		description_roman_urdu: 'Unsloth 4-bit fine-tuned LLaMA model on Colab Free T4 identifying sarcastic Pakistani tweets and irony.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 300,
+		title: "Grandma's Secret Biryani Recipe RAG Engine",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Building an end-to-end Retrieval-Augmented Generation (RAG) system with dense BGE embeddings, Top-K semantic similarity search, and hallucination-free generation.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_07_vector_rag_engine.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'Roman Urdu sarcasm dataset format karna (JSONL ShareGPT)',
-			'Unsloth FastLanguageModel 4-bit quantization load karna',
-			'LoRA adapter train karna on Free Colab T4 without out-of-memory',
-			'Test suite se sarcasm accuracy benchmark karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[7]
 	},
 	'8': {
-		title: 'Salary Negotiation Agent',
-		humorous_badge: 'HR Negotiator',
-		description_roman_urdu: 'smolagents & Anthropic MCP swarm drafting funny yet razor-sharp counter-offers to tech recruiters.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 275,
+		title: "Aggressive Salary Negotiation AI Agent Swarm",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Autonomous tool calling using Hugging Face smolagents CodeAgent: writing and executing Python calculations dynamically to solve multi-step problems.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_08_smolagents_tools.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'Multi-agent roleplay structure build karna',
-			'Inflation & market compensation lookup tool add karna',
-			'Professional counter-offer email generator implement karna',
-			'Structured JSON evaluation run karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[8]
 	},
 	'9': {
-		title: 'Ghalib vs Iqbal Poetry Generator',
-		humorous_badge: 'Shayar-e-AI',
-		description_roman_urdu: 'Mini-GPT model serving classic Urdu poetry tokens in real-time via high-speed streaming gateway.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 250,
+		title: "Roman Urdu Sarcasm & Roast LoRA Fine-Tuning Engine",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Parameter-Efficient Fine-Tuning (PEFT) mechanics: injecting low-rank decomposition matrices (LoRA) into attention projections and training with TRL SFTTrainer on free T4 hardware.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_09_lora_qlora_sft.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'Classical Urdu poetry corpus tokenize karna',
-			'Causal attention weights compute karna',
-			'Rhyme scheme verification filter add karna',
-			'Sub-millisecond token streaming benchmark karna'
-		]
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[9]
 	},
 	'10': {
-		title: 'Biryani Delivery Routing Agent & High-Speed Gateway',
-		humorous_badge: 'Full-Stack Ustaad',
-		description_roman_urdu: 'Autonomous multi-branch food dispatcher with route optimization, MCP tool-calls, and high-throughput Rust gateway.',
-		colab_url: 'https://colab.research.google.com/#create=true',
-		xp_reward: 350,
+		title: "Phuppo-Proof Family WhatsApp Content Guardrail Firewall",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Implementing programmatic AI safety guardrails: pre-generation toxicity filtering with Toxic-BERT, thresholding, and responsible AI system architecture.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_10_guardrails_safety.ipynb",
+		xp_reward: 200,
 		checklist: [
-			'Multi-agent dispatcher tool flow orchestrate karna',
-			'Rust Axum streaming backend deploy karna',
-			'OpenTelemetry latency tracing graph integrate karna',
-			'Cloudflare Pages production release complete karna'
-		]
-	}
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[10]
+	},
+	'11': {
+		title: "DeepSeek-R1 Sub-50ms Low-Latency Inference Benchmark",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Benchmarking inference throughput (tokens/sec), latency profiling, memory consumption telemetry, and comparing FP16 vs quantized execution on production open-weight models.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_11_production_benchmark.ipynb",
+		xp_reward: 200,
+		checklist: [
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[11]
+	},
+	'12': {
+		title: "Doctor Prescription OCR & Audio Transcriber",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Multimodal AI orchestration: unifying Automatic Speech Recognition (Whisper) and image-to-text vision models (BLIP) with an LLM clinical summarizer.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_12_whisper_multimodal.ipynb",
+		xp_reward: 200,
+		checklist: [
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[12]
+	},
+	'13': {
+		title: "100% Offline Exam Crammer & Flashcard Generator",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Edge Small Language Models (SLMs) execution: running SmolLM2-135M entirely in CPU memory under 150MB RAM for complete privacy, zero cost, and offline edge resilience.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_13_local_edge_slm.ipynb",
+		xp_reward: 200,
+		checklist: [
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[13]
+	},
+	'14': {
+		title: "Global AI Micro-SaaS Capstone Defense",
+		humorous_badge: "Hugging Face Lab",
+		description_roman_urdu: "Architecting a multi-tenant enterprise AI system: combining SOTA reasoning models (DeepSeek-R1), strict latency SLAs, production telemetry, and interactive Gradio 5 showcase.",
+		colab_url: "https://colab.research.google.com/github/isaim0011/ai-mastery-notebooks/blob/main/module_14_enterprise_capstone.ipynb",
+		xp_reward: 200,
+		checklist: [
+			'Open 1-Click interactive notebook on Google Colab / Kaggle',
+			'Load Hugging Face model & dataset in streaming mode',
+			'Execute local test inference & benchmark token throughput',
+			'Deploy interactive Gradio 5 web UI demo'
+		],
+		hf_subproject: HF_SUBPROJECTS[14]
+	},
 };
+
+export function getHfSubproject(key: string | number): HfSubproject | undefined {
+	const num = typeof key === 'number' ? key : parseInt(key, 10);
+	if (!isNaN(num) && HF_SUBPROJECTS[num]) {
+		return HF_SUBPROJECTS[num];
+	}
+	const str = String(key);
+	for (const p of Object.values(HF_SUBPROJECTS)) {
+		if (p.module_slug === str || str.includes(p.module_slug)) {
+			return p;
+		}
+	}
+	return undefined;
+}
 
 export function getPracticeProject(key: string | number): PracticeProject {
 	const strKey = String(key);
@@ -1234,9 +1587,16 @@ export function getPracticeProject(key: string | number): PracticeProject {
 	for (const phase of FALLBACK_PHASES) {
 		const mod = phase.modules.find((m) => m.slug === strKey || m.id === strKey || String(m.module_number) === strKey);
 		if (mod && mod.practice_project) {
-			return mod.practice_project;
+			const num = mod.module_number;
+			return {
+				...mod.practice_project,
+				hf_subproject: HF_SUBPROJECTS[num]
+			};
 		}
+	}
+	const num = parseInt(strKey, 10);
+	if (!isNaN(num) && MODULE_PRACTICE_PROJECTS[String(num)]) {
+		return MODULE_PRACTICE_PROJECTS[String(num)];
 	}
 	return MODULE_PRACTICE_PROJECTS['0'];
 }
-

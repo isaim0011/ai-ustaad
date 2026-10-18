@@ -23,7 +23,8 @@ export const load: PageServerLoad = async ({ params, locals, parent }) => {
 							id: m.id,
 							slug: m.slug,
 							title: m.title,
-							module_number: m.module_number
+							module_number: m.module_number,
+							practice_checkpoint: m.practice_checkpoint || m.practice_project
 						},
 						prevLesson,
 						nextLesson,
@@ -46,7 +47,7 @@ export const load: PageServerLoad = async ({ params, locals, parent }) => {
 	// 1. Fetch current module
 	const { data: moduleData, error: modErr } = await supabase
 		.from('modules')
-		.select('id, slug, title, module_number')
+		.select('id, slug, title, module_number, practice_checkpoint')
 		.eq('slug', moduleSlug)
 		.maybeSingle();
 
