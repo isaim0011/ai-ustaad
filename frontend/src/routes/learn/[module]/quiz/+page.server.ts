@@ -1,4 +1,4 @@
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, locals, parent }) => {
@@ -39,24 +39,35 @@ export const load: PageServerLoad = async ({ params, locals, parent }) => {
 		.eq('quiz_id', quiz.id)
 		.order('question_number', { ascending: true });
 
-	// 4. Fetch user previous quiz attempts
-	const { data: previousAttempts } = await supabase
-		.from('user_quiz_attempts')
-		.select('*')
-		.eq('quiz_id', quiz.id)
-		.order('created_at', { ascending: false })
-		.limit(5);
+	// 4. Fetch user previous quiz attempts if logged in
+	let previousAttempts: any[] = [];
+	const { user } = await locals.safeGetSession();
+	if (user) {
+		const { data: attempts } = await supabase
+			.from('user_quiz_attempts')
+			.select('*')
+			.eq('quiz_id', quiz.id)
+			.eq('user_id', user.id)
+			.order('created_at', { ascending: false })
+			.limit(5);
+		previousAttempts = attempts ?? [];
+	}
 
 	return {
 		module: moduleData,
 		quiz,
 		questions: questions ?? [],
-		previousAttempts: previousAttempts ?? []
+		previousAttempts
 	};
 };
 
 export const actions: Actions = {
 	submitQuiz: async ({ request, locals }) => {
+		const { session, user } = await locals.safeGetSession();
+		if (!session || !user) {
+			throw redirect(303, '/login');
+		}
+
 		if (!locals.supabase) {
 			return fail(500, { message: 'Database client missing.' });
 		}

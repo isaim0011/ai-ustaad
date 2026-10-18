@@ -35,7 +35,7 @@
 	);
 </script>
 
-<div class="mx-auto max-w-5xl px-4 py-10 sm:px-6 lg:px-8 space-y-10">
+<div class="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
 	<!-- Breadcrumbs -->
 	<nav class="flex items-center gap-2 text-xs font-mono text-[#6f6e69] dark:text-[#a19f97]">
 		<a href="/learn" class="hover:text-[#c96442]">Curriculum</a>
@@ -80,135 +80,69 @@
 		</div>
 	</div>
 
-	<!-- Deliverable Callout -->
-	{#if mod.real_world_deliverable}
-		<div class="rounded-2xl border border-emerald-500/30 bg-emerald-500/5 p-5 dark:border-emerald-500/20">
-			<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-emerald-800 dark:text-emerald-400">
-				<Sparkles class="h-4 w-4" />
-				<span>Real-World Deliverable (Production Project)</span>
-			</div>
-			<p class="mt-2 font-serif text-base font-semibold text-[#141413] dark:text-[#f5f4ed]">
-				{mod.real_world_deliverable}
-			</p>
-		</div>
-	{/if}
-
-	<!-- Gamified Real-Time Practice: Culturally Relatable & Funny Sub-Project -->
-	{#if practiceProject}
-		<div class="rounded-2xl border-2 border-dashed border-[#c96442]/40 bg-[#c96442]/5 p-6 shadow-sm dark:border-[#c96442]/30 dark:bg-[#c96442]/10">
-			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-				<div class="flex items-center gap-3.5">
-					<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#c96442] text-white shadow-sm">
-						<Sparkles class="h-6 w-6" />
-					</div>
-					<div>
-						<div class="flex flex-wrap items-center gap-2">
-							<span class="rounded-full bg-[#c96442] px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase text-white tracking-wider">
-								Real-Time Practice Checkpoint
-							</span>
-							<span class="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-mono font-semibold text-amber-700 dark:text-amber-400">
-								{practiceProject.humorous_badge}
-							</span>
-							<span class="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400">
-								+{practiceProject.xp_reward} XP
-							</span>
-						</div>
-						<h3 class="mt-1 font-serif text-xl font-bold tracking-tight text-[#141413] dark:text-[#f5f4ed]">
-							{practiceProject.title}
-						</h3>
-					</div>
-				</div>
-
-				<a
-					href={practiceProject.colab_url}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#c96442] px-5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-[#d97757] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#c96442]/40 shrink-0"
-				>
-					<span>Open Google Colab Practice Notebook</span>
-					<ExternalLink class="h-3.5 w-3.5" />
-				</a>
-			</div>
-
-			<p class="mt-4 text-sm leading-relaxed text-[#2c2b28] dark:text-[#dcd9ce]">
-				{practiceProject.description_roman_urdu}
-			</p>
-
-			<!-- Interactive Checklist & Test Criteria -->
-			{#if practiceProject.checklist && practiceProject.checklist.length > 0}
-				<div class="mt-5 rounded-xl border border-[#e5e2d9] bg-[#faf9f5]/80 p-4 dark:border-[#343330] dark:bg-[#1f1e1d]/80">
-					<div class="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-[#6f6e69] dark:text-[#a19f97] mb-3">
-						<span>Sub-Project Checklist & Test Criteria</span>
-						<span class="text-emerald-600 dark:text-emerald-400">100% Free Colab Practice</span>
-					</div>
-					<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
-						{#each practiceProject.checklist as item}
-							<div class="flex items-start gap-2.5 text-xs text-[#141413] dark:text-[#f5f4ed]">
-								<CheckCircle2 class="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
-								<span class="leading-relaxed">{item}</span>
-							</div>
-						{/each}
-					</div>
-				</div>
-			{/if}
-		</div>
-	{/if}
-
-	<!-- Hugging Face Interactive Lab & Open-Source Sub-Project -->
-	{#if hfSubproject}
-		<HfSubprojectCard subproject={hfSubproject} moduleNumber={mod.module_number} />
-	{/if}
-
-	<!-- Zero-GPU Recipe -->
-	<div class="rounded-2xl border border-[#e5e2d9] bg-[#faf9f5] p-6 shadow-xs dark:border-[#343330] dark:bg-[#232321]">
-		<div class="flex items-center justify-between">
-			<div class="flex items-center gap-2">
-				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#c96442]/10 text-[#c96442]">
-					<Cpu class="h-4 w-4" />
-				</div>
+	<!-- Consolidated Hands-on Project Lab -->
+	{#if mod.real_world_deliverable || practiceProject || hfSubproject}
+		<section class="order-4 space-y-5 rounded-2xl border border-[#d8d5cb] bg-white p-6 shadow-xs dark:border-[#343330] dark:bg-[#232321]">
+			<div class="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
 				<div>
-					<h2 class="font-serif text-base font-semibold text-[#141413] dark:text-[#f5f4ed]">
-						Zero-GPU Cloud Compute Recipe
+					<div class="flex flex-wrap items-center gap-2 text-[11px] font-mono font-semibold">
+						<span class="rounded-md bg-[#c96442]/10 px-2 py-0.5 text-[#c96442]">Hands-on Project Lab</span>
+						{#if practiceProject}
+							<span class="rounded-md bg-stone-200/70 px-2 py-0.5 text-stone-700 dark:bg-stone-800 dark:text-stone-300">{practiceProject.humorous_badge}</span>
+							<span class="rounded-md bg-emerald-500/10 px-2 py-0.5 text-emerald-700 dark:text-emerald-400">+{practiceProject.xp_reward} XP</span>
+						{/if}
+					</div>
+					<h2 class="mt-2 font-serif text-xl font-bold text-[#141413] dark:text-[#f5f4ed]">
+						{practiceProject?.title || mod.real_world_deliverable}
 					</h2>
-					<p class="text-xs text-[#6f6e69] dark:text-[#a19f97]">
-						Local GPU ki zaroorat nahi — Colab Free T4 ya Kaggle Dual-T4 par run karein
-					</p>
+					{#if mod.real_world_deliverable && practiceProject}
+						<p class="mt-1 text-sm text-[#52514c] dark:text-[#a19f97]">Deliverable: {mod.real_world_deliverable}</p>
+					{/if}
+				</div>
+				<div class="flex shrink-0 flex-wrap gap-2">
+					<a href={practiceProject?.colab_url || 'https://colab.research.google.com'} target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center gap-2 rounded-xl bg-[#c96442] px-4 text-xs font-semibold text-white hover:bg-[#d97757]">
+						<span>Open in Colab</span><ExternalLink class="h-3.5 w-3.5" />
+					</a>
+					<a href="https://www.kaggle.com/code" target="_blank" rel="noopener noreferrer" class="inline-flex h-10 items-center gap-2 rounded-xl border border-[#d8d5cb] px-4 text-xs font-semibold text-[#141413] hover:border-[#c96442]/50 dark:border-[#343330] dark:text-[#f5f4ed]">
+						<span>Kaggle Dual-T4</span><ExternalLink class="h-3.5 w-3.5" />
+					</a>
 				</div>
 			</div>
 
-			<div class="flex items-center gap-2">
-				<a
-					href="https://colab.research.google.com"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="inline-flex items-center gap-1 rounded-lg border border-[#e5e2d9] bg-[#f0eee6] px-2.5 py-1 text-xs font-mono text-[#141413] hover:border-[#c96442]/40 dark:border-[#343330] dark:bg-[#262624] dark:text-[#f5f4ed]"
-				>
-					<span>Open Colab</span>
-					<ExternalLink class="h-3 w-3" />
-				</a>
-				<a
-					href="https://www.kaggle.com"
-					target="_blank"
-					rel="noopener noreferrer"
-					class="inline-flex items-center gap-1 rounded-lg border border-[#e5e2d9] bg-[#f0eee6] px-2.5 py-1 text-xs font-mono text-[#141413] hover:border-[#c96442]/40 dark:border-[#343330] dark:bg-[#262624] dark:text-[#f5f4ed]"
-				>
-					<span>Kaggle Dual-T4</span>
-					<ExternalLink class="h-3 w-3" />
-				</a>
-			</div>
-		</div>
+			{#if practiceProject?.description_roman_urdu}
+				<p class="text-sm leading-relaxed text-[#2c2b28] dark:text-[#dcd9ce]">{practiceProject.description_roman_urdu}</p>
+			{/if}
 
-		<div class="mt-4">
-			<p class="text-xs leading-relaxed text-[#2c2b28] dark:text-[#dcd9ce]">
-				Training session khatam hone ke baad runtime unassign zaroor karein taake background idle hours na count hon:
-			</p>
-			<CodeBlock code={unassignSnippet} language="python" title="Credit Saver Snippet" />
-		</div>
-	</div>
+			{#if practiceProject?.checklist?.length}
+				<ul class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+					{#each practiceProject.checklist as item}
+						<li class="flex items-start gap-2 text-xs text-[#141413] dark:text-[#f5f4ed]">
+							<CheckCircle2 class="mt-0.5 h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400" />
+							<span>{item}</span>
+						</li>
+					{/each}
+				</ul>
+			{/if}
+
+			{#if hfSubproject}
+				<HfSubprojectCard subproject={hfSubproject} moduleNumber={mod.module_number} />
+			{/if}
+
+			<details class="rounded-xl border border-[#d8d5cb] p-4 dark:border-[#343330]">
+				<summary class="cursor-pointer text-xs font-mono font-semibold uppercase tracking-wider text-[#52514c] dark:text-[#a19f97]">
+					Zero-GPU tip: protect your Colab compute units
+				</summary>
+				<div class="mt-3">
+					<CodeBlock code={unassignSnippet} language="python" title="Credit Saver Snippet" />
+				</div>
+			</details>
+		</section>
+	{/if}
+
 
 	<!-- Architecture Diagram -->
 	{#if mod.diagram_script}
-		<div>
+		<div class="order-3">
 			<h2 class="font-serif text-xl font-bold text-[#141413] dark:text-[#f5f4ed]">
 				Module Architecture Blueprint
 			</h2>
@@ -222,7 +156,7 @@
 	{/if}
 
 	<!-- Learning Outcomes & Tasks (2-Col) -->
-	<div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+	<div class="order-5 grid grid-cols-1 gap-6 md:grid-cols-2">
 		<!-- Outcomes -->
 		{#if mod.learning_outcomes && Array.isArray(mod.learning_outcomes)}
 			<div class="rounded-2xl border border-[#e5e2d9] bg-[#faf9f5] p-5 shadow-xs dark:border-[#343330] dark:bg-[#232321]">
@@ -259,7 +193,7 @@
 	</div>
 
 	<!-- Lessons List -->
-	<div>
+	<div class="order-2">
 		<div class="flex items-center justify-between">
 			<h2 class="font-serif text-2xl font-bold text-[#141413] dark:text-[#f5f4ed]">
 				Module Lessons ({lessons.length})
@@ -312,7 +246,7 @@
 
 	<!-- Module Quiz Card -->
 	{#if quiz}
-		<div class="rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 shadow-xs dark:border-amber-500/20">
+		<div class="order-6 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-6 shadow-xs dark:border-amber-500/20">
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 				<div>
 					<div class="flex items-center gap-2 text-xs font-mono uppercase tracking-wider text-amber-800 dark:text-amber-400">

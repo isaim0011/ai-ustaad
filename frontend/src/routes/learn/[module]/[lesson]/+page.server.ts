@@ -1,4 +1,4 @@
-import { error, fail } from '@sveltejs/kit';
+import { error, fail, redirect } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
 import { FALLBACK_PHASES } from '$lib/data/fallback';
 
@@ -100,6 +100,11 @@ export const load: PageServerLoad = async ({ params, locals, parent }) => {
 
 export const actions: Actions = {
 	completeLesson: async ({ request, locals }) => {
+		const { session, user } = await locals.safeGetSession();
+		if (!session || !user) {
+			throw redirect(303, '/login');
+		}
+
 		if (!locals.supabase) {
 			return fail(500, { message: 'Database client missing.' });
 		}

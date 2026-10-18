@@ -4,10 +4,6 @@ import { FALLBACK_PHASES } from '$lib/data/fallback';
 
 export const load: LayoutServerLoad = async ({ locals }) => {
 	const { session, user } = await locals.safeGetSession();
-	if (!session || !user) {
-		throw redirect(303, '/login');
-	}
-
 	const supabase = locals.supabase;
 	if (!supabase) {
 		const allModules: any[] = [];
@@ -60,14 +56,16 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 			`)
 			.order('order_index', { ascending: true });
 
-		// Fetch user completed lessons
-		const { data: userProgress } = await supabase
-			.from('user_lesson_progress')
-			.select('lesson_id')
-			.eq('user_id', user.id)
-			.eq('completed', true);
-
-		const completedLessonIds = (userProgress ?? []).map((p) => p.lesson_id);
+		// Fetch user completed lessons if authenticated
+		let completedLessonIds: string[] = [];
+		if (user) {
+			const { data: userProgress } = await supabase
+				.from('user_lesson_progress')
+				.select('lesson_id')
+				.eq('user_id', user.id)
+				.eq('completed', true);
+			completedLessonIds = (userProgress ?? []).map((p) => p.lesson_id);
+		}
 
 		// Ensure Phase 0 (Python Zero Se Hero) is present
 		const effectivePhases: any[] = [...(phases ?? [])];
@@ -93,6 +91,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		});
 
 		return {
+			user: user ?? null,
 			phases: effectivePhases,
 			modules: allModules,
 			completedLessonIds
@@ -100,6 +99,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 	} catch (err) {
 		console.error('Error fetching learn layout data:', err);
 		return {
+			user: user ?? null,
 			phases: [],
 			modules: [],
 			completedLessonIds: [] as string[]

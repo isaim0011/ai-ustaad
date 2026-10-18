@@ -141,49 +141,12 @@
 				</div>
 			{/if}
 
-			<!-- Quick Practice Checkpoint -->
+			<!-- Slim module project reminder -->
 			{#if practiceProject}
-				<div class="my-8 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 dark:border-amber-500/20">
-					<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-						<div class="flex items-center gap-3">
-							<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400">
-								<Sparkles class="h-4 w-4" />
-							</div>
-							<div>
-								<div class="flex items-center gap-2">
-									<span class="rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-mono font-bold uppercase text-amber-800 dark:text-amber-300">
-										Module Practice Checkpoint
-									</span>
-									<span class="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-400">
-										+{practiceProject.xp_reward} XP
-									</span>
-								</div>
-								<h4 class="mt-1 font-serif text-sm font-bold text-[#141413] dark:text-[#f5f4ed]">
-									{practiceProject.title} ({practiceProject.humorous_badge})
-								</h4>
-							</div>
-						</div>
-						<a
-							href={practiceProject.colab_url}
-							target="_blank"
-							rel="noopener noreferrer"
-							class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#c96442] px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#d97757] shrink-0"
-						>
-							<span>Open Colab Practice</span>
-							<ExternalLink class="h-3.5 w-3.5" />
-						</a>
-					</div>
-					<p class="mt-2 text-xs leading-relaxed text-[#6f6e69] dark:text-[#a19f97]">
-						{practiceProject.description_roman_urdu}
-					</p>
-				</div>
-			{/if}
-
-			<!-- Hugging Face Interactive Sub-Project & Real-Time Lab -->
-			{#if hfSubproject}
-				<div class="my-8">
-					<HfSubprojectCard subproject={hfSubproject} moduleNumber={mod.module_number} />
-				</div>
+				<a href="/learn/{mod.slug}" class="my-8 flex items-center justify-between gap-3 rounded-xl border border-[#d8d5cb] bg-white px-4 py-3 text-sm hover:border-[#c96442]/50 dark:border-[#343330] dark:bg-[#232321]">
+					<span class="text-[#141413] dark:text-[#f5f4ed]">Module project: <strong>{practiceProject.title}</strong></span>
+					<span class="shrink-0 text-xs font-mono text-[#c96442]">Open project lab</span>
+				</a>
 			{/if}
 
 			<!-- Mark Complete CTA Section -->
