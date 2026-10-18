@@ -3,7 +3,7 @@
 	import Logo from '$lib/components/Logo.svelte';
 </script>
 
-<footer class="mt-auto border-t border-[#e5e2d9] bg-[#f0eee6]/60 dark:border-[#343330] dark:bg-[#181817]">
+<footer class="mt-auto border-t border-[#e5e2d9] bg-[#f0eee6]/60 dark:border-[#2c2b28] dark:bg-[#191918]">
 	<div class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
 			<!-- Col 1: Brand & Roman Urdu Mission -->
@@ -79,7 +79,7 @@
 		</div>
 
 		<!-- Bottom Line: Built by Bimo -->
-		<div class="mt-10 flex flex-col items-center justify-between border-t border-[#e5e2d9] pt-6 text-xs text-[#6f6e69] sm:flex-row dark:border-[#343330] dark:text-[#a19f97]">
+		<div class="mt-10 flex flex-col items-center justify-between border-t border-[#e5e2d9] pt-6 text-xs text-[#6f6e69] sm:flex-row dark:border-[#2c2b28] dark:text-[#a19f97]">
 			<p>© 2026 AI Ustaad (ai-ustaad.pages.dev). All rights reserved.</p>
 			<p class="mt-3 sm:mt-0 font-medium">
 				Built by <a

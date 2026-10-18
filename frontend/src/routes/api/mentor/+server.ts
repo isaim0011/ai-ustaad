@@ -24,7 +24,7 @@ const KNOWLEDGE_BASE: Array<{
 		keywords: ['attention', 'transformer', 'multi-head', 'scaled dot', 'qkv', 'query', 'key', 'value', 'kv cache'],
 		match: (t) => t.includes('attention') || t.includes('transformer') || t.includes('qkv') || t.includes('kv cache'),
 		generate: () => ({
-			reply_urdu: `Transformer ka sab se bunyadi aur inqilabi building block **Scaled Dot-Product Attention** hai! 🧠
+			reply_urdu: `Transformer ka sab se bunyadi aur inqilabi building block **Scaled Dot-Product Attention** hai! 
 
 Iska formula hai:
 $$\\text{Attention}(Q, K, V) = \\text{softmax}\\left(\\frac{Q K^T}{\\sqrt{d_k}}\\right) V$$
@@ -91,7 +91,7 @@ arch LR: Scaled Dot-Product Attention Architecture
 		keywords: ['rag', 'vector', 'retrieval', 'colpali', 'bm25', 'rerank', 'hybrid', 'embedding', 'chunking'],
 		match: (t) => t.includes('rag') || t.includes('retrieval') || t.includes('colpali') || t.includes('bm25') || t.includes('rerank') || t.includes('vector'),
 		generate: () => ({
-			reply_urdu: `Modern 2026 RAG architecture mein purana "naive chunking + cosine similarity" system reject ho chuka hai! 🚀
+			reply_urdu: `Modern 2026 RAG architecture mein purana "naive chunking + cosine similarity" system reject ho chuka hai! 
 
 ### Production RAG ke 4 Pillars:
 1. **Hybrid Retrieval (Dense + Sparse)**:
@@ -156,7 +156,7 @@ arch LR: 2026 Hybrid RAG Pipeline
 		keywords: ['lora', 'qlora', 'fine-tuning', 'finetuning', 'unsloth', 'peft', 'rank', 'sft'],
 		match: (t) => t.includes('lora') || t.includes('qlora') || t.includes('tuning') || t.includes('unsloth') || t.includes('peft'),
 		generate: () => ({
-			reply_urdu: `**LoRA (Low-Rank Adaptation)** aur **QLoRA** ne model fine-tuning ki dunya badal di hai! 🎯
+			reply_urdu: `**LoRA (Low-Rank Adaptation)** aur **QLoRA** ne model fine-tuning ki dunya badal di hai! 
 
 ### Asal Magic Kya Hai?
 Aik 8-Billion parameter model ka weight matrix $W_0 \\in \\mathbb{R}^{d \\times k}$ hota hai.
@@ -220,7 +220,7 @@ arch LR: LoRA Rank Decomposition Workflow
 		keywords: ['deepseek', 'grpo', 'reasoning', 'rl', 'reinforcement', 'ppo', 'reward', 'r1'],
 		match: (t) => t.includes('deepseek') || t.includes('grpo') || t.includes('reasoning') || t.includes('ppo') || t.includes('r1'),
 		generate: () => ({
-			reply_urdu: `**DeepSeek-R1** aur **GRPO (Group Relative Policy Optimization)** ne 2026 mein reasoning models ka naya inqilab paida kar diya hai! 🔥
+			reply_urdu: `**DeepSeek-R1** aur **GRPO (Group Relative Policy Optimization)** ne 2026 mein reasoning models ka naya inqilab paida kar diya hai! 
 
 ### Purana PPO vs DeepSeek GRPO:
 - **PPO (Proximal Policy Optimization)** mein aik bara **Critic Model (Value Model)** train karna parta tha jo memory aur compute ka bohot bara hissa kha jata tha.
@@ -279,7 +279,7 @@ arch LR: DeepSeek-R1 GRPO Optimization
 		keywords: ['agent', 'mcp', 'smolagent', 'tool', 'function calling', 'swarm', 'protocol'],
 		match: (t) => t.includes('agent') || t.includes('mcp') || t.includes('smolagent') || t.includes('tool'),
 		generate: () => ({
-			reply_urdu: `**Autonomous Agents** aur **Model Context Protocol (MCP)** 2026 ke enterprise application development ki reedh ki haddi hain! 🤖
+			reply_urdu: `**Autonomous Agents** aur **Model Context Protocol (MCP)** 2026 ke enterprise application development ki reedh ki haddi hain! 
 
 ### 1. Model Context Protocol (MCP):
 - Anthropic ka open standard jo LLMs ko databases, local tools, files, aur APIs se connect karta hai.
@@ -337,7 +337,7 @@ arch LR: MCP Autonomous Multi-Agent Swarm
 		keywords: ['rust', 'axum', 'backend', 'gateway', 'vllm', 'performance', 'actix'],
 		match: (t) => t.includes('rust') || t.includes('axum') || t.includes('gateway') || t.includes('vllm'),
 		generate: () => ({
-			reply_urdu: `AI Systems mein Python training ke liye behtareen hai, lekin **Production Gateways aur High-Throughput Serving** ke liye **Rust (Axum)** industry ka gold standard hai! 🦀
+			reply_urdu: `AI Systems mein Python training ke liye behtareen hai, lekin **Production Gateways aur High-Throughput Serving** ke liye **Rust (Axum)** industry ka gold standard hai! 
 
 ### Rust Axum Kyun Chunte Hain?
 1. **Zero Garbage Collection Pauses**: Python FastAPI mein heavy concurrency par GC latency spikes aate hain. Rust mein deterministic sub-millisecond latency milti hai.
@@ -400,7 +400,7 @@ arch LR: Rust Axum AI Gateway Architecture
 		keywords: ['colab', 'free', 'gpu', 'kaggle', 'zero-gpu', 'compute', 't4'],
 		match: (t) => t.includes('colab') || t.includes('free') || t.includes('kaggle') || t.includes('zero-gpu') || t.includes('compute'),
 		generate: () => ({
-			reply_urdu: `AI Engineering seekhne ke liye \$3000 ka gaming laptop ya RTX 4090 GPU khareedne ki **bilkul zaroorat nahi hai**! 💡
+			reply_urdu: `AI Engineering seekhne ke liye \$3000 ka gaming laptop ya RTX 4090 GPU khareedne ki **bilkul zaroorat nahi hai**! 
 
 ### AI Mastery Zero-GPU Cloud Strategy:
 1. **Google Colab Free Tier**:
@@ -421,9 +421,9 @@ def verify_zero_gpu_cloud():
     if torch.cuda.is_available():
         gpu_name = torch.cuda.get_device_name(0)
         vram_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
-        print(f"✓ Free Cloud GPU Active: {gpu_name}")
-        print(f"✓ Available VRAM: {vram_gb:.2f} GB")
-        print("✓ Zero-GPU AI Engineering Ready!")
+        print(f" Free Cloud GPU Active: {gpu_name}")
+        print(f" Available VRAM: {vram_gb:.2f} GB")
+        print(" Zero-GPU AI Engineering Ready!")
     else:
         print("Running in CPU mode. Enable GPU via: Runtime > Change runtime type > T4 GPU")
 
@@ -448,7 +448,7 @@ arch LR: Zero-GPU Cloud Pipeline
 // Fallback generator for general Roman Urdu AI questions
 function generateGeneralReply(query: string): MentorResponse {
 	return {
-		reply_urdu: `Bohot behtareen sawal hai: **"${query}"**! 🎓
+		reply_urdu: `Bohot behtareen sawal hai: **"${query}"**! 
 
 AI Mastery curriculum ke mutabiq har concept ko first-principles math aur production-grade implementation se samjhna zaroori hai.
 

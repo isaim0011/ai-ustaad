@@ -140,7 +140,9 @@
 				<div class="my-8 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 dark:border-amber-500/20">
 					<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
 						<div class="flex items-center gap-3">
-							<span class="text-2xl">🚀</span>
+							<div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400">
+								<Sparkles class="h-4 w-4" />
+							</div>
 							<div>
 								<div class="flex items-center gap-2">
 									<span class="rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-mono font-bold uppercase text-amber-800 dark:text-amber-300">

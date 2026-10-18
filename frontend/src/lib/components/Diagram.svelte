@@ -319,7 +319,10 @@
 				<div>
 					<h3 class="font-serif text-sm font-semibold text-[#f5f4ed]">{title}</h3>
 					<div class="flex items-center gap-2 text-[11px] text-[#a19f97]">
-						<span class="text-emerald-400">● Live Canvas</span>
+						<span class="inline-flex items-center gap-1.5 text-emerald-400">
+							<span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+							<span>Live Canvas</span>
+						</span>
 						<span>•</span>
 						<span>{renderSource}</span>
 					</div>
@@ -441,13 +444,22 @@
 
 			<!-- Floating Instructions Pill -->
 			<div
-				class="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none rounded-full border border-[#343330] bg-[#18181b]/80 px-4 py-1.5 text-[11px] font-mono text-[#a19f97] backdrop-blur-sm shadow-md"
+				class="absolute bottom-6 left-1/2 -translate-x-1/2 pointer-events-none flex items-center gap-3 rounded-full border border-[#343330] bg-[#18181b]/90 px-4 py-1.5 text-[11px] font-mono text-[#a19f97] backdrop-blur-sm shadow-md"
 			>
-				<span>🖐️ Drag canvas to pan</span>
-				<span class="mx-2">•</span>
-				<span>🔍 Scroll wheel to zoom</span>
-				<span class="mx-2">•</span>
-				<span>⌨️ Esc to close</span>
+				<span class="inline-flex items-center gap-1.5">
+					<Move class="h-3 w-3 text-[#c96442]" />
+					<span>Drag canvas to pan</span>
+				</span>
+				<span class="text-[#454440]">•</span>
+				<span class="inline-flex items-center gap-1.5">
+					<ZoomIn class="h-3 w-3 text-[#c96442]" />
+					<span>Scroll wheel to zoom</span>
+				</span>
+				<span class="text-[#454440]">•</span>
+				<span class="inline-flex items-center gap-1.5">
+					<kbd class="rounded bg-[#2a2927] px-1 py-0.5 text-[9px] text-[#f5f4ed]">Esc</kbd>
+					<span>to close</span>
+				</span>
 			</div>
 		</div>
 	</div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { Check, Copy, Play, ExternalLink, Terminal, ChevronDown, ChevronUp } from 'lucide-svelte';
+	import { Check, Copy, Play, ExternalLink, Terminal, ChevronDown, ChevronUp, X } from 'lucide-svelte';
 	import { highlightCode } from '$lib/utils/highlighter';
 
 	interface Props {
@@ -66,7 +66,7 @@
 				results.push('Computing scaled dot-product attention: softmax((Q @ K.T) / sqrt(d_k)) @ V');
 				results.push('Output tensor shape: torch.Size([2, 8, 64])');
 				results.push('Attention energy matrix max: 1.0000, min: 0.0000');
-				results.push('✓ Matrix multiplication & residual addition verified.');
+				results.push('[ok] Matrix multiplication & residual addition verified.');
 			} else if (lower.includes('rag') || lower.includes('vector') || lower.includes('embedding')) {
 				results.push('Vector store initialized with 1536-dim embeddings.');
 				results.push('Computing Cosine Similarity with BM25 Sparse hybrid score...');
@@ -75,7 +75,7 @@
 				results.push('Unsloth FastLanguageModel initialized.');
 				results.push('Target modules: ["q_proj", "k_proj", "v_proj", "o_proj"]');
 				results.push('Trainable params: 4,194,304 || All params: 7,241,732,096 || Trainable%: 0.0579%');
-				results.push('✓ VRAM saving: ~78% lower memory footprint.');
+				results.push('[ok] VRAM saving: ~78% lower memory footprint.');
 			} else {
 				results.push('Execution successful. All tests and assertions passed.');
 			}
@@ -101,10 +101,10 @@
 					} finally {
 						console.log = origLog;
 					}
-					results.push(...(logCapture.length > 0 ? logCapture : ['✓ Script executed without errors.']));
+					results.push(...(logCapture.length > 0 ? logCapture : ['[ok] Script executed without errors.']));
 				} else {
 					results.push('[node/edge] TypeScript compiled successfully.');
-					results.push('✓ Zero type errors detected.');
+					results.push('[ok] Zero type errors detected.');
 				}
 			} catch (e: unknown) {
 				results.push(`[error] ${e instanceof Error ? e.message : String(e)}`);
@@ -195,7 +195,7 @@
 						class="text-[#a19f97] hover:text-white"
 						title="Close console"
 					>
-						✕
+						<X class="h-3.5 w-3.5" />
 					</button>
 				</div>
 			</div>
@@ -203,7 +203,7 @@
 				{#each outputLines as line}
 					<div class="flex items-start gap-2">
 						<span class="text-[#6f6e69] select-none">&gt;</span>
-						<span class={line.includes('✓') ? 'text-emerald-400' : line.includes('[error]') ? 'text-rose-400' : 'text-[#f5f4ed]'}>
+						<span class={line.includes('[ok]') ? 'text-emerald-400' : line.includes('[error]') ? 'text-rose-400' : 'text-[#f5f4ed]'}>
 							{line}
 						</span>
 					</div>

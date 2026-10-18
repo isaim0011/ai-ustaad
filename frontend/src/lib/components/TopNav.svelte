@@ -36,7 +36,7 @@
 	);
 </script>
 
-<header class="sticky top-0 z-40 border-b border-[#e5e2d9] bg-[#faf9f5]/90 backdrop-blur-md dark:border-[#343330] dark:bg-[#1f1e1d]/90">
+<header class="sticky top-0 z-40 border-b border-[#e5e2d9] bg-[#faf9f5]/90 backdrop-blur-md dark:border-[#2c2b28] dark:bg-[#141413]/90">
 	<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 		<!-- Brand Logo -->
 		<div class="flex items-center gap-2.5 sm:gap-3">
@@ -192,7 +192,7 @@
 
 	<!-- Mobile Drawer -->
 	{#if mobileMenuOpen}
-		<div class="border-b border-[#e5e2d9] bg-[#faf9f5] px-4 py-4 md:hidden dark:border-[#343330] dark:bg-[#1f1e1d]">
+		<div class="border-b border-[#e5e2d9] bg-[#faf9f5] px-4 py-4 md:hidden dark:border-[#2c2b28] dark:bg-[#141413]">
 			<nav class="flex flex-col gap-3">
 				<a
 					href="/learn"

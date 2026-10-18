@@ -91,8 +91,8 @@
 		<div class="rounded-2xl border-2 border-dashed border-[#c96442]/40 bg-[#c96442]/5 p-6 shadow-sm dark:border-[#c96442]/30 dark:bg-[#c96442]/10">
 			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
 				<div class="flex items-center gap-3.5">
-					<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#c96442] text-white shadow-sm font-bold text-xl">
-						🚀
+					<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#c96442] text-white shadow-sm">
+						<Sparkles class="h-6 w-6" />
 					</div>
 					<div>
 						<div class="flex flex-wrap items-center gap-2">
@@ -118,7 +118,7 @@
 					rel="noopener noreferrer"
 					class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#c96442] px-5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-[#d97757] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#c96442]/40 shrink-0"
 				>
-					<span>🚀 Open Google Colab Practice Notebook</span>
+					<span>Open Google Colab Practice Notebook</span>
 					<ExternalLink class="h-3.5 w-3.5" />
 				</a>
 			</div>
@@ -137,9 +137,7 @@
 					<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
 						{#each practiceProject.checklist as item}
 							<div class="flex items-start gap-2.5 text-xs text-[#141413] dark:text-[#f5f4ed]">
-								<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold mt-0.5">
-									✓
-								</span>
+								<CheckCircle2 class="h-4 w-4 shrink-0 text-emerald-600 dark:text-emerald-400 mt-0.5" />
 								<span class="leading-relaxed">{item}</span>
 							</div>
 						{/each}
@@ -239,9 +237,7 @@
 				<ul class="mt-3 space-y-2 text-xs text-[#2c2b28] dark:text-[#dcd9ce]">
 					{#each mod.practical_tasks as task}
 						<li class="flex items-start gap-2">
-							<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-[#c96442]/10 font-mono text-[10px] text-[#c96442] mt-0.5">
-								✓
-							</span>
+							<CheckCircle2 class="h-4 w-4 shrink-0 text-[#c96442] mt-0.5" />
 							<span class="leading-relaxed">{task}</span>
 						</li>
 					{/each}

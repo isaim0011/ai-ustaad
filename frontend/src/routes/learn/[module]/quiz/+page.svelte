@@ -82,8 +82,9 @@
 			{/if}
 
 			{#if form.badge_unlocked}
-				<div class="mt-4 mx-auto max-w-md rounded-xl border border-amber-500/40 bg-amber-500/20 p-3 text-xs font-medium text-amber-900 dark:text-amber-200">
-					👑 Badge Unlocked: <strong>{form.badge_unlocked}</strong>! (Bonus XP added to profile)
+				<div class="mt-4 mx-auto max-w-md flex items-center justify-center gap-2 rounded-xl border border-amber-500/40 bg-amber-500/20 p-3 text-xs font-medium text-amber-900 dark:text-amber-200">
+					<Award class="h-4 w-4 shrink-0 text-amber-600 dark:text-amber-400" />
+					<span>Badge Unlocked: <strong>{form.badge_unlocked}</strong>! (Bonus XP added to profile)</span>
 				</div>
 			{/if}
 

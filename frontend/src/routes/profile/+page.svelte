@@ -181,7 +181,9 @@
 				{#each userBadges as ub}
 					{@const b = Array.isArray(ub.badge) ? ub.badge[0] : ub.badge}
 					<div class="flex items-center gap-3 rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5">
-						<span class="text-2xl">{b?.icon || '🎖️'}</span>
+						<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-600 dark:text-amber-400">
+							<Award class="h-5 w-5" />
+						</div>
 						<div>
 							<div class="font-serif text-xs font-semibold text-[#141413] dark:text-[#f5f4ed]">
 								{b?.title}

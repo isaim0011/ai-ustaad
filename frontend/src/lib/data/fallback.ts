@@ -119,7 +119,7 @@ flow LR: Python Zero Se Hero Pipeline
 				},
 				practice_project: {
 					title: 'Chai Dhaba Billing & Khata System',
-					humorous_badge: 'Dhabay Ka Pythoneer ☕',
+					humorous_badge: 'Dhabay Ka Pythoneer',
 					description_roman_urdu: 'CLI application jo customer orders calculate kare, dost-yaar discounts lagaye, aur JSON khata file update kare.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 150,
@@ -199,7 +199,7 @@ print(f"Paratha: {special_paratha} x {paratha_price} = Rs. {special_paratha * pa
 print(f"Grand Total: Rs. {total}")
 
 if total >= 200:
-    print("Complimentary saunf & elaichi included! ☕")`
+    print("Complimentary saunf & elaichi included! ")`
 					},
 					{
 						id: 'l0-2',
@@ -515,7 +515,7 @@ flow LR: Module 1 Fast Math & Vector Pipeline
 				},
 				practice_project: {
 					title: 'Biryani vs Pulao Sentiment Analyzer',
-					humorous_badge: 'Biryani Scientist 🍛',
+					humorous_badge: 'Biryani Scientist',
 					description_roman_urdu: 'Twitter/X aur food reviews dataset se Biryani vs Pulao ki sentimental jung analyze karein using fast vectorized NumPy operations.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 175,
@@ -558,7 +558,7 @@ flow LR: Autograd Computational Graph
 				},
 				practice_project: {
 					title: 'Rishta Matcher Algorithm',
-					humorous_badge: 'Rishta Optimizer 💍',
+					humorous_badge: 'Rishta Optimizer',
 					description_roman_urdu: 'Candidate bios aur mother-in-law (Ami) ki strict criteria ke darmiyan Cosine similarity vector distance calculate karein.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 200,
@@ -607,7 +607,7 @@ flow LR: Backprop Gradient Flow
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Cricketer Performance Predictor',
-					humorous_badge: 'PSL Analyst 🏏',
+					humorous_badge: 'PSL Analyst',
 					description_roman_urdu: 'PSL / IPL match outcome aur player score predictor with LightGBM & regression.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 200,
@@ -641,7 +641,7 @@ flow LR: Transformer Attention Block
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Meme Classifier & Roast Bot',
-					humorous_badge: 'Meme Lord 🎭',
+					humorous_badge: 'Meme Lord',
 					description_roman_urdu: 'PyTorch CNN jo spicy memes vs wholesome cat pictures classify kare aur automatically funny roasts generate kare.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 225,
@@ -693,7 +693,7 @@ flow LR: Enterprise Hybrid RAG
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Biryani Recipe RAG with Exact Spices',
-					humorous_badge: 'Nani Ammi Approved 📖',
+					humorous_badge: 'Nani Ammi Approved',
 					description_roman_urdu: 'Vector search system jo dadi/nani ki handwritten recipe book se exact page aur grams of aloo bukhara cite kare.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 260,
@@ -729,7 +729,7 @@ flow LR: Anthropic MCP Agent Loop
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Ami Ka WhatsApp Reply Bot',
-					humorous_badge: 'Farmanbardar Beta 📱',
+					humorous_badge: 'Farmanbardar Beta',
 					description_roman_urdu: 'FastAPI streaming auto-responder for family groups with respectful polite excuses.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 220,
@@ -779,7 +779,7 @@ flow LR: Unsloth 4-bit QLoRA
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Roman Urdu Sarcasm Detector',
-					humorous_badge: 'Tanz Specialist 🎯',
+					humorous_badge: 'Tanz Specialist',
 					description_roman_urdu: 'Unsloth 4-bit fine-tuned LLaMA model on Colab Free T4 identifying sarcastic Pakistani tweets and irony.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 300,
@@ -814,7 +814,7 @@ flow LR: DeepSeek GRPO Pipeline
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Salary Negotiation Agent',
-					humorous_badge: 'HR Negotiator 💼',
+					humorous_badge: 'HR Negotiator',
 					description_roman_urdu: 'smolagents & Anthropic MCP swarm drafting funny yet razor-sharp counter-offers to tech recruiters.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 275,
@@ -864,7 +864,7 @@ flow LR: Rust Axum High-Performance Gateway
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Ghalib vs Iqbal Poetry Generator',
-					humorous_badge: 'Shayar-e-AI ✍️',
+					humorous_badge: 'Shayar-e-AI',
 					description_roman_urdu: 'Mini-GPT model serving classic Urdu poetry tokens in real-time via high-speed streaming gateway.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 250,
@@ -898,7 +898,7 @@ flow LR: Enterprise Production Capstone
 				diagram_animation: 'flow',
 				practice_project: {
 					title: 'Biryani Delivery Routing Agent & High-Speed Gateway',
-					humorous_badge: 'Full-Stack Ustaad 🚀',
+					humorous_badge: 'Full-Stack Ustaad',
 					description_roman_urdu: 'Autonomous multi-branch food dispatcher with route optimization, MCP tool-calls, and high-throughput Rust gateway.',
 					colab_url: 'https://colab.research.google.com/#create=true',
 					xp_reward: 350,
@@ -1081,7 +1081,7 @@ export const FALLBACK_BLOGS = [
 export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	'0': {
 		title: 'Chai Dhaba Billing & Khata System',
-		humorous_badge: 'Dhabay Ka Pythoneer ☕',
+		humorous_badge: 'Dhabay Ka Pythoneer',
 		description_roman_urdu: 'CLI application jo customer orders calculate kare, dost-yaar discounts lagaye, aur JSON khata file update kare.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 150,
@@ -1095,7 +1095,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'1': {
 		title: 'Biryani vs Pulao Sentiment Analyzer',
-		humorous_badge: 'Biryani Scientist 🍛',
+		humorous_badge: 'Biryani Scientist',
 		description_roman_urdu: 'Twitter/X aur food reviews dataset se Biryani vs Pulao ki sentimental jung analyze karein using fast vectorized NumPy operations.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 175,
@@ -1108,7 +1108,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'2': {
 		title: 'Rishta Matcher Algorithm',
-		humorous_badge: 'Rishta Optimizer 💍',
+		humorous_badge: 'Rishta Optimizer',
 		description_roman_urdu: 'Candidate bios aur mother-in-law (Ami) ki strict criteria ke darmiyan Cosine similarity vector distance calculate karein.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 200,
@@ -1121,7 +1121,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'3': {
 		title: 'Cricketer Performance Predictor',
-		humorous_badge: 'PSL Analyst 🏏',
+		humorous_badge: 'PSL Analyst',
 		description_roman_urdu: 'PSL / IPL match outcome aur player score predictor with LightGBM & regression.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 200,
@@ -1134,7 +1134,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'4': {
 		title: 'Meme Classifier & Roast Bot',
-		humorous_badge: 'Meme Lord 🎭',
+		humorous_badge: 'Meme Lord',
 		description_roman_urdu: 'PyTorch CNN jo spicy memes vs wholesome cat pictures classify kare aur automatically funny roasts generate kare.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 225,
@@ -1147,7 +1147,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'5': {
 		title: 'Biryani Recipe RAG with Exact Spices',
-		humorous_badge: 'Nani Ammi Approved 📖',
+		humorous_badge: 'Nani Ammi Approved',
 		description_roman_urdu: 'Vector search system jo dadi/nani ki handwritten recipe book se exact page aur grams of aloo bukhara cite kare.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 260,
@@ -1160,7 +1160,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'6': {
 		title: 'Ami Ka WhatsApp Reply Bot',
-		humorous_badge: 'Farmanbardar Beta 📱',
+		humorous_badge: 'Farmanbardar Beta',
 		description_roman_urdu: 'FastAPI streaming auto-responder for family groups with respectful polite excuses.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 220,
@@ -1173,7 +1173,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'7': {
 		title: 'Roman Urdu Sarcasm Detector',
-		humorous_badge: 'Tanz Specialist 🎯',
+		humorous_badge: 'Tanz Specialist',
 		description_roman_urdu: 'Unsloth 4-bit fine-tuned LLaMA model on Colab Free T4 identifying sarcastic Pakistani tweets and irony.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 300,
@@ -1186,7 +1186,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'8': {
 		title: 'Salary Negotiation Agent',
-		humorous_badge: 'HR Negotiator 💼',
+		humorous_badge: 'HR Negotiator',
 		description_roman_urdu: 'smolagents & Anthropic MCP swarm drafting funny yet razor-sharp counter-offers to tech recruiters.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 275,
@@ -1199,7 +1199,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'9': {
 		title: 'Ghalib vs Iqbal Poetry Generator',
-		humorous_badge: 'Shayar-e-AI ✍️',
+		humorous_badge: 'Shayar-e-AI',
 		description_roman_urdu: 'Mini-GPT model serving classic Urdu poetry tokens in real-time via high-speed streaming gateway.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 250,
@@ -1212,7 +1212,7 @@ export const MODULE_PRACTICE_PROJECTS: Record<string, PracticeProject> = {
 	},
 	'10': {
 		title: 'Biryani Delivery Routing Agent & High-Speed Gateway',
-		humorous_badge: 'Full-Stack Ustaad 🚀',
+		humorous_badge: 'Full-Stack Ustaad',
 		description_roman_urdu: 'Autonomous multi-branch food dispatcher with route optimization, MCP tool-calls, and high-throughput Rust gateway.',
 		colab_url: 'https://colab.research.google.com/#create=true',
 		xp_reward: 350,

@@ -43,7 +43,7 @@
 				{
 					sender: 'assistant',
 					content:
-						'Salam! Main aap ka **Roman Urdu AI Engineering Mentor** hoon. 🤖\n\nAap Transformer attention, Scaled Dot-Product math, Modern Hybrid RAG, Anthropic MCP swarms, DeepSeek-R1 GRPO ya Google Colab Free GPU compute se mutaliq koi bhi sawal pooch sakte hain!',
+						'Salam! Main aap ka **Roman Urdu AI Engineering Mentor** hoon.\n\nAap Transformer attention, Scaled Dot-Product math, Modern Hybrid RAG, Anthropic MCP swarms, DeepSeek-R1 GRPO ya Google Colab Free GPU compute se mutaliq koi bhi sawal pooch sakte hain!',
 					suggested_followups: [
 						'Transformer ka Self-Attention formula aur intuition samjhao',
 						'Modern RAG mein ColPali aur BM25 re-ranking ka kya role hai?',
