@@ -68,7 +68,7 @@ export interface LessonData {
 	order_index: number;
 	diagram_script?: string;
 	diagram_type?: string;
-	resources?: { title: string; url: string }[];
+	resources?: { title: string; url: string; type?: string }[];
 }
 
 export interface ModuleData {
@@ -90,6 +90,7 @@ export interface ModuleData {
 	practice_checkpoint?: PracticeCheckpoint;
 	learning_outcomes?: string[];
 	practical_tasks?: string[];
+	resources?: { title: string; url: string; type?: string }[];
 	lessons?: LessonData[];
 }
 

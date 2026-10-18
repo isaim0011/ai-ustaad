@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { ArrowRight, Sparkles, Cpu, Terminal, Shield, Zap, BookOpen, Layers, CheckCircle2, ExternalLink } from 'lucide-svelte';
 	import Diagram from '$lib/components/Diagram.svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -10,6 +11,74 @@
 	const tracks = $derived(data.tracks ?? []);
 	const blogs = $derived(data.featuredBlogs ?? []);
 </script>
+
+<Seo
+	title="AI Ustaad — AI Mastery: Zero Se Production Tak | Roman Urdu"
+	description="South Asia ka pehla complete, production-grade Roman Urdu AI Engineering curriculum. Python, PyTorch, Transformers, Modern RAG, Anthropic MCP, DeepSeek-R1 GRPO aur Rust Axum."
+	canonical="https://ai-ustaad.pages.dev/"
+	ogType="website"
+	ogImage="/og-image.png"
+	jsonLd={[
+		{
+			"@context": "https://schema.org",
+			"@type": "WebSite",
+			"@id": "https://ai-ustaad.pages.dev/#website",
+			"url": "https://ai-ustaad.pages.dev",
+			"name": "AI Ustaad",
+			"alternateName": "AI Ustaad by Bimo",
+			"description": "South Asia ka pehla complete, production-grade Roman Urdu AI Engineering curriculum.",
+			"inLanguage": ["ur-Latn", "en"],
+			"potentialAction": {
+				"@type": "SearchAction",
+				"target": {
+					"@type": "EntryPoint",
+					"urlTemplate": "https://ai-ustaad.pages.dev/learn?q={search_term_string}"
+				},
+				"query-input": "required name=search_term_string"
+			}
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "EducationalOrganization",
+			"@id": "https://ai-ustaad.pages.dev/#organization",
+			"name": "AI Ustaad",
+			"alternateName": "AI Ustaad by Bimo",
+			"url": "https://ai-ustaad.pages.dev",
+			"logo": "https://ai-ustaad.pages.dev/favicon.svg",
+			"sameAs": ["https://github.com/isaim0011"],
+			"founder": {
+				"@type": "Person",
+				"name": "Bimo",
+				"url": "https://github.com/isaim0011"
+			},
+			"description": "South Asia ka pehla complete, production-grade Roman Urdu AI Engineering curriculum."
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "Course",
+			"@id": "https://ai-ustaad.pages.dev/#course",
+			"name": "AI Ustaad — AI Mastery: Zero Se Production Tak",
+			"description": "Comprehensive 20-week production AI engineering curriculum in Roman Urdu covering Python, Tensors, PyTorch, Transformers, Modern RAG, Anthropic MCP, DeepSeek-R1 GRPO, and Rust Axum microservices.",
+			"provider": {
+				"@id": "https://ai-ustaad.pages.dev/#organization"
+			},
+			"inLanguage": ["ur-Latn", "en"],
+			"educationalCredentialAwarded": "AI Ustaad Full-Stack AI Engineer Certificate",
+			"courseCode": "AU-AI-2026",
+			"isAccessibleForFree": true,
+			"hasCourseInstance": {
+				"@type": "CourseInstance",
+				"courseMode": "online",
+				"courseWorkload": "PT100H",
+				"instructor": {
+					"@type": "Person",
+					"name": "Bimo",
+					"url": "https://github.com/isaim0011"
+				}
+			}
+		}
+	]}
+/>
 
 <div class="relative overflow-hidden">
 	<!-- Hero Section -->

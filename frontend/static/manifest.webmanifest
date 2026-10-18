@@ -1,0 +1,25 @@
+{
+  "name": "AI Ustaad — AI Mastery Zero Se Production Tak",
+  "short_name": "AI Ustaad",
+  "description": "South Asia ka pehla complete, production-grade Roman Urdu AI Engineering curriculum.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#faf9f5",
+  "theme_color": "#c96442",
+  "orientation": "portrait-primary",
+  "lang": "ur-Latn",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/og-image.png",
+      "sizes": "1200x630",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

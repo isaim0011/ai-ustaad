@@ -5,87 +5,135 @@ export const GET: RequestHandler = async ({ locals }) => {
 	const siteUrl = 'https://ai-ustaad.pages.dev';
 	const now = new Date().toISOString();
 
-	// Core static routes
+	// Core public static indexable routes (disallow auth/login/signup/profile)
 	const staticRoutes = [
 		{ path: '', priority: '1.0', changefreq: 'daily' },
 		{ path: '/learn', priority: '0.95', changefreq: 'daily' },
 		{ path: '/blog', priority: '0.90', changefreq: 'daily' },
-		{ path: '/mentor', priority: '0.85', changefreq: 'weekly' },
-		{ path: '/signup', priority: '0.70', changefreq: 'monthly' },
-		{ path: '/login', priority: '0.50', changefreq: 'monthly' }
+		{ path: '/mentor', priority: '0.80', changefreq: 'weekly' }
 	];
 
-	// Canonical 10 engineering blog slugs
-	const defaultBlogSlugs = [
-		'zero-gpu-survival-guide-2026',
-		'why-85-percent-fail-ai',
-		'tensors-memory-strides',
-		'the-illustrated-transformer',
-		'kv-cache-paged-attention',
-		'vector-search-vs-hybrid-rag',
-		'mcp-and-smolagents',
-		'unsloth-4bit-qlora',
-		'deepseek-r1-and-grpo',
-		'learner-to-3k-ai-engineer'
-	];
+	// Maps for deduplication and lastmod tracking
+	const blogsMap = new Map<string, string>();
+	const modulesMap = new Map<string, string>();
+	const lessonsMap = new Map<string, string>(); // key: `${moduleSlug}/${lessonSlug}`, value: lastmod
 
-	let blogSlugs = defaultBlogSlugs;
-
-	// Attempt to pull latest from Supabase if connected
-	if (locals.supabase) {
-		try {
-			const { data: dbBlogs } = await locals.supabase
-				.from('engineering_blogs')
-				.select('slug');
-			if (dbBlogs && dbBlogs.length > 0) {
-				const merged = new Set([...defaultBlogSlugs, ...dbBlogs.map((b: { slug: string }) => b.slug)]);
-				blogSlugs = Array.from(merged);
-			}
-		} catch {
-			// Fallback to canonical list
+	// 1. Populate from fallback data
+	for (const b of FALLBACK_BLOGS) {
+		if (b.slug) {
+			blogsMap.set(b.slug, now);
 		}
 	}
 
-	// Module slugs from fallback phases
-	const moduleSlugs: string[] = [];
 	for (const phase of FALLBACK_PHASES) {
-		for (const mod of phase.modules) {
-			if (mod.slug) moduleSlugs.push(mod.slug);
+		const mods = phase.modules ?? [];
+		for (const mod of mods) {
+			if (mod.slug) {
+				if (!modulesMap.has(mod.slug)) {
+					modulesMap.set(mod.slug, now);
+				}
+				const lessons = mod.lessons ?? [];
+				for (const les of lessons) {
+					if (les.slug) {
+						lessonsMap.set(`${mod.slug}/${les.slug}`, now);
+					}
+				}
+			}
 		}
+	}
+
+	// 2. Merge with Supabase database if available
+	if (locals.supabase) {
+		try {
+			// Query engineering blogs
+			const { data: dbBlogs } = await locals.supabase
+				.from('engineering_blogs')
+				.select('slug, updated_at');
+			if (dbBlogs) {
+				for (const b of dbBlogs) {
+					if (b.slug) {
+						blogsMap.set(b.slug, b.updated_at || now);
+					}
+				}
+			}
+		} catch {
+			// Fallback retained
+		}
+
+		try {
+			// Query modules
+			const { data: dbModules } = await locals.supabase
+				.from('modules')
+				.select('id, slug, updated_at');
+			if (dbModules) {
+				const moduleMapById = new Map<string, string>();
+				for (const m of dbModules) {
+					if (m.slug) {
+						modulesMap.set(m.slug, m.updated_at || now);
+						moduleMapById.set(m.id, m.slug);
+					}
+				}
+
+				// Query lessons
+				const { data: dbLessons } = await locals.supabase
+					.from('lessons')
+					.select('module_id, slug, updated_at');
+				if (dbLessons) {
+					for (const l of dbLessons) {
+						const modSlug = moduleMapById.get(l.module_id);
+						if (modSlug && l.slug) {
+							lessonsMap.set(`${modSlug}/${l.slug}`, l.updated_at || now);
+						}
+					}
+				}
+			}
+		} catch {
+			// Fallback retained
+		}
+	}
+
+	// Build XML
+	const urlEntries: string[] = [];
+
+	for (const route of staticRoutes) {
+		urlEntries.push(`  <url>
+    <loc>${siteUrl}${route.path}</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>${route.changefreq}</changefreq>
+    <priority>${route.priority}</priority>
+  </url>`);
+	}
+
+	for (const [slug, lastmod] of blogsMap.entries()) {
+		urlEntries.push(`  <url>
+    <loc>${siteUrl}/blog/${slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.75</priority>
+  </url>`);
+	}
+
+	for (const [slug, lastmod] of modulesMap.entries()) {
+		urlEntries.push(`  <url>
+    <loc>${siteUrl}/learn/${slug}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>`);
+	}
+
+	for (const [path, lastmod] of lessonsMap.entries()) {
+		urlEntries.push(`  <url>
+    <loc>${siteUrl}/learn/${path}</loc>
+    <lastmod>${lastmod}</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.80</priority>
+  </url>`);
 	}
 
 	const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-${staticRoutes
-	.map(
-		(r) => `  <url>
-    <loc>${siteUrl}${r.path}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>${r.changefreq}</changefreq>
-    <priority>${r.priority}</priority>
-  </url>`
-	)
-	.join('\n')}
-${blogSlugs
-	.map(
-		(slug) => `  <url>
-    <loc>${siteUrl}/blog/${slug}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.80</priority>
-  </url>`
-	)
-	.join('\n')}
-${moduleSlugs
-	.map(
-		(slug) => `  <url>
-    <loc>${siteUrl}/learn/${slug}</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.85</priority>
-  </url>`
-	)
-	.join('\n')}
+${urlEntries.join('\n')}
 </urlset>`.trim();
 
 	return new Response(xml, {

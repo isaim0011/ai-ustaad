@@ -112,7 +112,7 @@
 		}));
 
 		try {
-			// Call server endpoint /api/mentor (3-tier: local backend -> Groq/Gemini -> Built-in Roman Urdu knowledge engine)
+			// Call server endpoint /api/mentor (3-tier: Workers AI -> Groq -> Built-in Roman Urdu knowledge engine)
 			const res = await fetch('/api/mentor', {
 				method: 'POST',
 				headers: { 'Content-Type': 'application/json' },

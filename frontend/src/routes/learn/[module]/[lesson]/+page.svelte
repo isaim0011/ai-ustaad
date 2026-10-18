@@ -6,6 +6,7 @@
 	import Diagram from '$lib/components/Diagram.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import HfSubprojectCard from '$lib/components/HfSubprojectCard.svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import { getPracticeProject, getHfSubproject } from '$lib/data/fallback';
 	import type { ActionData, PageData } from './$types';
 
@@ -20,13 +21,74 @@
 	let isOptimisticCompleted = $state(false);
 
 	const isCompleted = $derived(isOptimisticCompleted || data.isCompleted || form?.success);
-	const practiceProject = $derived(getPracticeProject(mod.slug || mod.module_number));
+	const practiceProject = $derived(getPracticeProject(mod.slug || (mod as any).module_number));
 	const hfSubproject = $derived(
 		(mod as any).practice_checkpoint?.hf_subproject ||
 		practiceProject?.hf_subproject ||
-		getHfSubproject(mod.slug || mod.module_number)
+		getHfSubproject(mod.slug || (mod as any).module_number)
 	);
 </script>
+
+<Seo
+	title={`${lesson.lesson_code ? lesson.lesson_code + ' ' : ''}${lesson.title} | AI Ustaad`}
+	description={lesson.english_summary || 'Interactive AI Engineering lesson in Roman Urdu with code examples and practical exercises.'}
+	canonical={`https://ai-ustaad.pages.dev/learn/${mod.slug}/${lesson.slug}`}
+	ogType="article"
+	ogImage="/og-image.png"
+	jsonLd={[
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://ai-ustaad.pages.dev"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Curriculum",
+					"item": "https://ai-ustaad.pages.dev/learn"
+				},
+				{
+					"@type": "ListItem",
+					"position": 3,
+					"name": mod.title,
+					"item": `https://ai-ustaad.pages.dev/learn/${mod.slug}`
+				},
+				{
+					"@type": "ListItem",
+					"position": 4,
+					"name": lesson.title,
+					"item": `https://ai-ustaad.pages.dev/learn/${mod.slug}/${lesson.slug}`
+				}
+			]
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "LearningResource",
+			"name": `${lesson.lesson_code ? lesson.lesson_code + ' ' : ''}${lesson.title}`,
+			"description": lesson.english_summary || 'Interactive AI Engineering lesson in Roman Urdu with code examples and practical exercises.',
+			"learningResourceType": "Lesson",
+			"educationalLevel": "Beginner to Advanced",
+			"inLanguage": ["ur-Latn", "en"],
+			"isAccessibleForFree": true,
+			"url": `https://ai-ustaad.pages.dev/learn/${mod.slug}/${lesson.slug}`,
+			"partOfCourse": {
+				"@type": "Course",
+				"name": mod.title,
+				"url": `https://ai-ustaad.pages.dev/learn/${mod.slug}`
+			},
+			"publisher": {
+				"@type": "EducationalOrganization",
+				"name": "AI Ustaad",
+				"url": "https://ai-ustaad.pages.dev"
+			}
+		}
+	]}
+/>
 
 <div class="flex min-h-[calc(100vh-4rem)]">
 	<!-- Collapsible Syllabus Sidebar -->

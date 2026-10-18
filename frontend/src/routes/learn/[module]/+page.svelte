@@ -3,6 +3,7 @@
 	import Diagram from '$lib/components/Diagram.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
 	import HfSubprojectCard from '$lib/components/HfSubprojectCard.svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import { getPracticeProject, getHfSubproject } from '$lib/data/fallback';
 	import type { PageData } from './$types';
 
@@ -34,6 +35,57 @@
 		getHfSubproject(mod.slug || mod.module_number)
 	);
 </script>
+
+<Seo
+	title={`Module ${mod.module_number}: ${mod.title} | AI Ustaad`}
+	description={mod.description || mod.real_world_deliverable || 'Production AI Engineering module in Roman Urdu.'}
+	canonical={`https://ai-ustaad.pages.dev/learn/${mod.slug}`}
+	ogType="website"
+	ogImage="/og-image.png"
+	jsonLd={[
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://ai-ustaad.pages.dev"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Curriculum",
+					"item": "https://ai-ustaad.pages.dev/learn"
+				},
+				{
+					"@type": "ListItem",
+					"position": 3,
+					"name": mod.title,
+					"item": `https://ai-ustaad.pages.dev/learn/${mod.slug}`
+				}
+			]
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "Course",
+			"name": mod.title,
+			"description": mod.description || mod.real_world_deliverable || 'Production AI Engineering module in Roman Urdu.',
+			"provider": {
+				"@type": "EducationalOrganization",
+				"name": "AI Ustaad",
+				"url": "https://ai-ustaad.pages.dev"
+			},
+			"inLanguage": ["ur-Latn", "en"],
+			"isAccessibleForFree": true,
+			"hasCourseInstance": {
+				"@type": "CourseInstance",
+				"courseMode": "online"
+			}
+		}
+	]}
+/>
 
 <div class="mx-auto flex max-w-5xl flex-col gap-10 px-4 py-10 sm:px-6 lg:px-8">
 	<!-- Breadcrumbs -->

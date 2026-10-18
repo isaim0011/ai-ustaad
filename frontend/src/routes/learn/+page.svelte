@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Flame, Sparkles, BookOpen, ArrowRight, Award, Trophy, Play, CheckCircle2, Circle, Clock, Terminal, Shield } from 'lucide-svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -19,6 +20,46 @@
 	const totalLessons = $derived(phaseStats.reduce((acc: number, p: any) => acc + p.totalLessons, 0));
 	const overallPct = $derived(totalLessons > 0 ? Math.round((totalCompleted / totalLessons) * 100) : 0);
 </script>
+
+<Seo
+	title="Curriculum & Roadmap | AI Ustaad"
+	description="Explore the complete 20-week production AI engineering curriculum in Roman Urdu: Python prerequisites, Tensors, PyTorch, Transformers, Modern RAG, Agents, and MLOps."
+	canonical="https://ai-ustaad.pages.dev/learn"
+	ogType="website"
+	ogImage="/og-image.png"
+	jsonLd={[
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://ai-ustaad.pages.dev"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Curriculum",
+					"item": "https://ai-ustaad.pages.dev/learn"
+				}
+			]
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "ItemList",
+			"name": "AI Ustaad Curriculum Phases",
+			"description": "20-week production AI engineering roadmap from prerequisites to advanced LLM post-training and distributed MLOps.",
+			"itemListElement": (phaseStats ?? []).map((p: any, idx: number) => ({
+				"@type": "ListItem",
+				"position": idx + 1,
+				"name": p.title,
+				"description": p.description || `Phase ${p.phase_number}`
+			}))
+		}
+	]}
+/>
 
 <div class="mx-auto max-w-7xl px-4 py-10 sm:px-6 lg:px-8 space-y-10">
 	<!-- Welcome Header -->

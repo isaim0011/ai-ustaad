@@ -1,6 +1,5 @@
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
-import { PUBLIC_API_URL } from '$env/static/public';
 
 interface MentorResponse {
 	reply_urdu: string;
@@ -485,56 +484,266 @@ arch LR: First-Principles AI Architecture
 	};
 }
 
+const SYSTEM_PROMPT = `You are "AI Ustaad", the premier Roman Urdu AI Engineering Mentor for the AI Mastery platform (ai-ustaad.pages.dev).
+
+ROLE AND SCOPE:
+You answer ONLY questions strictly related to the 15 curriculum modules of AI Mastery:
+1. Module 00: Python Foundations (variables, control flow, functions, OOP, data structures, file handling)
+2. Module 01: Python for AI & Fast Math (NumPy, vectorization, matrix algebra, broadcasting)
+3. Module 02: PyTorch from Scratch (tensors, autograd, computational graphs, Dataset & DataLoader)
+4. Module 03: Neural Networks & Backprop (MLPs, loss functions, optimizers, backpropagation)
+5. Module 04: Transformers & Attention Deep Dive (Scaled Dot-Product Attention, QKV, Multi-Head Attention, RoPE, KV cache)
+6. Module 05: Modern RAG & Retrieval (Hybrid search, pgvector, BM25, Reciprocal Rank Fusion, Cross-Encoder rerankers, ColPali)
+7. Module 06: Autonomous Agents & MCP (Anthropic Model Context Protocol, CodeAgents, tool calling, smolagents)
+8. Module 07: Fine-Tuning & Quantization (LoRA, QLoRA, 4-bit NF4, Unsloth, PEFT, Colab Zero-GPU)
+9. Module 08: Reasoning Models & GRPO (DeepSeek-R1, Group Relative Policy Optimization, chain-of-thought, reward functions)
+10. Module 09: Rust Axum AI Gateway (High-performance serving, streaming SSE, Axum 0.8, Tokio concurrency)
+11. Module 10: Production MLOps Capstone (CI/CD, evaluation, observability, model monitoring, deployment)
+And all related Machine Learning, Deep Learning, and AI Systems Engineering topics in the curriculum.
+
+OFF-TOPIC REFUSAL POLICY:
+If the user's question is NOT about AI engineering, machine learning, Python/Rust for AI, or the course modules (e.g. general chit-chat, cooking, politics, sports, entertainment, or programming unrelated to AI):
+You MUST politely refuse in Roman Urdu:
+"Main AI Ustaad hoon aur sirf AI Mastery curriculum ke 15 modules (Python, ML, DL, Transformers, RAG, Agents/MCP, Fine-Tuning, MLOps, Rust AI) ke sawalaat ka jawab deta hoon. Baraye meherbani AI curriculum se mutaliq sawal poochein."
+Provide 2-3 relevant course questions in suggested_followups.
+
+LANGUAGE AND STYLE:
+- Respond in Roman Urdu mixed naturally with English technical terms (e.g., "Scaled Dot-Product Attention", "Tensors", "Loss function", "Gradients", "Backpropagation").
+- First-principles conceptual clarity and practical engineering intuition.
+- ABSOLUTELY NO EMOJIS anywhere in your response under any circumstances.
+
+OUTPUT SCHEMA:
+You MUST respond with valid raw JSON only. Do not wrap in markdown or backticks.
+The JSON must follow this exact schema:
+{
+  "reply_urdu": "Markdown formatted Roman Urdu explanation with English technical terms. No emojis.",
+  "code_snippet": {
+    "language": "python",
+    "title": "Title of snippet",
+    "code": "# Runnable code without emojis"
+  },
+  "diagram_script": "@preset midnight\\n@animate flow\\narch LR: Title\\n  a[Input] -> b[Output]*",
+  "suggested_followups": [
+    "Relevant followup question 1 in Roman Urdu / English",
+    "Relevant followup question 2 in Roman Urdu / English",
+    "Relevant followup question 3 in Roman Urdu / English"
+  ]
+}
+If code_snippet is not needed, set it to null.
+If diagram_script is not needed, set it to null.
+suggested_followups must contain 2-3 relevant questions.`;
+
+function stripEmojis(text: string): string {
+	return text.replace(
+		/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{1F000}-\u{1F02F}\u{1F0A0}-\u{1F0FF}\u{1F100}-\u{1F64F}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{1FA00}-\u{1FA6F}\u{1FA70}-\u{1FAFF}]/gu,
+		''
+	);
+}
+
+function normalizeMentorObject(
+	parsed: Record<string, unknown>,
+	fallbackText: string
+): MentorResponse {
+	let replyUrdu = '';
+	if (typeof parsed.reply_urdu === 'string' && parsed.reply_urdu.trim()) {
+		replyUrdu = parsed.reply_urdu.trim();
+	} else if (typeof parsed.content === 'string' && parsed.content.trim()) {
+		replyUrdu = parsed.content.trim();
+	} else {
+		replyUrdu = fallbackText;
+	}
+
+	let codeSnippet: MentorResponse['code_snippet'] = null;
+	if (
+		parsed.code_snippet &&
+		typeof parsed.code_snippet === 'object' &&
+		'code' in parsed.code_snippet &&
+		typeof (parsed.code_snippet as { code: unknown }).code === 'string' &&
+		(parsed.code_snippet as { code: string }).code.trim()
+	) {
+		const cs = parsed.code_snippet as { language?: unknown; title?: unknown; code: string };
+		codeSnippet = {
+			language: typeof cs.language === 'string' ? cs.language : 'python',
+			title: typeof cs.title === 'string' ? cs.title : 'Code Implementation',
+			code: stripEmojis(cs.code)
+		};
+	}
+
+	let diagramScript: string | null = null;
+	if (typeof parsed.diagram_script === 'string' && parsed.diagram_script.trim()) {
+		diagramScript = stripEmojis(parsed.diagram_script.trim());
+	}
+
+	let followups: string[] = [];
+	if (Array.isArray(parsed.suggested_followups)) {
+		followups = parsed.suggested_followups
+			.filter((f): f is string => typeof f === 'string' && f.trim().length > 0)
+			.map((f) => stripEmojis(f.trim()))
+			.slice(0, 4);
+	}
+	if (followups.length === 0) {
+		followups = [
+			'Transformer ka Self-Attention formula aur intuition samjhao',
+			'Modern RAG mein ColPali aur BM25 re-ranking ka kya role hai?',
+			'Google Colab Free GPU par bina paise diye LoRA fine-tuning kaise karein?'
+		];
+	}
+
+	return {
+		reply_urdu: stripEmojis(replyUrdu),
+		code_snippet: codeSnippet,
+		diagram_script: diagramScript,
+		suggested_followups: followups
+	};
+}
+
+function parseMentorResponse(raw: string): MentorResponse {
+	const sanitized = stripEmojis(raw).trim();
+	const textWithoutThink = sanitized.replace(/<think>[\s\S]*?<\/think>/gi, '').trim();
+
+	// 1. Try direct JSON parse
+	try {
+		const parsed = JSON.parse(textWithoutThink);
+		if (parsed && typeof parsed === 'object') {
+			return normalizeMentorObject(parsed as Record<string, unknown>, textWithoutThink);
+		}
+	} catch {
+		// Continue
+	}
+
+	// 2. Try markdown code block extraction
+	const blockMatch = textWithoutThink.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
+	if (blockMatch && blockMatch[1]) {
+		try {
+			const parsed = JSON.parse(blockMatch[1].trim());
+			if (parsed && typeof parsed === 'object') {
+				return normalizeMentorObject(parsed as Record<string, unknown>, textWithoutThink);
+			}
+		} catch {
+			// Continue
+		}
+	}
+
+	// 3. Try outermost JSON object brackets { ... }
+	const startIdx = textWithoutThink.indexOf('{');
+	const endIdx = textWithoutThink.lastIndexOf('}');
+	if (startIdx !== -1 && endIdx > startIdx) {
+		try {
+			const jsonSub = textWithoutThink.substring(startIdx, endIdx + 1);
+			const parsed = JSON.parse(jsonSub);
+			if (parsed && typeof parsed === 'object') {
+				return normalizeMentorObject(parsed as Record<string, unknown>, textWithoutThink);
+			}
+		} catch {
+			// Continue
+		}
+	}
+
+	// 4. Fallback: return entire text as reply_urdu
+	return {
+		reply_urdu: textWithoutThink || 'Jawab generate nahi ho saka. Baraye meherbani dobara koshish karein.',
+		code_snippet: null,
+		diagram_script: null,
+		suggested_followups: [
+			'Transformer ka Self-Attention formula aur intuition samjhao',
+			'Modern RAG mein ColPali aur BM25 re-ranking ka kya role hai?',
+			'Google Colab Free GPU par bina paise diye LoRA fine-tuning kaise karein?'
+		]
+	};
+}
+
+async function runWithTimeout<T>(promise: Promise<T>, ms: number, label: string): Promise<T> {
+	let timer: ReturnType<typeof setTimeout> | undefined;
+	const timeoutPromise = new Promise<never>((_, reject) => {
+		timer = setTimeout(() => reject(new Error(`${label} timed out after ${ms}ms`)), ms);
+	});
+	try {
+		return await Promise.race([promise, timeoutPromise]);
+	} finally {
+		if (timer) clearTimeout(timer);
+	}
+}
+
 export const POST: RequestHandler = async ({ request, platform }) => {
 	try {
 		const body = await request.json();
 		const message = (body.message || '').trim();
-		const history = body.history || [];
+		const rawHistory = Array.isArray(body.history) ? body.history : [];
 
 		if (!message) {
 			return json({ error: 'Message cannot be empty' }, { status: 400 });
 		}
 
-		// Tier 1: Try local backend if configured and available
-		if (PUBLIC_API_URL || typeof process !== 'undefined') {
-			const backendUrl = PUBLIC_API_URL || 'http://127.0.0.1:8080';
-			try {
-				const controller = new AbortController();
-				const timeoutId = setTimeout(() => controller.abort(), 1200);
-				const res = await fetch(`${backendUrl}/api/ai/mentor`, {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ message, history }),
-					signal: controller.signal
-				});
-				clearTimeout(timeoutId);
+		const formattedHistory = rawHistory.slice(-6).map((h: unknown) => {
+			const item = h as { role?: unknown; content?: unknown };
+			return {
+				role: item?.role === 'assistant' ? 'assistant' : 'user',
+				content: typeof item?.content === 'string' ? item.content : ''
+			};
+		});
 
-				if (res.ok) {
-					const data = await res.json();
-					return json(data);
+		// (1) Cloudflare Workers AI with Meta Llama models
+		if (platform?.env?.AI && typeof platform.env.AI.run === 'function') {
+			const candidateModels = [
+				'@cf/meta/llama-3.3-70b-instruct-fp8-fast',
+				'@cf/meta/llama-3.1-8b-instruct'
+			];
+
+			for (const model of candidateModels) {
+				try {
+					const aiCall = platform.env.AI.run(model, {
+						messages: [
+							{ role: 'system', content: SYSTEM_PROMPT },
+							...formattedHistory,
+							{ role: 'user', content: message }
+						],
+						max_tokens: 1500,
+						temperature: 0.3
+					});
+
+					const aiRes = (await runWithTimeout(aiCall, 9000, `Workers AI ${model}`)) as
+						| { response?: unknown }
+						| string
+						| undefined;
+
+					let rawText = '';
+					if (aiRes && typeof aiRes === 'object') {
+						if (typeof aiRes.response === 'string') {
+							rawText = aiRes.response;
+						} else if (typeof aiRes.response === 'object' && aiRes.response !== null) {
+							return json(
+								normalizeMentorObject(
+									aiRes.response as Record<string, unknown>,
+									JSON.stringify(aiRes.response)
+								)
+							);
+						} else {
+							rawText = JSON.stringify(aiRes);
+						}
+					} else if (typeof aiRes === 'string') {
+						rawText = aiRes;
+					}
+
+					if (rawText && rawText.trim()) {
+						const parsedResponse = parseMentorResponse(rawText);
+						return json(parsedResponse);
+					}
+				} catch (cfErr) {
+					console.warn(`Workers AI (${model}) attempt failed:`, cfErr);
+					// Continue to fallback model or next tier
 				}
-			} catch {
-				// Backend not running, fallback seamlessly to Edge LLM / Knowledge Engine
 			}
 		}
 
-		// Tier 2: Try Groq API if GROQ_API_KEY is available in platform.env or process.env
+		// (2) Groq llama-3.3-70b-versatile if GROQ_API_KEY is available
 		const groqKey =
-			platform?.env?.GROQ_API_KEY ||
+			(typeof platform?.env?.GROQ_API_KEY === 'string' ? platform.env.GROQ_API_KEY : undefined) ||
 			(typeof process !== 'undefined' ? process.env?.GROQ_API_KEY : undefined);
 
 		if (groqKey) {
 			try {
-				const sysPrompt = `You are "AI Ustaad", the premier Roman Urdu AI Engineering Mentor for the AI Mastery platform (ai-ustaad.pages.dev) created by Bimo.
-Explain concepts with deep first-principles intuition in engaging Roman Urdu.
-If appropriate, include runnable code in Python or Rust and a DiagramKit script in @preset midnight format.
-Return a structured JSON with:
-{
-  "reply_urdu": "Markdown formatted Roman Urdu explanation",
-  "code_snippet": {"language": "python", "title": "Script Title", "code": "...code..."},
-  "diagram_script": "@preset midnight\\n@animate flow\\n...",
-  "suggested_followups": ["Followup 1", "Followup 2", "Followup 3"]
-}`;
+				const controller = new AbortController();
+				const timeoutId = setTimeout(() => controller.abort(), 7500);
 
 				const groqRes = await fetch('https://api.groq.com/openai/v1/chat/completions', {
 					method: 'POST',
@@ -545,31 +754,36 @@ Return a structured JSON with:
 					body: JSON.stringify({
 						model: 'llama-3.3-70b-versatile',
 						messages: [
-							{ role: 'system', content: sysPrompt },
-							...history.slice(-4),
+							{ role: 'system', content: SYSTEM_PROMPT },
+							...formattedHistory,
 							{ role: 'user', content: message }
 						],
 						response_format: { type: 'json_object' },
-						temperature: 0.6
-					})
+						temperature: 0.3,
+						max_tokens: 1500
+					}),
+					signal: controller.signal
 				});
+				clearTimeout(timeoutId);
 
 				if (groqRes.ok) {
-					const groqData = await groqRes.json();
-					const parsed = JSON.parse(groqData.choices[0].message.content);
-					return json({
-						reply_urdu: parsed.reply_urdu || parsed.content,
-						code_snippet: parsed.code_snippet || null,
-						diagram_script: parsed.diagram_script || null,
-						suggested_followups: parsed.suggested_followups || []
-					});
+					const groqData = (await groqRes.json()) as {
+						choices?: Array<{ message?: { content?: string } }>;
+					};
+					const content = groqData.choices?.[0]?.message?.content;
+					if (content && content.trim()) {
+						const parsedResponse = parseMentorResponse(content);
+						return json(parsedResponse);
+					}
+				} else {
+					console.warn('Groq API error response status:', groqRes.status);
 				}
-			} catch (e) {
-				console.warn('Groq edge call failed, falling back to built-in knowledge engine:', e);
+			} catch (groqErr) {
+				console.warn('Groq call failed, falling back to built-in knowledge engine:', groqErr);
 			}
 		}
 
-		// Tier 3: Built-in Roman Urdu AI Ustaad Knowledge Engine
+		// (3) Existing built-in Roman Urdu AI Ustaad Knowledge Engine
 		const lowerMsg = message.toLowerCase();
 		for (const entry of KNOWLEDGE_BASE) {
 			if (entry.match(lowerMsg)) {
@@ -583,3 +797,4 @@ Return a structured JSON with:
 		return json({ error: msg }, { status: 500 });
 	}
 };
+

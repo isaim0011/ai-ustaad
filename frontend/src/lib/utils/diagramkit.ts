@@ -35,7 +35,37 @@ export interface ParsedEdge {
 	label?: string;
 }
 
-export const COLOR_MAP: Record<string, { bg: string; border: string; glow: string; text: string }> = {
+export interface NodeColorScheme {
+	bg: string;
+	border: string;
+	glow: string;
+	text: string;
+}
+
+export interface DiagramTheme {
+	name: string;
+	label: string;
+	isDark: boolean;
+	bg: string;
+	border: string;
+	grid: string;
+	text: string;
+	textMuted: string;
+	accent: string;
+	badgeBg: string;
+	badgeBorder: string;
+	badgeText: string;
+	edgeBase: string;
+	edgeActive: string;
+	edgeLabelBg: string;
+	edgeLabelBorder: string;
+	edgeLabelText: string;
+	iconBg: string;
+	iconBorder?: string;
+	colorMap: Record<string, NodeColorScheme>;
+}
+
+export const COLOR_MAP: Record<string, NodeColorScheme> = {
 	primary: { bg: '#2b1c18', border: '#c96442', glow: 'rgba(201, 100, 66, 0.4)', text: '#fca082' },
 	purple: { bg: '#231834', border: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.4)', text: '#c4b5fd' },
 	teal: { bg: '#13282b', border: '#14b8a6', glow: 'rgba(20, 184, 166, 0.4)', text: '#5eead4' },
@@ -65,17 +95,238 @@ export const ICONS: Record<string, string> = {
 	zap: `<polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>`
 };
 
+export const THEMES: Record<string, DiagramTheme> = {
+	midnight: {
+		name: 'midnight',
+		label: 'Midnight',
+		isDark: true,
+		bg: '#131315',
+		border: '#2a2a2e',
+		grid: '#222226',
+		text: '#f5f4ed',
+		textMuted: '#a19f97',
+		accent: '#c96442',
+		badgeBg: '#201a18',
+		badgeBorder: '#c96442',
+		badgeText: '#c96442',
+		edgeBase: '#2a2a2e',
+		edgeActive: '#c96442',
+		edgeLabelBg: '#18181b',
+		edgeLabelBorder: '#3f3f46',
+		edgeLabelText: '#e4e4e7',
+		iconBg: '#18181b',
+		iconBorder: '#3f3f46',
+		colorMap: COLOR_MAP
+	},
+	light: {
+		name: 'light',
+		label: 'Light (Warm Cream)',
+		isDark: false,
+		bg: '#faf9f5',
+		border: '#d8d5cb',
+		grid: '#e8e5dc',
+		text: '#141413',
+		textMuted: '#706f6a',
+		accent: '#c96442',
+		badgeBg: '#f0eee6',
+		badgeBorder: '#d8d5cb',
+		badgeText: '#c96442',
+		edgeBase: '#d8d5cb',
+		edgeActive: '#c96442',
+		edgeLabelBg: '#ffffff',
+		edgeLabelBorder: '#d8d5cb',
+		edgeLabelText: '#141413',
+		iconBg: '#f5f3ec',
+		iconBorder: '#d8d5cb',
+		colorMap: {
+			primary: { bg: '#fdf5f2', border: '#c96442', glow: 'rgba(201, 100, 66, 0.18)', text: '#96381a' },
+			purple: { bg: '#f6f3fd', border: '#8b5cf6', glow: 'rgba(139, 92, 246, 0.18)', text: '#5b21b6' },
+			teal: { bg: '#f0fdfa', border: '#14b8a6', glow: 'rgba(20, 184, 166, 0.18)', text: '#0f766e' },
+			info: { bg: '#eff6ff', border: '#3b82f6', glow: 'rgba(59, 130, 246, 0.18)', text: '#1d4ed8' },
+			ok: { bg: '#f0fdf4', border: '#10b981', glow: 'rgba(16, 185, 129, 0.18)', text: '#047857' },
+			emerald: { bg: '#f0fdf4', border: '#10b981', glow: 'rgba(16, 185, 129, 0.18)', text: '#047857' },
+			warn: { bg: '#fffbeb', border: '#f59e0b', glow: 'rgba(245, 158, 11, 0.18)', text: '#b45309' },
+			amber: { bg: '#fffbeb', border: '#f59e0b', glow: 'rgba(245, 158, 11, 0.18)', text: '#b45309' },
+			danger: { bg: '#fef2f2', border: '#ef4444', glow: 'rgba(239, 68, 68, 0.18)', text: '#b91c1c' },
+			default: { bg: '#ffffff', border: '#d8d5cb', glow: 'rgba(20, 20, 19, 0.05)', text: '#141413' }
+		}
+	},
+	slate: {
+		name: 'slate',
+		label: 'Slate',
+		isDark: true,
+		bg: '#0f172a',
+		border: '#334155',
+		grid: '#1e293b',
+		text: '#f8fafc',
+		textMuted: '#94a3b8',
+		accent: '#38bdf8',
+		badgeBg: '#1e293b',
+		badgeBorder: '#38bdf8',
+		badgeText: '#38bdf8',
+		edgeBase: '#334155',
+		edgeActive: '#38bdf8',
+		edgeLabelBg: '#1e293b',
+		edgeLabelBorder: '#475569',
+		edgeLabelText: '#f1f5f9',
+		iconBg: '#1e293b',
+		iconBorder: '#334155',
+		colorMap: {
+			primary: { bg: '#132c3f', border: '#38bdf8', glow: 'rgba(56, 189, 248, 0.35)', text: '#7dd3fc' },
+			purple: { bg: '#251c3d', border: '#a855f7', glow: 'rgba(168, 85, 247, 0.35)', text: '#d8b4fe' },
+			teal: { bg: '#112d2f', border: '#2dd4bf', glow: 'rgba(45, 212, 191, 0.35)', text: '#5eead4' },
+			info: { bg: '#172554', border: '#60a5fa', glow: 'rgba(96, 165, 250, 0.35)', text: '#93c5fd' },
+			ok: { bg: '#063b2a', border: '#34d399', glow: 'rgba(52, 211, 153, 0.35)', text: '#6ee7b7' },
+			emerald: { bg: '#063b2a', border: '#34d399', glow: 'rgba(52, 211, 153, 0.35)', text: '#6ee7b7' },
+			warn: { bg: '#382910', border: '#fbbf24', glow: 'rgba(251, 191, 36, 0.35)', text: '#fde68a' },
+			amber: { bg: '#382910', border: '#fbbf24', glow: 'rgba(251, 191, 36, 0.35)', text: '#fde68a' },
+			danger: { bg: '#3f1519', border: '#f87171', glow: 'rgba(248, 113, 113, 0.35)', text: '#fca5a5' },
+			default: { bg: '#1e293b', border: '#475569', glow: 'rgba(148, 163, 184, 0.2)', text: '#f1f5f9' }
+		}
+	},
+	emerald: {
+		name: 'emerald',
+		label: 'Emerald',
+		isDark: true,
+		bg: '#05241b',
+		border: '#0f5942',
+		grid: '#0a3a2d',
+		text: '#ecfdf5',
+		textMuted: '#a7f3d0',
+		accent: '#10b981',
+		badgeBg: '#093c2c',
+		badgeBorder: '#10b981',
+		badgeText: '#34d399',
+		edgeBase: '#0d4d38',
+		edgeActive: '#10b981',
+		edgeLabelBg: '#093c2c',
+		edgeLabelBorder: '#10b981',
+		edgeLabelText: '#ecfdf5',
+		iconBg: '#093c2c',
+		iconBorder: '#0f5942',
+		colorMap: {
+			primary: { bg: '#0d4432', border: '#10b981', glow: 'rgba(16, 185, 129, 0.35)', text: '#a7f3d0' },
+			purple: { bg: '#251c38', border: '#a855f7', glow: 'rgba(168, 85, 247, 0.35)', text: '#d8b4fe' },
+			teal: { bg: '#0a3a37', border: '#14b8a6', glow: 'rgba(20, 184, 166, 0.35)', text: '#5eead4' },
+			info: { bg: '#0d2847', border: '#38bdf8', glow: 'rgba(56, 189, 248, 0.35)', text: '#7dd3fc' },
+			ok: { bg: '#0a3e2b', border: '#34d399', glow: 'rgba(52, 211, 153, 0.35)', text: '#a7f3d0' },
+			emerald: { bg: '#0a3e2b', border: '#34d399', glow: 'rgba(52, 211, 153, 0.35)', text: '#a7f3d0' },
+			warn: { bg: '#3a3010', border: '#fbbf24', glow: 'rgba(251, 191, 36, 0.35)', text: '#fde68a' },
+			amber: { bg: '#3a3010', border: '#fbbf24', glow: 'rgba(251, 191, 36, 0.35)', text: '#fde68a' },
+			danger: { bg: '#3d161d', border: '#f87171', glow: 'rgba(248, 113, 113, 0.35)', text: '#fca5a5' },
+			default: { bg: '#0a3628', border: '#059669', glow: 'rgba(16, 185, 129, 0.25)', text: '#ecfdf5' }
+		}
+	},
+	'warm clay': {
+		name: 'warm clay',
+		label: 'Warm Clay',
+		isDark: true,
+		bg: '#241814',
+		border: '#4f2e24',
+		grid: '#33221c',
+		text: '#fdf4ef',
+		textMuted: '#d4b0a4',
+		accent: '#e07a5f',
+		badgeBg: '#38201a',
+		badgeBorder: '#e07a5f',
+		badgeText: '#f4a261',
+		edgeBase: '#4a2c22',
+		edgeActive: '#e07a5f',
+		edgeLabelBg: '#341f19',
+		edgeLabelBorder: '#61382b',
+		edgeLabelText: '#fdf4ef',
+		iconBg: '#341f19',
+		iconBorder: '#4f2e24',
+		colorMap: {
+			primary: { bg: '#38201a', border: '#e07a5f', glow: 'rgba(224, 122, 95, 0.35)', text: '#fce3db' },
+			purple: { bg: '#2b1a2c', border: '#c084fc', glow: 'rgba(192, 132, 252, 0.35)', text: '#e9d5ff' },
+			teal: { bg: '#192925', border: '#2dd4bf', glow: 'rgba(45, 212, 191, 0.35)', text: '#99f6e4' },
+			info: { bg: '#1c2838', border: '#60a5fa', glow: 'rgba(96, 165, 250, 0.35)', text: '#bfdbfe' },
+			ok: { bg: '#1a2f20', border: '#4ade80', glow: 'rgba(74, 222, 128, 0.35)', text: '#bbf7d0' },
+			emerald: { bg: '#1a2f20', border: '#4ade80', glow: 'rgba(74, 222, 128, 0.35)', text: '#bbf7d0' },
+			warn: { bg: '#3a2810', border: '#fbbf24', glow: 'rgba(251, 191, 36, 0.35)', text: '#fef08a' },
+			amber: { bg: '#3a2810', border: '#fbbf24', glow: 'rgba(251, 191, 36, 0.35)', text: '#fef08a' },
+			danger: { bg: '#3c181a', border: '#f87171', glow: 'rgba(248, 113, 113, 0.35)', text: '#fecaca' },
+			default: { bg: '#341e18', border: '#61382b', glow: 'rgba(224, 122, 95, 0.25)', text: '#fdf4ef' }
+		}
+	},
+	paper: {
+		name: 'paper',
+		label: 'Paper',
+		isDark: false,
+		bg: '#fdfcf9',
+		border: '#e2ded4',
+		grid: '#ede8de',
+		text: '#1e293b',
+		textMuted: '#64748b',
+		accent: '#2563eb',
+		badgeBg: '#f4f1ea',
+		badgeBorder: '#cbd5e1',
+		badgeText: '#2563eb',
+		edgeBase: '#cbd5e1',
+		edgeActive: '#2563eb',
+		edgeLabelBg: '#ffffff',
+		edgeLabelBorder: '#cbd5e1',
+		edgeLabelText: '#1e293b',
+		iconBg: '#f8fafc',
+		iconBorder: '#e2ded4',
+		colorMap: {
+			primary: { bg: '#eff6ff', border: '#3b82f6', glow: 'rgba(59, 130, 246, 0.15)', text: '#1d4ed8' },
+			purple: { bg: '#faf5ff', border: '#a855f7', glow: 'rgba(168, 85, 247, 0.15)', text: '#7e22ce' },
+			teal: { bg: '#f0fdfa', border: '#14b8a6', glow: 'rgba(20, 184, 166, 0.15)', text: '#0f766e' },
+			info: { bg: '#f0f9ff', border: '#0ea5e9', glow: 'rgba(14, 165, 233, 0.15)', text: '#0369a1' },
+			ok: { bg: '#f0fdf4', border: '#10b981', glow: 'rgba(16, 185, 129, 0.15)', text: '#047857' },
+			emerald: { bg: '#f0fdf4', border: '#10b981', glow: 'rgba(16, 185, 129, 0.15)', text: '#047857' },
+			warn: { bg: '#fffbeb', border: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', text: '#b45309' },
+			amber: { bg: '#fffbeb', border: '#f59e0b', glow: 'rgba(245, 158, 11, 0.15)', text: '#b45309' },
+			danger: { bg: '#fef2f2', border: '#ef4444', glow: 'rgba(239, 68, 68, 0.15)', text: '#b91c1c' },
+			default: { bg: '#ffffff', border: '#cbd5e1', glow: 'rgba(15, 23, 42, 0.05)', text: '#0f172a' }
+		}
+	}
+};
+
+export const PRESET_OPTIONS = [
+	{ id: 'auto', label: 'Auto (Follow Theme)' },
+	{ id: 'midnight', label: 'Midnight' },
+	{ id: 'light', label: 'Light' },
+	{ id: 'slate', label: 'Slate' },
+	{ id: 'emerald', label: 'Emerald' },
+	{ id: 'warm clay', label: 'Warm Clay' },
+	{ id: 'paper', label: 'Paper' }
+];
+
+export function resolvePresetName(userPreset?: string, isDark?: boolean): string {
+	const raw = (userPreset || '').trim().toLowerCase().replace(/[-_]/g, ' ');
+	if (raw === 'light') return 'light';
+	if (raw === 'slate') return 'slate';
+	if (raw === 'emerald') return 'emerald';
+	if (raw === 'warm clay' || raw === 'clay') return 'warm clay';
+	if (raw === 'paper') return 'paper';
+	if (raw === 'midnight') return 'midnight';
+
+	// Default follows theme:
+	if (typeof isDark === 'boolean') {
+		return isDark ? 'midnight' : 'light';
+	}
+	if (typeof document !== 'undefined') {
+		const htmlIsDark = document.documentElement.classList.contains('dark');
+		return htmlIsDark ? 'midnight' : 'light';
+	}
+	return 'midnight';
+}
+
 export function renderDiagramKitSvg(
 	script: string,
-	userPreset: string = 'midnight',
-	userAnimate: string = 'flow'
+	userPreset: string = 'auto',
+	userAnimate: string = 'flow',
+	isDark?: boolean
 ): string {
 	const rawLines = script
 		.split('\n')
 		.map((l) => l.trim())
 		.filter((l) => l && !l.startsWith('//') && !l.startsWith('#'));
 
-	let preset = userPreset || 'midnight';
+	let scriptPreset: string | undefined = undefined;
 	let animate = userAnimate || 'flow';
 	let title = 'Architecture Workflow';
 	let subtitle = 'DiagramKit Reactive Topology';
@@ -88,7 +339,7 @@ export function renderDiagramKitSvg(
 	for (const line of rawLines) {
 		if (line.startsWith('@preset')) {
 			const p = line.replace('@preset', '').trim();
-			if (p) preset = p;
+			if (p) scriptPreset = p;
 		} else if (line.startsWith('@animate')) {
 			const a = line.replace('@animate', '').trim();
 			if (a) animate = a;
@@ -101,6 +352,11 @@ export function renderDiagramKitSvg(
 			}
 		}
 	}
+
+	// Resolve active theme: user selection takes precedence, then script directive, else auto theme
+	const chosenPreset = (userPreset && userPreset !== 'auto') ? userPreset : (scriptPreset || userPreset);
+	const resolvedPresetKey = resolvePresetName(chosenPreset, isDark);
+	const theme = THEMES[resolvedPresetKey] || THEMES.midnight;
 
 	// Helper to parse individual node token safely without duplicate phantom nodes
 	function parseNodeToken(token: string): string {
@@ -165,11 +421,14 @@ export function renderDiagramKitSvg(
 			label = clean;
 		}
 
+		// Strip optional outer quotes from label
+		label = label.replace(/^["']|["']$/g, '').trim();
+
 		// Handle sublabel: "Main Label // Sub Label"
 		if (label.includes('//')) {
 			const parts = label.split('//');
-			label = parts[0].trim();
-			subLabel = parts[1].trim();
+			label = parts[0].trim().replace(/^["']|["']$/g, '');
+			subLabel = parts[1].trim().replace(/^["']|["']$/g, '');
 		}
 
 		// Calculate appropriate width and height based on text & shape
@@ -185,7 +444,7 @@ export function renderDiagramKitSvg(
 				label,
 				subLabel,
 				shape,
-				color: COLOR_MAP[color] ? color : 'default',
+				color: (theme.colorMap[color] || COLOR_MAP[color]) ? color : 'default',
 				icon,
 				isFinal,
 				layer: 0,
@@ -236,9 +495,15 @@ export function renderDiagramKitSvg(
 			const rawParts = normalizedLine.split('->').map((p) => p.trim());
 
 			for (let i = 0; i < rawParts.length - 1; i++) {
-				const fromSegment = rawParts[i];
+				let fromSegment = rawParts[i];
 				let toSegment = rawParts[i + 1];
 				let edgeLabel: string | undefined = undefined;
+
+				// If fromSegment still has leading label syntax from prior link, strip it
+				const fromLabelMatch = fromSegment.match(/^\|\s*([^|]+)\s*\|\s*(.*)$/);
+				if (fromLabelMatch) {
+					fromSegment = fromLabelMatch[2].trim();
+				}
 
 				// Check for edge label in format: |Label| Target
 				const labelMatch = toSegment.match(/^\|\s*([^|]+)\s*\|\s*(.*)$/);
@@ -247,11 +512,23 @@ export function renderDiagramKitSvg(
 					toSegment = labelMatch[2].trim();
 				}
 
+				// Check for colon edge label syntax: Target: Label (not inside brackets)
+				if (!edgeLabel) {
+					const colonMatch = toSegment.match(/^([^:\[\(\{]+):\s*(.+)$/);
+					if (colonMatch) {
+						toSegment = colonMatch[1].trim();
+						edgeLabel = colonMatch[2].trim();
+					}
+				}
+
 				const fromId = parseNodeToken(fromSegment);
 				const toId = parseNodeToken(toSegment);
 
-				if (fromId && toId) {
-					edges.push({ from: fromId, to: toId, label: edgeLabel });
+				if (fromId && toId && fromId !== toId) {
+					const exists = edges.some(e => e.from === fromId && e.to === toId && e.label === edgeLabel);
+					if (!exists) {
+						edges.push({ from: fromId, to: toId, label: edgeLabel });
+					}
 				}
 			}
 		} else if (line.match(/[\[\(\{]/)) {
@@ -260,13 +537,18 @@ export function renderDiagramKitSvg(
 		}
 	}
 
-	// Topological ranking (Longest path to preserve DAG structure and eliminate backward crossings)
+	// Clean layout DAG topological ranking (Longest path to preserve DAG structure and eliminate backward crossings)
 	const inDegree = new Map<string, number>();
+	const adj = new Map<string, string[]>();
 	for (const [id] of nodesMap) {
 		inDegree.set(id, 0);
+		adj.set(id, []);
 	}
 	for (const edge of edges) {
-		inDegree.set(edge.to, (inDegree.get(edge.to) || 0) + 1);
+		if (nodesMap.has(edge.from) && nodesMap.has(edge.to)) {
+			inDegree.set(edge.to, (inDegree.get(edge.to) || 0) + 1);
+			adj.get(edge.from)!.push(edge.to);
+		}
 	}
 
 	const queue: string[] = [];
@@ -277,24 +559,37 @@ export function renderDiagramKitSvg(
 		}
 	}
 
-	// Safe traversal with cycle breaker limit
+	// Cycle breaker & visited counter for robust ranking
 	let steps = 0;
-	const maxSteps = nodesMap.size * 5;
+	const maxSteps = Math.max(100, nodesMap.size * 10);
+	const visitedCount = new Map<string, number>();
+
 	while (queue.length > 0 && steps < maxSteps) {
 		steps++;
 		const curr = queue.shift()!;
 		const currLayer = nodesMap.get(curr)!.layer;
-		const outEdges = edges.filter((e) => e.from === curr);
+		const outNeighbors = adj.get(curr) || [];
 
-		for (const edge of outEdges) {
-			const target = nodesMap.get(edge.to);
+		for (const targetId of outNeighbors) {
+			const target = nodesMap.get(targetId);
 			if (target) {
 				const nextLayer = currLayer + 1;
 				if (nextLayer > target.layer) {
 					target.layer = nextLayer;
-					queue.push(edge.to);
+					const visits = (visitedCount.get(targetId) || 0) + 1;
+					visitedCount.set(targetId, visits);
+					if (visits < nodesMap.size) {
+						queue.push(targetId);
+					}
 				}
 			}
+		}
+	}
+
+	// Ensure no orphan/floating node is unlayered
+	for (const [, node] of nodesMap) {
+		if (node.layer === undefined || isNaN(node.layer)) {
+			node.layer = 0;
 		}
 	}
 
@@ -311,8 +606,8 @@ export function renderDiagramKitSvg(
 
 	// Coordinate calculations & Spacing
 	const paddingX = 48;
-	const paddingY = 84;
-	const colGap = 100;
+	const paddingY = 96; // Ample spacing below header banner
+	const colGap = 90;
 	const rowGap = 36;
 	const defaultNodeHeight = 52;
 
@@ -339,12 +634,14 @@ export function renderDiagramKitSvg(
 		sortedLayers.forEach((lIndex, colIdx) => {
 			const group = layerGroups.get(lIndex)!;
 			const colX = layerXCoords[colIdx];
+			const maxColWidth = layerWidths[colIdx];
 			const totalGroupHeight = group.reduce((acc, n) => acc + n.height, 0) + (group.length - 1) * rowGap;
 			const startY = paddingY + Math.max(0, (totalHeight - paddingY - totalGroupHeight) / 2);
 
 			let curY = startY;
 			group.forEach((node) => {
-				node.x = colX;
+				// Center node horizontally within its rank column
+				node.x = colX + (maxColWidth - node.width) / 2;
 				node.y = curY;
 				curY += node.height + rowGap;
 			});
@@ -369,22 +666,23 @@ export function renderDiagramKitSvg(
 		sortedLayers.forEach((lIndex, rowIdx) => {
 			const group = layerGroups.get(lIndex)!;
 			const rowY = layerYCoords[rowIdx];
+			const maxRowHeight = layerHeights[rowIdx];
 			const totalGroupWidth = group.reduce((acc, n) => acc + n.width, 0) + (group.length - 1) * rowGap;
 			const startX = paddingX + Math.max(0, (totalWidth - paddingX - totalGroupWidth) / 2);
 
 			let curX = startX;
 			group.forEach((node) => {
 				node.x = curX;
-				node.y = rowY;
+				node.y = rowY + (maxRowHeight - node.height) / 2;
 				curX += node.width + rowGap;
 			});
 		});
 	}
 
-	totalWidth = Math.max(totalWidth, 720);
-	totalHeight = Math.max(totalHeight, 280);
+	totalWidth = Math.max(totalWidth, 740);
+	totalHeight = Math.max(totalHeight, 300);
 
-	// CSS Animation styles
+	// CSS Animation styles with prefers-reduced-motion safety
 	const animKeyframes = `
 		@keyframes dkit-flow {
 			0% { stroke-dashoffset: 48; }
@@ -395,9 +693,9 @@ export function renderDiagramKitSvg(
 			50% { transform: scale(1.02); opacity: 0.95; }
 		}
 		@keyframes dkit-wave {
-			0% { filter: drop-shadow(0 0 2px rgba(201,100,66,0.3)); }
-			50% { filter: drop-shadow(0 0 10px rgba(201,100,66,0.8)); }
-			100% { filter: drop-shadow(0 0 2px rgba(201,100,66,0.3)); }
+			0% { filter: drop-shadow(0 0 2px ${theme.accent}4d); }
+			50% { filter: drop-shadow(0 0 10px ${theme.accent}cc); }
+			100% { filter: drop-shadow(0 0 2px ${theme.accent}4d); }
 		}
 		@keyframes dkit-glow {
 			0%, 100% { stroke-opacity: 0.45; }
@@ -417,34 +715,54 @@ export function renderDiagramKitSvg(
 		.dkit-anim-glow {
 			animation: dkit-glow 2s ease-in-out infinite;
 		}
+		@media (prefers-reduced-motion: reduce) {
+			.dkit-anim-flow,
+			.dkit-anim-pulse,
+			.dkit-anim-wave,
+			.dkit-anim-glow {
+				animation: none !important;
+				stroke-dashoffset: 0 !important;
+				transform: none !important;
+				filter: none !important;
+			}
+		}
 	`;
 
+	const isStatic = animate === 'none' || animate === 'static';
+	const flowClass = isStatic ? '' : animate === 'flow' ? 'dkit-anim-flow' : animate === 'glow' ? 'dkit-anim-glow' : '';
+	const pulseClass = isStatic ? '' : animate === 'pulse' ? 'dkit-anim-pulse' : '';
+
+	// Deterministic unique marker & pattern IDs to prevent collisions
+	const markerId = `dkit-arrow-${theme.name.replace(/\s+/g, '-')}`;
+	const markerMutedId = `dkit-arrow-muted-${theme.name.replace(/\s+/g, '-')}`;
+	const gridId = `dkit-grid-${theme.name.replace(/\s+/g, '-')}`;
+
 	// SVG generation
-	let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="100%" height="100%" class="diagramkit-svg" style="background:#131315; border-radius:12px; font-family:'JetBrains Mono', monospace, -apple-system, BlinkMacSystemFont, sans-serif;">
+	let svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${totalWidth} ${totalHeight}" width="100%" height="100%" class="diagramkit-svg" style="background:${theme.bg}; border: 1px solid ${theme.border}; border-radius:12px; font-family:'JetBrains Mono', monospace, -apple-system, BlinkMacSystemFont, sans-serif;">
 		<defs>
 			<style>${animKeyframes}</style>
-			<marker id="dkit-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-				<path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#c96442" />
+			<marker id="${markerId}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+				<path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="${theme.edgeActive}" />
 			</marker>
-			<marker id="dkit-arrow-muted" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-				<path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="#71717a" />
+			<marker id="${markerMutedId}" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+				<path d="M 0 1.5 L 8 5 L 0 8.5 z" fill="${theme.edgeBase}" />
 			</marker>
+			<!-- Subtle Blueprint Grid Pattern -->
+			<pattern id="${gridId}" width="24" height="24" patternUnits="userSpaceOnUse">
+				<path d="M 24 0 L 0 0 0 24" fill="none" stroke="${theme.grid}" stroke-width="0.8" />
+			</pattern>
 		</defs>
 
-		<!-- Subtle Blueprint Grid -->
-		<pattern id="dkit-grid-${totalWidth}" width="24" height="24" patternUnits="userSpaceOnUse">
-			<path d="M 24 0 L 0 0 0 24" fill="none" stroke="#222226" stroke-width="0.8" />
-		</pattern>
-		<rect width="100%" height="100%" fill="url(#dkit-grid-${totalWidth})" rx="12" />
+		<rect width="100%" height="100%" fill="url(#${gridId})" rx="12" />
 
 		<!-- Header Banner -->
 		<g transform="translate(24, 28)">
-			<rect x="0" y="0" width="8" height="8" rx="2" fill="#c96442" />
-			<text x="16" y="8" fill="#f5f4ed" font-size="13" font-weight="600" letter-spacing="-0.01em">${title}</text>
-			<text x="16" y="24" fill="#a19f97" font-size="10">${subtitle}</text>
-			<g transform="translate(${totalWidth - 146}, -6)">
-				<rect width="98" height="22" rx="11" fill="#201a18" stroke="#c96442" stroke-opacity="0.6" stroke-width="0.8" />
-				<text x="49" y="14" fill="#c96442" font-size="9" text-anchor="middle" font-weight="600">DiagramKit Core</text>
+			<rect x="0" y="0" width="8" height="8" rx="2" fill="${theme.accent}" />
+			<text x="16" y="8" fill="${theme.text}" font-size="13" font-weight="600" letter-spacing="-0.01em">${title}</text>
+			<text x="16" y="24" fill="${theme.textMuted}" font-size="10">${subtitle}</text>
+			<g transform="translate(${totalWidth - 160}, -6)">
+				<rect width="112" height="22" rx="11" fill="${theme.badgeBg}" stroke="${theme.badgeBorder}" stroke-opacity="0.8" stroke-width="0.9" />
+				<text x="56" y="14" fill="${theme.badgeText}" font-size="9" text-anchor="middle" font-weight="600">${theme.label}</text>
 			</g>
 		</g>
 
@@ -479,17 +797,17 @@ export function renderDiagramKitSvg(
 
 		svg += `
 			<!-- Edge ${edge.from} -> ${edge.to} -->
-			<path d="${pathD}" fill="none" stroke="#2a2a2e" stroke-width="2.6" />
-			<path d="${pathD}" fill="none" stroke="#c96442" stroke-width="1.8" class="${animate === 'flow' ? 'dkit-anim-flow' : animate === 'glow' ? 'dkit-anim-glow' : ''}" marker-end="url(#dkit-arrow)" />
+			<path d="${pathD}" fill="none" stroke="${theme.edgeBase}" stroke-width="2.4" />
+			<path d="${pathD}" fill="none" stroke="${theme.edgeActive}" stroke-width="1.8" class="${flowClass}" marker-end="url(#${markerId})" />
 		`;
 
 		// Render edge label if present
 		if (edge.label) {
-			const labelWidth = Math.max(50, edge.label.length * 6.5 + 16);
+			const labelWidth = Math.max(50, edge.label.length * 6.8 + 16);
 			svg += `
 				<g transform="translate(${midX}, ${midY})">
-					<rect x="${-labelWidth / 2}" y="-10" width="${labelWidth}" height="20" rx="5" fill="#18181b" stroke="#3f3f46" stroke-width="0.9" />
-					<text x="0" y="3.5" fill="#e4e4e7" font-size="9.5" text-anchor="middle" font-weight="500">${edge.label}</text>
+					<rect x="${-labelWidth / 2}" y="-10" width="${labelWidth}" height="20" rx="5" fill="${theme.edgeLabelBg}" stroke="${theme.edgeLabelBorder}" stroke-width="0.9" />
+					<text x="0" y="3.5" fill="${theme.edgeLabelText}" font-size="9.5" text-anchor="middle" font-weight="500">${edge.label}</text>
 				</g>
 			`;
 		}
@@ -498,12 +816,13 @@ export function renderDiagramKitSvg(
 	svg += `</g>\n<!-- Nodes -->\n<g class="dkit-nodes">`;
 
 	for (const [, node] of nodesMap) {
-		const colors = COLOR_MAP[node.color] || COLOR_MAP.default;
+		const colors = theme.colorMap[node.color] || theme.colorMap.default || COLOR_MAP.default;
 		const iconSvg = node.icon && ICONS[node.icon] ? ICONS[node.icon] : '';
+		const waveClass = node.isFinal && !isStatic ? 'dkit-anim-wave' : pulseClass;
 
 		svg += `
 			<!-- Node: ${node.id} (${node.shape}) -->
-			<g transform="translate(${node.x}, ${node.y})" class="${node.isFinal ? 'dkit-anim-wave' : animate === 'pulse' ? 'dkit-anim-pulse' : ''}">
+			<g transform="translate(${node.x}, ${node.y})" class="${waveClass}">
 		`;
 
 		if (node.shape === 'diamond') {
@@ -519,7 +838,7 @@ export function renderDiagramKitSvg(
 					stroke="${colors.border}"
 					stroke-width="${node.isFinal ? '2' : '1.4'}"
 					stroke-dasharray="4 2"
-					style="filter: drop-shadow(0 4px 12px ${colors.glow});"
+					style="filter: drop-shadow(0 3px 10px ${colors.glow});"
 				/>
 				<text x="${node.width / 2}" y="${node.subLabel ? 24 : node.height / 2 + 4}" fill="${colors.text}" font-size="11" font-weight="600" text-anchor="middle">${node.label}</text>
 			`;
@@ -535,7 +854,7 @@ export function renderDiagramKitSvg(
 					fill="${colors.bg}"
 					stroke="${colors.border}"
 					stroke-width="${node.isFinal ? '2' : '1.4'}"
-					style="filter: drop-shadow(0 4px 12px ${colors.glow});"
+					style="filter: drop-shadow(0 3px 10px ${colors.glow});"
 				/>
 				<ellipse cx="${node.width / 2}" cy="8" rx="${node.width / 2 - 8}" ry="4" fill="none" stroke="${colors.border}" stroke-width="1" opacity="0.6" />
 			`;
@@ -551,7 +870,7 @@ export function renderDiagramKitSvg(
 					fill="${colors.bg}"
 					stroke="${colors.border}"
 					stroke-width="${node.isFinal ? '2' : '1.4'}"
-					style="filter: drop-shadow(0 4px 12px ${colors.glow});"
+					style="filter: drop-shadow(0 3px 10px ${colors.glow});"
 				/>
 			`;
 		}
@@ -561,7 +880,7 @@ export function renderDiagramKitSvg(
 				svg += `
 					<!-- Icon Badge -->
 					<g transform="translate(10, ${(node.height - 22) / 2})">
-						<rect x="0" y="0" width="22" height="22" rx="5" fill="#18181b" stroke="${colors.border}" stroke-width="0.8" />
+						<rect x="0" y="0" width="22" height="22" rx="5" fill="${theme.iconBg}" stroke="${theme.iconBorder || colors.border}" stroke-width="0.8" />
 						<g transform="translate(3, 3) scale(0.68)" stroke="${colors.text}" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round">
 							${iconSvg}
 						</g>
@@ -579,14 +898,14 @@ export function renderDiagramKitSvg(
 			const subX = node.shape === 'diamond' ? node.width / 2 : iconSvg ? 40 : 14;
 			const subAnchor = node.shape === 'diamond' ? 'text-anchor="middle"' : '';
 			svg += `
-				<text x="${subX}" y="43" fill="#a19f97" font-size="9" font-family="'JetBrains Mono', monospace" ${subAnchor}>${node.subLabel}</text>
+				<text x="${subX}" y="43" fill="${theme.textMuted}" font-size="9" font-family="'JetBrains Mono', monospace" ${subAnchor}>${node.subLabel}</text>
 			`;
 		}
 
 		if (node.isFinal) {
 			svg += `
 				<!-- Final Target Star Badge -->
-				<circle cx="${node.width - 10}" cy="10" r="4" fill="#10b981" />
+				<circle cx="${node.width - 10}" cy="10" r="4" fill="${theme.accent}" />
 			`;
 		}
 

@@ -3,6 +3,7 @@
 	import Diagram from '$lib/components/Diagram.svelte';
 	import Markdown from '$lib/components/Markdown.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import Seo from '$lib/components/Seo.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -10,6 +11,64 @@
 	const blog = $derived(data.blog);
 	const adjacent = $derived(data.adjacent ?? []);
 </script>
+
+<Seo
+	title={blog.title}
+	description={blog.summary_roman_urdu}
+	canonical={`https://ai-ustaad.pages.dev/blog/${blog.slug}`}
+	ogType="article"
+	ogImage="/og-image.png"
+	jsonLd={[
+		{
+			"@context": "https://schema.org",
+			"@type": "BreadcrumbList",
+			"itemListElement": [
+				{
+					"@type": "ListItem",
+					"position": 1,
+					"name": "Home",
+					"item": "https://ai-ustaad.pages.dev"
+				},
+				{
+					"@type": "ListItem",
+					"position": 2,
+					"name": "Engineering Blog",
+					"item": "https://ai-ustaad.pages.dev/blog"
+				},
+				{
+					"@type": "ListItem",
+					"position": 3,
+					"name": blog.title,
+					"item": `https://ai-ustaad.pages.dev/blog/${blog.slug}`
+				}
+			]
+		},
+		{
+			"@context": "https://schema.org",
+			"@type": "TechArticle",
+			"headline": blog.title,
+			"description": blog.summary_roman_urdu,
+			"image": "https://ai-ustaad.pages.dev/og-image.png",
+			"author": {
+				"@type": "Person",
+				"name": "Bimo",
+				"url": "https://github.com/isaim0011"
+			},
+			"publisher": {
+				"@type": "EducationalOrganization",
+				"name": "AI Ustaad",
+				"url": "https://ai-ustaad.pages.dev",
+				"logo": "https://ai-ustaad.pages.dev/favicon.svg"
+			},
+			"mainEntityOfPage": {
+				"@type": "WebPage",
+				"@id": `https://ai-ustaad.pages.dev/blog/${blog.slug}`
+			},
+			"inLanguage": ["ur-Latn", "en"],
+			"articleSection": blog.category
+		}
+	]}
+/>
 
 <div class="mx-auto max-w-4xl px-4 py-12 sm:px-6 lg:px-8 space-y-10">
 	<!-- Breadcrumbs -->

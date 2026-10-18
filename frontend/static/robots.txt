@@ -1,5 +1,8 @@
-# AI Ustaad Production Robots Configuration
 User-agent: *
 Allow: /
+Disallow: /login
+Disallow: /signup
+Disallow: /auth
+Disallow: /profile
 
 Sitemap: https://ai-ustaad.pages.dev/sitemap.xml

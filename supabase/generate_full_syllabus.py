@@ -13,11 +13,13 @@ from seed_modules_phase1_2 import get_modules_phase1_2
 from seed_modules_phase3_5 import get_modules_phase3_5
 from seed_quizzes import get_quizzes
 from seed_blogs import get_blogs_sql
+from content.loader import enrich_with_mastery_content
 
 def main():
     lines = get_base_sql()
     
     all_modules = get_modules_phase1_2() + get_modules_phase3_5()
+    all_modules = enrich_with_mastery_content(all_modules)
     
     # Inject 15 Hugging Face interactive sub-projects into practice_checkpoint
     hf_path = os.path.join(cur_dir, "hf_subprojects.json")

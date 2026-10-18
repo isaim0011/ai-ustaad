@@ -15,12 +15,18 @@ declare global {
 		// interface PageState {}
 		interface Platform {
 			env?: {
+				AI?: {
+					run: (
+						model: string,
+						inputs: Record<string, unknown>,
+						options?: Record<string, unknown>
+					) => Promise<unknown>;
+				};
 				GROQ_API_KEY?: string;
-				GEMINI_API_KEY?: string;
 				PUBLIC_API_URL?: string;
 				PUBLIC_SUPABASE_URL?: string;
 				PUBLIC_SUPABASE_ANON_KEY?: string;
-				[key: string]: string | undefined;
+				[key: string]: unknown;
 			};
 			context?: {
 				waitUntil: (promise: Promise<unknown>) => void;
