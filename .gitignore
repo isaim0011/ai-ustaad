@@ -1,0 +1,46 @@
+# Rust artifacts
+target/
+**/target/
+**/*.rs.bk
+
+# Node & Frontend dependencies and builds
+node_modules/
+**/node_modules/
+.svelte-kit/
+**/.svelte-kit/
+.output/
+**/.output/
+build/
+**/build/
+.wrangler/
+**/.wrangler/
+.vercel/
+.netlify/
+
+# Environment files and credentials (CRITICAL)
+.env
+.env.*
+!.env.example
+*.env
+backend/.env
+frontend/.env
+**/.env
+**/.env.*
+!**/.env.example
+
+# Python cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*$py.class
+
+# OS Files
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# IDE & Editor caches
+.vscode/
+.idea/
+*.swp
+*.swo
