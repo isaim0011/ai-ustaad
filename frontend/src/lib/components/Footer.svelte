@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { Sparkles, Terminal, BookOpen, Compass, ExternalLink } from 'lucide-svelte';
+	import Logo from '$lib/components/Logo.svelte';
 </script>
 
 <footer class="mt-auto border-t border-[#e5e2d9] bg-[#f0eee6]/60 dark:border-[#343330] dark:bg-[#181817]">
@@ -7,14 +8,12 @@
 		<div class="grid grid-cols-1 gap-8 md:grid-cols-4">
 			<!-- Col 1: Brand & Roman Urdu Mission -->
 			<div class="md:col-span-2">
-				<div class="flex items-center gap-2">
-					<div class="flex h-7 w-7 items-center justify-center rounded-lg bg-[#c96442] text-white font-serif font-bold text-sm">
-						AU
-					</div>
-					<span class="font-serif text-lg font-semibold tracking-tight text-[#141413] dark:text-[#f5f4ed]">
+				<div class="flex items-center gap-2.5">
+					<Logo size={32} />
+					<span class="font-serif text-lg font-bold tracking-tight text-[#141413] dark:text-[#f5f4ed]">
 						AI Ustaad
 					</span>
-					<span class="rounded bg-[#c96442]/10 px-2 py-0.5 text-xs font-mono font-medium text-[#c96442] dark:bg-[#c96442]/20">
+					<span class="rounded-full bg-[#c96442]/10 px-2.5 py-0.5 text-xs font-mono font-medium text-[#c96442] dark:bg-[#c96442]/20">
 						ai-ustaad.pages.dev
 					</span>
 				</div>
@@ -22,9 +21,9 @@
 					Zero se Hero tak: South Asia ka pehla complete, production-grade Roman Urdu AI Engineering curriculum. Zero-GPU cloud recipes, first-principles tensor math, aur 2026 SOTA tools.
 				</p>
 				<div class="mt-4 flex items-center gap-4 text-xs font-mono text-[#6f6e69] dark:text-[#a19f97]">
-					<span>5 Phases</span>
+					<span>Prerequisite Track: Python Zero Se Hero</span>
 					<span>•</span>
-					<span>14 Modules</span>
+					<span>5 AI Phases</span>
 					<span>•</span>
 					<span>Zero-GPU Guaranteed</span>
 				</div>
@@ -51,35 +50,29 @@
 				</ul>
 			</div>
 
-			<!-- Col 3: Community & Open Source -->
+			<!-- Col 3: Community & Practice Notebooks -->
 			<div>
 				<h3 class="text-xs font-mono uppercase tracking-wider text-[#141413] dark:text-[#f5f4ed]">
-					System & Stack
+					Free Practice & Tools
 				</h3>
 				<ul class="mt-3 space-y-2 text-sm text-[#6f6e69] dark:text-[#a19f97]">
 					<li>
-						<span class="inline-flex items-center gap-1.5 text-xs font-mono">
-							<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-							SvelteKit 2 + Svelte 5
-						</span>
+						<a href="https://colab.research.google.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 transition-colors hover:text-[#c96442]">
+							<span>Google Colab Free T4</span>
+							<ExternalLink class="h-3 w-3 text-[#6f6e69]" />
+						</a>
 					</li>
 					<li>
-						<span class="inline-flex items-center gap-1.5 text-xs font-mono">
-							<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-							Supabase PostgreSQL + RLS
-						</span>
+						<a href="https://www.kaggle.com" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 transition-colors hover:text-[#c96442]">
+							<span>Kaggle Dual-T4 (30h/wk)</span>
+							<ExternalLink class="h-3 w-3 text-[#6f6e69]" />
+						</a>
 					</li>
 					<li>
-						<span class="inline-flex items-center gap-1.5 text-xs font-mono">
-							<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-							DiagramKit Core Engine
-						</span>
-					</li>
-					<li>
-						<span class="inline-flex items-center gap-1.5 text-xs font-mono">
-							<span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>
-							Rust Axum 0.8 Backend
-						</span>
+						<a href="https://github.com/isaim0011" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 transition-colors hover:text-[#c96442]">
+							<span>Open Source GitHub</span>
+							<ExternalLink class="h-3 w-3 text-[#6f6e69]" />
+						</a>
 					</li>
 				</ul>
 			</div>

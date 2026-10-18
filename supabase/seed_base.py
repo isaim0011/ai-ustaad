@@ -25,6 +25,7 @@ def get_base_sql():
     # 1. Badges
     lines.append("-- 1. GAMIFICATION BADGES")
     badges = [
+        ("chai-munshi", "Chai Wala Munshi", "Python Zero Se Hero", "Completed Module 0: Python Zero Se Hero and solved the Chai Shop billing checkpoint!", "☕", 100, {"type": "module_complete", "module_slug": "python-zero-se-hero"}),
         ("pehla-prompt", "Pehla Prompt", "Safar Ka Aaghaz", "Completed your very first lesson on AI Ustaad!", "🚀", 50, {"type": "lesson_count", "threshold": 1}),
         ("prompt-rookie", "Prompt Rookie", "Prompts Ka Ustaad", "Mastered zero-shot, few-shot, CoT and prompt engineering patterns.", "🎯", 100, {"type": "module_complete", "module_slug": "prompt-engineering-and-llm-mental-models"}),
         ("ml-practitioner", "ML Practitioner", "Data Se Model Tak", "Mastered classical machine learning, feature pipelines, and metrics.", "📊", 150, {"type": "module_complete", "module_slug": "classical-machine-learning"}),
@@ -143,15 +144,26 @@ on conflict (slug) do update set
   zero_gpu_guide = excluded.zero_gpu_guide;\n""")
 
     # 3. Phases
-    lines.append("\n-- 3. PHASES (5 PHASES)")
+    lines.append("\n-- 3. PHASES (6 PHASES: PREREQUISITE + 5 AI PHASES)")
     phases = [
+        (0, "phase-0-python-prerequisite", "Prerequisite Track: Python Zero Se Hero", "Weeks 0", "Absolute Beginner",
+         "Naye hain aur Python nahi aati? Pehle Python Zero Se Hero complete karein, phir AI Mastery shuru karein! Variables, Loops, OOP, JSON, APIs aur NumPy foundations.",
+         """@preset midnight
+@animate flow
+flow LR: Python Zero Se Hero Pipeline
+  p1[0.1: Variables & Logic] $terminal -> p2[0.2: Functions & Types] ~info $code
+  p2 -> p3[0.3: Lists & Dicts] ~purple $database
+  p3 -> p4[0.4: OOP & Dataclass] ~teal $brain
+  p4 -> p5[0.5: Files, JSON & APIs] ~warn $server
+  p5 -> p6[0.6: NumPy & Fast Math]* ~ok $cpu"""),
+
         (1, "phase-1-foundations", "Phase 1: Foundations & Python Mastery", "Weeks 1-4", "Beginner",
-         "Python fundamentals, NumPy tensors, Vector math, Prompt Engineering aur LLM mental models.",
+         "Pehle Python (Module 0: Python Zero Se Hero), phir NumPy tensors, Vector math, Prompt Engineering aur LLM mental models.",
          """@preset midnight
 @animate flow
 flow LR: Phase 1 Foundations
-  py[Python 3.12 & NumPy] $python -> math[Linear Algebra & Calculus] $brain
-  math -> prompt[Prompt Engineering & LLMs] $terminal
+  py0[Module 0: Python Zero Se Hero] $python -> py[Module 1: NumPy & Fast Math] $cpu
+  py -> prompt[Module 2: Prompt Engineering & LLMs] $terminal
   prompt -> first_app[Pehla AI Prototype] $cube *"""),
 
         (2, "phase-2-core-ml-deeplearning", "Phase 2: Core ML & Deep Learning", "Weeks 5-8", "Intermediate",

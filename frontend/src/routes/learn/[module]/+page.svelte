@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { ArrowRight, CheckCircle2, Circle, Clock, Sparkles, Cpu, Layers, HelpCircle, ExternalLink, Award } from 'lucide-svelte';
+	import { ArrowRight, CheckCircle2, Circle, Clock, Sparkles, Cpu, Layers, HelpCircle, ExternalLink, Award, Play } from 'lucide-svelte';
 	import Diagram from '$lib/components/Diagram.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import { getPracticeProject } from '$lib/data/fallback';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -20,6 +21,10 @@
 	const unassignSnippet = $derived(
 		zeroGpu.unassign_code ||
 		`# Auto unassign to prevent burning Colab GPU credits:\nfrom google.colab import runtime\nruntime.unassign()`
+	);
+
+	const practiceProject = $derived(
+		mod.practice_project || getPracticeProject(mod.slug || mod.module_number)
 	);
 </script>
 
@@ -78,6 +83,69 @@
 			<p class="mt-2 font-serif text-base font-semibold text-[#141413] dark:text-[#f5f4ed]">
 				{mod.real_world_deliverable}
 			</p>
+		</div>
+	{/if}
+
+	<!-- Gamified Real-Time Practice: Culturally Relatable & Funny Sub-Project -->
+	{#if practiceProject}
+		<div class="rounded-2xl border-2 border-dashed border-[#c96442]/40 bg-[#c96442]/5 p-6 shadow-sm dark:border-[#c96442]/30 dark:bg-[#c96442]/10">
+			<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+				<div class="flex items-center gap-3.5">
+					<div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#c96442] text-white shadow-sm font-bold text-xl">
+						🚀
+					</div>
+					<div>
+						<div class="flex flex-wrap items-center gap-2">
+							<span class="rounded-full bg-[#c96442] px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase text-white tracking-wider">
+								Real-Time Practice Checkpoint
+							</span>
+							<span class="rounded-full border border-amber-500/30 bg-amber-500/10 px-2.5 py-0.5 text-xs font-mono font-semibold text-amber-700 dark:text-amber-400">
+								{practiceProject.humorous_badge}
+							</span>
+							<span class="rounded-full bg-emerald-500/10 px-2.5 py-0.5 text-xs font-mono font-bold text-emerald-700 dark:text-emerald-400">
+								+{practiceProject.xp_reward} XP
+							</span>
+						</div>
+						<h3 class="mt-1 font-serif text-xl font-bold tracking-tight text-[#141413] dark:text-[#f5f4ed]">
+							{practiceProject.title}
+						</h3>
+					</div>
+				</div>
+
+				<a
+					href={practiceProject.colab_url}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="inline-flex h-11 items-center justify-center gap-2 rounded-xl bg-[#c96442] px-5 text-xs font-semibold text-white shadow-sm transition-all hover:bg-[#d97757] hover:scale-[1.02] focus:outline-none focus:ring-2 focus:ring-[#c96442]/40 shrink-0"
+				>
+					<span>🚀 Open Google Colab Practice Notebook</span>
+					<ExternalLink class="h-3.5 w-3.5" />
+				</a>
+			</div>
+
+			<p class="mt-4 text-sm leading-relaxed text-[#2c2b28] dark:text-[#dcd9ce]">
+				{practiceProject.description_roman_urdu}
+			</p>
+
+			<!-- Interactive Checklist & Test Criteria -->
+			{#if practiceProject.checklist && practiceProject.checklist.length > 0}
+				<div class="mt-5 rounded-xl border border-[#e5e2d9] bg-[#faf9f5]/80 p-4 dark:border-[#343330] dark:bg-[#1f1e1d]/80">
+					<div class="flex items-center justify-between text-xs font-mono uppercase tracking-wider text-[#6f6e69] dark:text-[#a19f97] mb-3">
+						<span>Sub-Project Checklist & Test Criteria</span>
+						<span class="text-emerald-600 dark:text-emerald-400">100% Free Colab Practice</span>
+					</div>
+					<div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+						{#each practiceProject.checklist as item}
+							<div class="flex items-start gap-2.5 text-xs text-[#141413] dark:text-[#f5f4ed]">
+								<span class="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 font-mono text-[10px] font-bold mt-0.5">
+									✓
+								</span>
+								<span class="leading-relaxed">{item}</span>
+							</div>
+						{/each}
+					</div>
+				</div>
+			{/if}
 		</div>
 	{/if}
 

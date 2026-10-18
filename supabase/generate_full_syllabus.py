@@ -19,12 +19,15 @@ def main():
     
     all_modules = get_modules_phase1_2() + get_modules_phase3_5()
     
-    lines.append("\n-- 6. MODULES (ALL 14 MODULES)")
+    lines.append("\n-- 0. SCHEMA UPGRADES")
+    lines.append("alter table public.modules add column if not exists practice_checkpoint jsonb default '{}'::jsonb;\n")
+
+    lines.append("\n-- 6. MODULES (ALL 15 MODULES: MODULE 0 TO 14)")
     for m in all_modules:
         lines.append(f"""insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -42,6 +45,7 @@ select
   {esc(m['badge_slug'])},
   {esc(m.get('real_world_deliverable'))},
   {esc(m.get('zero_gpu_recipe', {}))},
+  {esc(m.get('practice_checkpoint', {}))},
   {m['order_index']}
 from public.phases p
 where p.slug = {esc(m['phase_slug'])}
@@ -59,6 +63,7 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;\n""")
 
     lines.append("\n-- 7. LESSONS (DETAILED LESSONS FOR EVERY MODULE)")

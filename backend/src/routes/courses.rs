@@ -34,6 +34,7 @@ pub async fn get_modules(State(state): State<AppState>) -> Json<Value> {
                 "diagram_script": m.diagram_script,
                 "real_world_deliverable": m.real_world_deliverable,
                 "zero_gpu_recipe": m.zero_gpu_recipe,
+                "practice_checkpoint": m.practice_checkpoint,
             })
         })
         .collect();

@@ -1,6 +1,6 @@
 use crate::models::{
     BadgeDefinition, CodeSnippet, CourseOverview, DesignPrinciple, EngineeringBlog, Lesson, Module,
-    Phase, PhaseSummary, ProjectBrief, Quiz, QuizQuestion, ResourceLink,
+    Phase, PhaseSummary, PracticeCheckpoint, ProjectBrief, Quiz, QuizQuestion, ResourceLink,
     SpecializationTrack, WeeklyChallenge, ZeroGpuGuide, ZeroGpuRecipe,
 };
 use crate::services::blogs_service::{get_engineering_blogs, get_zero_gpu_guide};
@@ -70,7 +70,22 @@ impl SyllabusStore {
 
     pub fn get_module(&self, slug: &str) -> Option<&Module> {
         for phase in &self.phases {
-            if let Some(m) = phase.modules.iter().find(|m| m.slug == slug) {
+            if let Some(m) = phase.modules.iter().find(|m| {
+                m.slug == slug
+                    || (m.slug == "python-mastery" && slug == "python-for-ai-and-fast-math")
+                    || (m.slug == "math-vectors-tensors" && slug == "prompt-engineering-and-llm-mental-models")
+                    || (m.slug == "classical-ml" && slug == "classical-machine-learning")
+                    || (m.slug == "deep-learning-pytorch" && slug == "deep-learning-and-pytorch-foundations")
+                    || (m.slug == "nlp-transformers" && slug == "attention-and-transformers-under-the-hood")
+                    || (m.slug == "llm-prompt-engineering" && slug == "building-ai-applications-and-apis")
+                    || (m.slug == "vector-databases" && slug == "vector-databases-and-modern-rag")
+                    || (m.slug == "production-rag" && slug == "autonomous-agents-and-tool-use")
+                    || (m.slug == "llm-fine-tuning" && slug == "fine-tuning-and-model-adaptation")
+                    || (m.slug == "autonomous-agents" && slug == "ai-safety-evals-and-guardrails")
+                    || (m.slug == "multimodal-ai" && slug == "production-ai-engineering-mlops")
+                    || (m.slug == "mlops-deployment" && slug == "multimodal-ai-and-vision")
+                    || (m.slug == "capstone-production" && slug == "enterprise-capstone-and-career-launch")
+            }) {
                 return Some(m);
             }
         }
@@ -167,6 +182,15 @@ fn build_syllabus() -> (
     ];
 
     let badges = vec![
+        BadgeDefinition {
+            id: "chai-munshi".to_string(),
+            title: "Chai Wala Munshi".to_string(),
+            urdu_title: "Python Zero Se Hero".to_string(),
+            description: "Completed Module 0: Python Zero Se Hero and solved the Chai Shop billing checkpoint!".to_string(),
+            icon: "☕".to_string(),
+            xp_requirement: 250,
+            module_requirement: Some("python-zero-se-hero".to_string()),
+        },
         BadgeDefinition {
             id: "python-ninja".to_string(),
             title: "Python Ka Ustaad".to_string(),
@@ -305,7 +329,533 @@ fn render_svg_or_fallback(script: &str) -> Option<String> {
     DiagramService::render_script_to_svg(script, Some("midnight"), Some("flow")).ok()
 }
 
+
+fn get_checkpoint(mod_num: usize) -> PracticeCheckpoint {
+    match mod_num {
+        0 => PracticeCheckpoint {
+            title: "Chai Shop Billing & Khata Management Engine".to_string(),
+            urdu_title: "Chai Dhaba Billing & Munshi CLI".to_string(),
+            description: "Dhabay aur chai shop ke liye real-time terminal billing tool. Har customer ka order (Doodh Patti, Elaichi Chai, Paratha), tax, discount calculate kare aur JSON khata file mein daily report append kare!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod0_chai_billing".to_string(),
+            checklist: vec![
+                "@dataclass for MenuItem & OrderBill with auto-validation".to_string(),
+                "Interactive while loop CLI with clean input sanitization".to_string(),
+                "JSON persistence for daily transactions khata".to_string(),
+                "Discount & sales tax automated calculation".to_string(),
+                "Summary report generator showing top-selling item & profit".to_string(),
+            ],
+            xp_reward: 100,
+            badge_name: "chai-munshi".to_string(),
+        },
+        1 => PracticeCheckpoint {
+            title: "Biryani vs Pulao Sentiment & Price Vectorizer".to_string(),
+            urdu_title: "Biryani vs Pulao Sentiment Analyzer".to_string(),
+            description: "Karahi, Biryani aur Pulao ke 50,000 food reviews ko pure Python vs NumPy vectorized arrays se analyze karein. Cosine similarity se find karein ke kiske reviews mein sab se zyada 'Lazeez' aur 'Mirchi' ka vector overlap hai!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod1_biryani_sentiment".to_string(),
+            checklist: vec![
+                "NumPy SIMD vectorized dot product implementation".to_string(),
+                "Zero-copy broadcasting array operations".to_string(),
+                "Cosine similarity calculator without SciPy".to_string(),
+                "50x speedup benchmark vs Python nested loops".to_string(),
+            ],
+            xp_reward: 150,
+            badge_name: "biryani-analyst".to_string(),
+        },
+        2 => PracticeCheckpoint {
+            title: "Rishta Matcher & Bio Compatibility Algorithm".to_string(),
+            urdu_title: "Rishta Matcher Vector Distance Calculator".to_string(),
+            description: "Candidate ke CV/Bio aur Mother-in-Law (Saas) ki strict 15-point demand list ke darmiyan high-dimensional embeddings calculate karein. Prompt engineering se 'Red Flags' identify karein aur automated humorous compatibility score generate karein!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod2_rishta_matcher".to_string(),
+            checklist: vec![
+                "Few-Shot Chain of Thought prompt engineering".to_string(),
+                "Structured JSON output validation with Pydantic".to_string(),
+                "Negative constraints & Hallucination mitigation rules".to_string(),
+                "Automated compatibility score generation (0-100%)".to_string(),
+            ],
+            xp_reward: 150,
+            badge_name: "rishta-whisperer".to_string(),
+        },
+        3 => PracticeCheckpoint {
+            title: "PSL/IPL Match Outcome & Cricketer Performance Predictor".to_string(),
+            urdu_title: "Cricketer Performance & Match Winner Predictor".to_string(),
+            description: "Historical T20 pitch report, dew factor, strike rate, aur player matchups par LightGBM & XGBoost classifier train karein. Match ke 16th over mein live winning probability estimate karein!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod3_cricket_predictor".to_string(),
+            checklist: vec![
+                "Data leakage prevention with temporal split".to_string(),
+                "Feature engineering (Strike rate in death overs, economy against spin)".to_string(),
+                "Hyperparameter tuning with Optuna".to_string(),
+                "Precision-Recall & ROC-AUC evaluation".to_string(),
+            ],
+            xp_reward: 150,
+            badge_name: "toss-ka-badshah".to_string(),
+        },
+        4 => PracticeCheckpoint {
+            title: "Desi Meme Classifier & Sarcastic Roast Bot".to_string(),
+            urdu_title: "Meme Classifier & Roast Engine".to_string(),
+            description: "PyTorch se custom convolutional/MLP neural network train karein jo viral memes ko detect kare (e.g. 'Sarfaraz Dhoka Nahi Dega' vs 'Disappointed Pakistani Fan') aur instant humorous roast dialogue generate kare.".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod4_meme_roast_bot".to_string(),
+            checklist: vec![
+                "Custom PyTorch Dataset & DataLoader".to_string(),
+                "CrossEntropyLoss with AdamW & CosineAnnealing".to_string(),
+                "Mixed Precision (AMP) training on Free Colab T4".to_string(),
+                "Model checkpointing and inference visualizer".to_string(),
+            ],
+            xp_reward: 200,
+            badge_name: "meme-roaster".to_string(),
+        },
+        5 => PracticeCheckpoint {
+            title: "Mirza Ghalib vs Allama Iqbal Urdu Poetry Rhyme Engine".to_string(),
+            urdu_title: "Ghalib vs Iqbal Poetry Mini-GPT".to_string(),
+            description: "Raw PyTorch tensors se multi-head self-attention transformer likhein jo classic Urdu ghazals ke meter aur qafiya (rhyme) ko seekh kar naye humorous shair complete kare!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod5_ghalib_gpt".to_string(),
+            checklist: vec![
+                "Custom Causal Self-Attention mask".to_string(),
+                "Rotary Position Embeddings (RoPE)".to_string(),
+                "Byte-Pair Encoding (BPE) tokenizer integration".to_string(),
+                "Next-token generation with temperature & top-p sampling".to_string(),
+            ],
+            xp_reward: 200,
+            badge_name: "shayar-e-ai".to_string(),
+        },
+        6 => PracticeCheckpoint {
+            title: "Ami Ka WhatsApp Auto-Responder Bot".to_string(),
+            urdu_title: "Ami Ka WhatsApp Reply Bot".to_string(),
+            description: "'Beta kahan ho?', 'Roti khayi?', aur 'Dahi le aana' jese WhatsApp messages ke liye production-ready FastAPI streaming server banayein with Server-Sent Events (SSE) and token-rate streaming.".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod6_ami_reply_bot".to_string(),
+            checklist: vec![
+                "FastAPI async route with StreamingResponse".to_string(),
+                "Pydantic V2 request & response schemas".to_string(),
+                "In-memory token-bucket rate limiter".to_string(),
+                "CORS & Bearer token authorization middleware".to_string(),
+            ],
+            xp_reward: 200,
+            badge_name: "farmanbardar-beta".to_string(),
+        },
+        7 => PracticeCheckpoint {
+            title: "Grandma's Secret Biryani Recipe RAG Engine".to_string(),
+            urdu_title: "Nani Amma Biryani Recipe RAG Search".to_string(),
+            description: "Scanned handwritten recipe notes aur secret spices PDF documents ko PostgreSQL pgvector hybrid search (BM25 + Dense) se index karein. Query: 'Agar namak tez ho jaye to kya karein?' -> exact potaato trick cite kare!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod7_secret_biryani_rag".to_string(),
+            checklist: vec![
+                "pgvector HNSW index creation in PostgreSQL".to_string(),
+                "Reciprocal Rank Fusion (RRF) for Hybrid search".to_string(),
+                "Cross-Encoder re-ranking with FlashRank".to_string(),
+                "Strict source citation grounding prompt".to_string(),
+            ],
+            xp_reward: 250,
+            badge_name: "bawarchi-rag".to_string(),
+        },
+        8 => PracticeCheckpoint {
+            title: "Aggressive Salary Negotiation AI Agent Swarm".to_string(),
+            urdu_title: "Salary Negotiation Multi-Agent Swarm".to_string(),
+            description: "Anthropic Model Context Protocol (MCP) aur smolagents use karte hue 3 agents ka swarm banayein (Analyst, Market Researcher, Hardball Negotiator) jo remote USD salary packages par counter-offers draft kare!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod8_salary_negotiator".to_string(),
+            checklist: vec![
+                "Custom MCP tool server (Tax Calculator, Glassdoor scraper)".to_string(),
+                "ReAct planning & execution loop".to_string(),
+                "Human-in-the-loop approval checkpoint".to_string(),
+                "Multi-turn counter-offer generation".to_string(),
+            ],
+            xp_reward: 250,
+            badge_name: "dollar-earner".to_string(),
+        },
+        9 => PracticeCheckpoint {
+            title: "Roman Urdu Sarcasm & Roast Fine-Tuning Engine".to_string(),
+            urdu_title: "Roman Urdu Sarcasm Detector (Unsloth QLoRA)".to_string(),
+            description: "Free Google Colab T4 par Unsloth 4-bit QLoRA use karke Llama 3.2 3B ya Gemma 2 2B ko fine-tune karein. Model pehchane ke 'Bohot aala bhai!' tareef hai ya taana!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod9_urdu_sarcasm".to_string(),
+            checklist: vec![
+                "Unsloth 4-bit FastLanguageModel setup".to_string(),
+                "ChatML dataset packing with assistant masking".to_string(),
+                "LoRA rank 16 / alpha 32 configuration".to_string(),
+                "GGUF Q4_K_M quant export for local inference".to_string(),
+            ],
+            xp_reward: 300,
+            badge_name: "taana-master".to_string(),
+        },
+        10 => PracticeCheckpoint {
+            title: "Phuppo-Proof Family Group Content Guardrail Firewall".to_string(),
+            urdu_title: "Family Group PII & Jailbreak Firewall".to_string(),
+            description: "Family WhatsApp groups mein fake news, toxic rishta gossip aur PII leaks ko rokne ke liye NeMo Guardrails + Microsoft Presidio firewall deploy karein jo toxic messages ko polite Roman Urdu mein rewrite kare.".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod10_family_firewall".to_string(),
+            checklist: vec![
+                "Presidio PII anonymizer (phone, CNIC, address)".to_string(),
+                "Semantic jailbreak detection rail".to_string(),
+                "Ragas faithfulness evaluation metric".to_string(),
+                "Automated GitHub Actions CI eval runner".to_string(),
+            ],
+            xp_reward: 300,
+            badge_name: "sulah-joo".to_string(),
+        },
+        11 => PracticeCheckpoint {
+            title: "Sub-50ms High-Scale AI Microservice Gateway".to_string(),
+            urdu_title: "Sub-50ms Rust Axum LLM Gateway".to_string(),
+            description: "Rust Axum mein high-throughput proxy gateway banayein jo Groq, Cerebras aur vLLM clusters ke darmiyan round-robin load balance kare with automated failover aur sub-50ms latency.".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod11_rust_gateway".to_string(),
+            checklist: vec![
+                "Rust Axum async route handlers".to_string(),
+                "Token-bucket rate limiter per API key".to_string(),
+                "Multi-provider health check & circuit breaker".to_string(),
+                "OpenTelemetry distributed tracing".to_string(),
+            ],
+            xp_reward: 350,
+            badge_name: "rocket-engineer".to_string(),
+        },
+        12 => PracticeCheckpoint {
+            title: "Handwritten Doctor Prescription & Urdu Audio Transcriber".to_string(),
+            urdu_title: "Doctor Prescription OCR & Audio Transcriber".to_string(),
+            description: "Doctor ki tehrir (handwritten bad handwriting) aur tez bolay gaye Urdu audio notes ko Whisper Large v3 + Vision LLM se parse karke structured medicine dosage JSON generate karein.".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod12_doctor_ocr".to_string(),
+            checklist: vec![
+                "Whisper audio chunking & transcription".to_string(),
+                "Vision LLM multimodal prompt with dosage schema".to_string(),
+                "Pydantic JSON schema strict enforcement".to_string(),
+                "Medicine interaction warning system".to_string(),
+            ],
+            xp_reward: 350,
+            badge_name: "hakeem-ai".to_string(),
+        },
+        13 => PracticeCheckpoint {
+            title: "100% Offline Exam Crammer Chatbot".to_string(),
+            urdu_title: "Offline WebGPU Exam Crammer".to_string(),
+            description: "Transformers.js + WebGPU ke zariye student ke browser mein Llama-3.2-1B-Instruct model 100% offline run karein taake bina internet / load-shedding ke exam revision ki ja sake.".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod13_offline_crammer".to_string(),
+            checklist: vec![
+                "WebGPU device initialization in JavaScript".to_string(),
+                "ONNX / Transformers.js quantized model loading".to_string(),
+                "Zero-server edge inference loop".to_string(),
+                "Local browser IndexedDB chat persistence".to_string(),
+            ],
+            xp_reward: 400,
+            badge_name: "bijli-proof".to_string(),
+        },
+        14 => PracticeCheckpoint {
+            title: "Global AI Micro-SaaS Capstone Defense".to_string(),
+            urdu_title: "Commercial AI SaaS Capstone Launch".to_string(),
+            description: "Supabase Auth, PostgreSQL RLS, Stripe billing aur Cloudflare Pages deployment ke sath ek commercial AI SaaS banayein aur live internet par launch karein!".to_string(),
+            colab_url: "https://colab.research.google.com/drive/1ai_ustaad_mod14_capstone_defense".to_string(),
+            checklist: vec![
+                "Multi-tenant Supabase schema with RLS".to_string(),
+                "Stripe webhook payment integration".to_string(),
+                "Production deployment on Cloudflare Pages".to_string(),
+                "Live 60-second video demo & GitHub repository".to_string(),
+            ],
+            xp_reward: 500,
+            badge_name: "unicorn-founder".to_string(),
+        },
+        _ => panic!("Invalid module number"),
+    }
+}
+
 fn build_phase_1() -> Phase {
+
+    let m0_script = r#"@preset midnight
+@animate flow
+flow LR: Python Zero Se Hero Learning Journey
+  syntax[0.1 Syntax & Mental Model] $code -> struct[0.2 Lists, Dicts & Tuples] $db
+  struct -> func[0.3 Functions & *args] $code
+  func -> oop[0.4 OOP & @dataclass] $cube
+  oop -> io[0.5 File I/O & JSON APIs] $cloud
+  io -> np[0.6 NumPy & Pandas Intro] $cpu *"#;
+
+    let m0 = Module {
+        id: 0,
+        phase_id: 1,
+        slug: "python-zero-se-hero".to_string(),
+        week: 0,
+        title: "Python Zero Se Hero (Prerequisite Track)".to_string(),
+        urdu_title: "Pehle Python, Phir AI — Zero Se Hero Tak".to_string(),
+        description: "Python ki bunyadi syntax, dynamic typing mental model, data structures, functions, OOP, file handling, aur NumPy/Pandas ka practical aaghaz.".to_string(),
+        diagram_script: m0_script.to_string(),
+        diagram_svg: render_svg_or_fallback(m0_script),
+        lessons: vec![
+            Lesson {
+                id: 1,
+                module_slug: "python-zero-se-hero".to_string(),
+                slug: "python-mental-model-syntax".to_string(),
+                title: "Python Mental Model, Setup & Fast Syntax".to_string(),
+                urdu_title: "Python Ka Mental Model, Interpreter Aur Basic Syntax".to_string(),
+                duration_mins: 30,
+                xp_reward: 50,
+                explanation_urdu: "Python ek interpreted bytecode language hai jo CPython VM par execute hoti hai. Variables memory labels hote hain. Dynamic typing, conditionals aur modern match-case patterns seekhein.".to_string(),
+                code_snippet: Some(CodeSnippet {
+                    language: "python".to_string(),
+                    title: "Python 3.12 Type Hints & Pattern Matching".to_string(),
+                    code: r#"model_name: str = "llama-3.2"
+active_users: int = 1500
+
+match model_name:
+    case "llama-3.2" | "gemma-2":
+        print("Edge inference ready!")
+    case _:
+        print("Standard cloud model")"#.to_string(),
+                    explanation: "Pattern matching se complex if/else chains simplify hoti hain.".to_string(),
+                }),
+                diagram_script: Some(r#"@preset midnight
+@animate flow
+flow LR: CPython Execution
+  src[code.py] -> comp[CPython Compiler] -> pyc[.pyc Bytecode] -> vm[Virtual Machine]*"#.to_string()),
+                diagram_svg: render_svg_or_fallback(r#"@preset midnight
+@animate flow
+flow LR: CPython Execution
+  src[code.py] -> comp[CPython Compiler] -> pyc[.pyc Bytecode] -> vm[Virtual Machine]*"#),
+                key_takeaways: vec![
+                    "Python source code pehle .pyc bytecode mein translate hota hai.".to_string(),
+                    "Type hints run-time par crash nahi karte lekin validation mein madad dete hain.".to_string(),
+                ],
+                resources: vec![
+                    ResourceLink { title: "Python 3.12 Official Tutorial".to_string(), url: "https://docs.python.org/3/tutorial/".to_string(), resource_type: "Docs".to_string() }
+                ],
+            },
+            Lesson {
+                id: 2,
+                module_slug: "python-zero-se-hero".to_string(),
+                slug: "python-data-structures-deep-dive".to_string(),
+                title: "Data Structures Deep-Dive: Lists, Tuples, Sets, Dicts".to_string(),
+                urdu_title: "Lists, Tuples, Sets, Dictionaries Aur Comprehensions".to_string(),
+                duration_mins: 35,
+                xp_reward: 50,
+                explanation_urdu: "Lists dynamic arrays hain, Tuples immutable hain, Sets hash tables hain O(1) lookup ke sath, aur Dictionaries key-value mapping hain. Comprehensions se code tez aur compact banta hai.".to_string(),
+                code_snippet: Some(CodeSnippet {
+                    language: "python".to_string(),
+                    title: "Comprehensions & O(1) Hash Sets".to_string(),
+                    code: r#"menu = {"chai": 60, "paratha": 120, "samosa": 40}
+taxed = {k: round(v * 1.16, 2) for k, v in menu.items()}
+unique_categories = {"beverage", "food", "snack"}
+print(f"Taxed menu: {taxed}")"#.to_string(),
+                    explanation: "Set lookups O(1) constant time mein execute hote hain.".to_string(),
+                }),
+                diagram_script: None,
+                diagram_svg: None,
+                key_takeaways: vec![
+                    "Search by key/value ke liye Set aur Dict Hashing O(1) time leti hai.".to_string(),
+                ],
+                resources: vec![],
+            },
+            Lesson {
+                id: 3,
+                module_slug: "python-zero-se-hero".to_string(),
+                slug: "python-functions-scope-closures".to_string(),
+                title: "Functions, Scope, Closures & *args/**kwargs".to_string(),
+                urdu_title: "Functions, Scope Rules (LEGB), Aur Observability Decorators".to_string(),
+                duration_mins: 30,
+                xp_reward: 50,
+                explanation_urdu: "Functions first-class citizens hain. Variable resolution LEGB rule follow karta hai. *args arbitrary tuple leta hai aur **kwargs named dictionary. Decorators telemetry ke liye ahem hain.".to_string(),
+                code_snippet: Some(CodeSnippet {
+                    language: "python".to_string(),
+                    title: "Benchmark Decorator & Parameter Dispatching".to_string(),
+                    code: r#"def benchmark(fn):
+    def wrapper(*args, **kwargs):
+        print(f"Running {fn.__name__}...")
+        return fn(*args, **kwargs)
+    return wrapper
+
+@benchmark
+def order_chai(name: str, *extras, **metadata):
+    print(f"Chai for {name}, extras: {extras}")"#.to_string(),
+                    explanation: "Decorators original function code ko modify kiye baghair monitoring add karte hain.".to_string(),
+                }),
+                diagram_script: None,
+                diagram_svg: None,
+                key_takeaways: vec![
+                    "LEGB: Local -> Enclosing -> Global -> Built-in scope hierarchy.".to_string(),
+                ],
+                resources: vec![],
+            },
+            Lesson {
+                id: 4,
+                module_slug: "python-zero-se-hero".to_string(),
+                slug: "python-oop-classes-dataclasses".to_string(),
+                title: "Object-Oriented Programming (OOP) for AI: Classes & @dataclass".to_string(),
+                urdu_title: "OOP, Dunder Methods Aur Modern @dataclass(slots=True)".to_string(),
+                duration_mins: 40,
+                xp_reward: 75,
+                explanation_urdu: "Class blueprint hai aur Object instance hai. Dunder methods (__call__, __len__, __repr__) Python ke core protocols implement karte hain. @dataclass(slots=True) memory overhead khatam karta hai.".to_string(),
+                code_snippet: Some(CodeSnippet {
+                    language: "python".to_string(),
+                    title: "High-Performance Memory Efficient Dataclass".to_string(),
+                    code: r#"from dataclasses import dataclass
+
+@dataclass(slots=True)
+class ChaiOrder:
+    table_id: int
+    items: list[str]
+    total_rs: float
+
+order = ChaiOrder(table_id=5, items=["Doodh Patti", "Paratha"], total_rs=180.0)
+print(order)"#.to_string(),
+                    explanation: "slots=True instance ke liye __dict__ heap overhead avoid karta hai.".to_string(),
+                }),
+                diagram_script: None,
+                diagram_svg: None,
+                key_takeaways: vec![
+                    "PyTorch models nn.Module class par based hote hain.".to_string(),
+                ],
+                resources: vec![],
+            },
+            Lesson {
+                id: 5,
+                module_slug: "python-zero-se-hero".to_string(),
+                slug: "python-files-json-apis".to_string(),
+                title: "File Handling, JSON, Parquet & REST API Requests".to_string(),
+                urdu_title: "Disk File I/O, JSONL Streaming Aur Web REST APIs".to_string(),
+                duration_mins: 35,
+                xp_reward: 75,
+                explanation_urdu: "Context managers (with statement) file leaks rokte hain. JSONL LLM datasets ka universal format hai. REST API calling with retry logic and error handling.".to_string(),
+                code_snippet: Some(CodeSnippet {
+                    language: "python".to_string(),
+                    title: "JSONL File Streaming for AI Datasets".to_string(),
+                    code: r#"import json
+
+records = [{"prompt": "Suno!", "response": "Ji farmayein"}]
+with open("dataset.jsonl", "w", encoding="utf-8") as f:
+    for r in records:
+        f.write(json.dumps(r) + "\n")"#.to_string(),
+                    explanation: "JSONL streaming memory mein puray dataset ko load kiye baghair iterate karta hai.".to_string(),
+                }),
+                diagram_script: None,
+                diagram_svg: None,
+                key_takeaways: vec![
+                    "with open(...) hamesha use karein taake file descriptors leak na hon.".to_string(),
+                ],
+                resources: vec![],
+            },
+            Lesson {
+                id: 6,
+                module_slug: "python-zero-se-hero".to_string(),
+                slug: "python-numpy-pandas-foundations".to_string(),
+                title: "NumPy & Pandas Foundations: Vectors, Matrices & Tabular Data".to_string(),
+                urdu_title: "NumPy NDArray, Vector Math Aur Pandas Tabular Analysis".to_string(),
+                duration_mins: 45,
+                xp_reward: 100,
+                explanation_urdu: "Python lists se NumPy C-contiguous arrays tak ka safar! Vectorized dot products, array slicing, aur Pandas DataFrame groupby aggregations for AI pipelines.".to_string(),
+                code_snippet: Some(CodeSnippet {
+                    language: "python".to_string(),
+                    title: "NumPy Vectorized Calculations & Pandas DataFrame".to_string(),
+                    code: r#"import numpy as np
+import pandas as pd
+
+prices = np.array([60, 120, 50])
+quantities = np.array([5, 2, 4])
+revenue = np.dot(prices, quantities)
+print(f"Vectorized Total Revenue: Rs {revenue}")"#.to_string(),
+                    explanation: "np.dot C-level SIMD instructions use karta hai.".to_string(),
+                }),
+                diagram_script: None,
+                diagram_svg: None,
+                key_takeaways: vec![
+                    "NumPy arrays contiguous memory block use karte hain.".to_string(),
+                    "Pandas DataFrames tabular data cleaning ke liye golden standard hain.".to_string(),
+                ],
+                resources: vec![
+                    ResourceLink { title: "NumPy Docs".to_string(), url: "https://numpy.org/doc/stable/".to_string(), resource_type: "Docs".to_string() },
+                    ResourceLink { title: "Pandas User Guide".to_string(), url: "https://pandas.pydata.org/docs/".to_string(), resource_type: "Guide".to_string() }
+                ],
+            },
+        ],
+        quiz: Quiz {
+            id: "quiz-module-0".to_string(),
+            module_slug: "python-zero-se-hero".to_string(),
+            title: "Module 0: Python Foundations Quiz".to_string(),
+            passing_score: 70,
+            xp_reward: 150,
+            questions: vec![
+                QuizQuestion {
+                    id: 1,
+                    question: "Which Python data types are mutable?".to_string(),
+                    urdu_question: "Python mein kaun si data types mutable (in-place modifiable) hoti hain?".to_string(),
+                    options: vec![
+                        "Lists, Dictionaries, and Sets".to_string(),
+                        "Tuples, Strings, and Integers".to_string(),
+                        "All primitive types".to_string(),
+                        "None of the above".to_string(),
+                    ],
+                    correct_index: 0,
+                    explanation_urdu: "Lists, Dicts aur Sets mutable hain jabke Tuples aur Strings immutable hain.".to_string(),
+                },
+                QuizQuestion {
+                    id: 2,
+                    question: "What is the primary benefit of @dataclass(slots=True)?".to_string(),
+                    urdu_question: "Classes mein @dataclass(slots=True) use karne ka sab se bara faida kya hai?".to_string(),
+                    options: vec![
+                        "Eliminates dynamic __dict__ overhead and improves memory and attribute lookup speed".to_string(),
+                        "Automatically compiles Python into Rust".to_string(),
+                        "Runs code on GPU".to_string(),
+                        "Disables all class methods".to_string(),
+                    ],
+                    correct_index: 0,
+                    explanation_urdu: "slots=True dynamic dictionary allocate karne ke bajaye fixed-size C array use karta hai.".to_string(),
+                },
+                QuizQuestion {
+                    id: 3,
+                    question: "What is the time complexity of searching a key in a Python dict or set?".to_string(),
+                    urdu_question: "Python dictionary ya set mein key dhoondne ka time complexity kya hota hai?".to_string(),
+                    options: vec![
+                        "O(1) average constant time via Hash Table".to_string(),
+                        "O(N) linear time scan".to_string(),
+                        "O(N^2) quadratic time".to_string(),
+                        "O(log N) binary search".to_string(),
+                    ],
+                    correct_index: 0,
+                    explanation_urdu: "Dicts aur Sets Hash Tables par base karte hain is liye inka lookup average O(1) hota hai.".to_string(),
+                },
+                QuizQuestion {
+                    id: 4,
+                    question: "How do *args and **kwargs collect incoming function parameters?".to_string(),
+                    urdu_question: "Functions mein *args aur **kwargs parameters ko kis format mein collect karte hain?".to_string(),
+                    options: vec![
+                        "*args as a Tuple, **kwargs as a Dictionary".to_string(),
+                        "*args as a List, **kwargs as a Set".to_string(),
+                        "Both as JSON strings".to_string(),
+                        "Both as pure floats".to_string(),
+                    ],
+                    correct_index: 0,
+                    explanation_urdu: "*args positional arguments ko tuple aur **kwargs keyword arguments ko dictionary banata hai.".to_string(),
+                },
+                QuizQuestion {
+                    id: 5,
+                    question: "What is the key difference between json.dump() and json.dumps()?".to_string(),
+                    urdu_question: "json.dumps() aur json.dump() mein bunyadi farq kya hai?".to_string(),
+                    options: vec![
+                        "json.dumps() returns a string; json.dump() writes directly to an open file stream".to_string(),
+                        "json.dumps() connects to SQL database".to_string(),
+                        "json.dump() only works on NumPy arrays".to_string(),
+                        "There is no difference".to_string(),
+                    ],
+                    correct_index: 0,
+                    explanation_urdu: "dumps ka 's' String ke liye hai jabke dump() file stream mein write karta hai.".to_string(),
+                },
+            ],
+        },
+        resources: vec![
+            ResourceLink { title: "Python Official Docs".to_string(), url: "https://docs.python.org/3/".to_string(), resource_type: "Docs".to_string() },
+        ],
+        project: Some(ProjectBrief {
+            title: "Chai Dhaba Billing & Khata Management Engine".to_string(),
+            description: "Build an interactive CLI khata management tool for a local chai shop with @dataclass items, automated tax calculation, and persistent JSONL disk storage.".to_string(),
+            deliverables: vec![
+                "Python CLI with interactive order loop".to_string(),
+                "@dataclass models with slots=True".to_string(),
+                "JSONL daily khata persistence and summary metrics".to_string(),
+            ],
+            evaluation_criteria: vec![
+                "Zero crashes on invalid user input".to_string(),
+                "Accurate profit margin calculations".to_string(),
+            ],
+            real_world_deliverable: Some("Chai Dhaba Billing Engine & Khata Management CLI".to_string()),
+            zero_gpu_recipe: None,
+        }),
+        real_world_deliverable: Some("Chai Dhaba Billing Engine & Khata Management CLI".to_string()),
+        zero_gpu_recipe: Some(ZeroGpuRecipe {
+            platform: "Local CPU / Google Colab Free Tier".to_string(),
+            vram_required: "0 GB (Any CPU / Laptop)".to_string(),
+            estimated_cost: "$0.00 Free".to_string(),
+            compute_units_tip: "Pure Python logic runs 100% locally on any basic laptop or Colab CPU without requiring GPU compute.".to_string(),
+            one_click_command: "python -m pip install tabulate rich && python chai_billing.py".to_string(),
+        }),
+        practice_checkpoint: Some(get_checkpoint(0)),
+    };
+
     let m1_script = r#"@preset midnight
 @animate flow
 flow LR: Python Data Pipeline Architecture | Clean Architecture & Ingestion
@@ -562,6 +1112,7 @@ print(f"Top matching document index: {top_idx}, score: {similarities[top_idx]:.4
             compute_units_tip: "NumPy AVX-512 vectorization runs blazing fast on standard Colab CPU without burning any GPU compute units.".to_string(),
             one_click_command: "python -m pip install numpy polars pyarrow pydantic && python main.py".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(1)),
     };
 
     let m2_script = r#"@preset midnight
@@ -736,6 +1287,7 @@ print("Dot product:", manual_dot_product(v1, v2))"#.to_string(),
             compute_units_tip: "Pure NumPy tensor calculations require 0 VRAM; run on any 4GB RAM laptop or Colab CPU.".to_string(),
             one_click_command: "python resume_matcher.py --top-k 5".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(2)),
     };
 
     Phase {
@@ -746,7 +1298,7 @@ print("Dot product:", manual_dot_product(v1, v2))"#.to_string(),
         week_range: "Weeks 1-4".to_string(),
         description: "Modern Python 3.12+, AsyncIO, memory profiling, NumPy vectorization, linear algebra intuition, gradients aur tensor memory layouts.".to_string(),
         outcome: "Aap raw Python aur NumPy se high-performance vector math operations aur data ingestion pipelines build karne ke qabil ho jayenge.".to_string(),
-        modules: vec![m1, m2],
+        modules: vec![m0, m1, m2],
     }
 }
 
@@ -897,6 +1449,7 @@ metric ->|No| train"#;
             compute_units_tip: "Scikit-Learn and LightGBM train 100k rows in <15 seconds on Colab dual-core CPU.".to_string(),
             one_click_command: "pip install scikit-learn lightgbm fastapi && uvicorn app:app --port 8000".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(3)),
     };
 
     let m4_script = r#"@preset midnight
@@ -1061,6 +1614,7 @@ print(f"Gradient at x=3: {x.grad.item():.1f}")"#.to_string(),
             compute_units_tip: "Colab Free T4 handles 50,000 parameter PyTorch MLP in under 2 minutes. Call runtime.unassign() once finished.".to_string(),
             one_click_command: "!python train_fraud_detector.py --epochs 20 --device cuda".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(4)),
     };
 
     Phase {
@@ -1220,6 +1774,7 @@ mlp -> pred((Predicted Class)) ~ok"#;
             compute_units_tip: "Use mixed precision torch.cuda.amp.autocast() to train ResNet-50 with 2x batch size on free T4.".to_string(),
             one_click_command: "!python train_cheque_ocr.py --arch resnet50 --fp16".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(5)),
     };
 
     let m6_script = r#"@preset midnight
@@ -1406,6 +1961,7 @@ def causal_self_attention(Q, K, V):
             compute_units_tip: "BPE vocabulary training on 50MB Roman Urdu text completes in 40s on standard CPU.".to_string(),
             one_click_command: "python train_bpe.py --input urdu_corpus.txt --vocab-size 32000".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(6)),
     };
 
     Phase {
@@ -1581,6 +2137,7 @@ class ExtractedEntities(BaseModel):
             compute_units_tip: "Enable FlashAttention-2 or PyTorch SDPA (scaled_dot_product_attention) for 3x memory reduction.".to_string(),
             one_click_command: "!python train_mini_gpt.py --seq-len 512 --batch-size 16".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(7)),
     };
 
     let m8_script = r#"@preset midnight
@@ -1750,6 +2307,7 @@ LIMIT 5;"#.to_string(),
             compute_units_tip: "Generate text-embedding-3 or BGE embeddings via serverless endpoints, store in free Supabase PostgreSQL.".to_string(),
             one_click_command: "cargo run --bin hybrid_rag_ingest -- --pdf sample_contract.pdf".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(8)),
     };
 
     Phase {
@@ -1914,6 +2472,7 @@ group Retrieval: vdb bm25 rrf"#;
             compute_units_tip: "Unsloth Triton kernels allow 4-bit QLoRA fine-tuning on a 15GB T4. Wrap script in try/finally runtime.unassign()!".to_string(),
             one_click_command: "!pip install 'unsloth[colab-new]' && python train_qlora.py".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(9)),
     };
 
     let m10_script = r#"@preset midnight
@@ -2060,6 +2619,7 @@ add -> y[Output Activation y // dim k] ~ok"#;
             compute_units_tip: "smolagents executes Python tools locally on CPU while querying Groq API at 350 tokens/sec for free.".to_string(),
             one_click_command: "python upwork_agent.py --query 'Rust Backend Engineer'".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(10)),
     };
 
     let m11_script = r#"@preset midnight
@@ -2207,6 +2767,7 @@ reflect ->|Yes - Completed| final((5. Final Answer & Deliverable)) ~ok"#;
             compute_units_tip: "Compiled Rust Axum binary consumes only 12MB RAM and handles 25,000 req/sec on a single vCPU.".to_string(),
             one_click_command: "cargo run --release".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(11)),
     };
 
     let m12_script = r#"@preset midnight
@@ -2354,6 +2915,7 @@ llm -> out((Visual Reasoning & OCR Answer)) ~ok"#;
             compute_units_tip: "Use faster-whisper with INT8 quantization on Colab T4 for 4x real-time audio transcription.".to_string(),
             one_click_command: "!pip install faster-whisper && python transcribe.py voice_note.ogg".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(12)),
     };
 
     let m13_script = r#"@preset midnight
@@ -2502,6 +3064,7 @@ mon -->|Data Drift Feedback| data"#;
             compute_units_tip: "WebLLM compiles Llama 3 8B directly into WebGPU shaders, running 100% inside student browser.".to_string(),
             one_click_command: "ollama run llama3.2:3b".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(13)),
     };
 
     let m14_script = r#"@preset midnight
@@ -2668,6 +3231,7 @@ mon -> resp((User Response with SLA)) ~ok"#;
             compute_units_tip: "Deploy frontend on Cloudflare Pages (free unlimited bandwidth), database on Supabase, backend on Fly.io free tier.".to_string(),
             one_click_command: "git push origin main".to_string(),
         }),
+        practice_checkpoint: Some(get_checkpoint(14)),
     };
 
     Phase {

@@ -141,6 +141,19 @@ pub struct Module {
     pub real_world_deliverable: Option<String>,
     #[serde(default, skip_serializing_if = "Option::is_none")]
     pub zero_gpu_recipe: Option<ZeroGpuRecipe>,
+    #[serde(default, skip_serializing_if = "Option::is_none")]
+    pub practice_checkpoint: Option<PracticeCheckpoint>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct PracticeCheckpoint {
+    pub title: String,
+    pub urdu_title: String,
+    pub description: String,
+    pub colab_url: String,
+    pub checklist: Vec<String>,
+    pub xp_reward: u32,
+    pub badge_name: String,
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

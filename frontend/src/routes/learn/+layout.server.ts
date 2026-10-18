@@ -69,9 +69,18 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 
 		const completedLessonIds = (userProgress ?? []).map((p) => p.lesson_id);
 
+		// Ensure Phase 0 (Python Zero Se Hero) is present
+		const effectivePhases: any[] = [...(phases ?? [])];
+		if (!effectivePhases.some((p) => p.slug === 'phase-0-python-prerequisite' || p.phase_number === 0)) {
+			const p0 = FALLBACK_PHASES.find((p) => p.phase_number === 0);
+			if (p0) {
+				effectivePhases.unshift(p0);
+			}
+		}
+
 		// Flatten and sort modules
 		const allModules: any[] = [];
-		(phases ?? []).forEach((p) => {
+		effectivePhases.forEach((p) => {
 			if (p.modules) {
 				const sortedMods = [...p.modules].sort((a, b) => a.order_index - b.order_index);
 				sortedMods.forEach((m) => {
@@ -84,7 +93,7 @@ export const load: LayoutServerLoad = async ({ locals }) => {
 		});
 
 		return {
-			phases: phases ?? [],
+			phases: effectivePhases,
 			modules: allModules,
 			completedLessonIds
 		};

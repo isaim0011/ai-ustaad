@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { Flame, Sparkles, User, Menu, X, LogOut, ChevronDown } from 'lucide-svelte';
 	import ThemeToggle from '$lib/components/ThemeToggle.svelte';
+	import Logo from '$lib/components/Logo.svelte';
 	interface SupabaseUser {
 		id: string;
 		email?: string;
@@ -35,28 +36,24 @@
 	);
 </script>
 
-<header class="sticky top-0 z-40 border-b border-[#e5e2d9] bg-[#faf9f5]/85 backdrop-blur-md dark:border-[#343330] dark:bg-[#1f1e1d]/85">
+<header class="sticky top-0 z-40 border-b border-[#e5e2d9] bg-[#faf9f5]/90 backdrop-blur-md dark:border-[#343330] dark:bg-[#1f1e1d]/90">
 	<div class="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
 		<!-- Brand Logo -->
 		<div class="flex items-center gap-2.5 sm:gap-3">
-			<a href="/" class="flex items-center gap-2.5 transition-opacity hover:opacity-90">
-				<div class="flex h-8 w-8 items-center justify-center rounded-lg bg-[#c96442] text-white font-serif font-bold text-sm shadow-sm">
-					AU
-				</div>
-				<div class="flex flex-col">
-					<span class="font-serif text-lg font-semibold tracking-tight text-[#141413] dark:text-[#f5f4ed]">
-						AI Ustaad
-					</span>
-				</div>
+			<a href="/" class="group flex items-center gap-2.5 transition-opacity hover:opacity-95">
+				<Logo size={34} />
+				<span class="text-lg font-serif font-bold tracking-tight text-[#141413] dark:text-[#f5f4ed]">
+					AI Ustaad
+				</span>
 			</a>
-			<span class="hidden rounded-full border border-[#c96442]/30 bg-[#c96442]/10 px-2 py-0.5 text-[11px] font-mono font-medium text-[#c96442] sm:inline-block">
-				Roman Urdu
+			<span class="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-600 dark:text-amber-400 font-mono border border-amber-500/20">
+				AI Mastery
 			</span>
 			<a
 				href="https://github.com/isaim0011"
 				target="_blank"
 				rel="noopener noreferrer"
-				class="hidden rounded-full border border-[#e5e2d9] bg-[#f0eee6] px-2 py-0.5 text-[11px] font-mono text-[#6f6e69] transition-colors hover:border-[#c96442]/40 hover:text-[#c96442] lg:inline-block dark:border-[#343330] dark:bg-[#262624] dark:text-[#a19f97]"
+				class="rounded-full border border-[#e5e2d9] bg-[#f0eee6]/80 px-2.5 py-0.5 text-xs font-mono font-medium text-[#6f6e69] transition-all hover:border-[#c96442]/50 hover:bg-[#c96442]/10 hover:text-[#c96442] dark:border-[#343330] dark:bg-[#262624] dark:text-[#a19f97] dark:hover:text-[#f5f4ed]"
 			>
 				by Bimo
 			</a>

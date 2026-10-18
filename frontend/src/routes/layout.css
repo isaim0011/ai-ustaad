@@ -1,22 +1,24 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-serif: "Source Serif 4", "Tiempos", Georgia, Cambria, serif;
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, monospace;
 
   --color-bg-light: #faf9f5;
-  --color-bg-dark: #1f1e1d;
+  --color-bg-dark: #141413;
   --color-surface-light: #f0eee6;
-  --color-surface-dark: #262624;
+  --color-surface-dark: #1f1e1d;
   --color-surface-hover-light: #e8e5db;
-  --color-surface-hover-dark: #2e2d2a;
+  --color-surface-hover-dark: #2a2927;
   --color-text-light: #141413;
   --color-text-dark: #f5f4ed;
   --color-muted-light: #6f6e69;
   --color-muted-dark: #a19f97;
   --color-border-light: #e5e2d9;
-  --color-border-dark: #343330;
+  --color-border-dark: #2c2b28;
   --color-terracotta: #c96442;
   --color-terracotta-hover: #d97757;
   --color-terracotta-light: #fdf5f2;

@@ -1,14 +1,47 @@
 import { error, fail } from '@sveltejs/kit';
 import type { Actions, PageServerLoad } from './$types';
+import { FALLBACK_PHASES } from '$lib/data/fallback';
 
 export const load: PageServerLoad = async ({ params, locals, parent }) => {
 	const parentData = await parent();
 	const supabase = locals.supabase;
-	if (!supabase) {
-		throw error(500, 'Database connection is not configured.');
+	const { module: moduleSlug, lesson: lessonSlug } = params;
+
+	function getFallbackData() {
+		for (const p of FALLBACK_PHASES) {
+			const m = p.modules?.find((mod) => mod.slug === moduleSlug);
+			if (m && m.lessons) {
+				const lesIndex = m.lessons.findIndex((l) => l.slug === lessonSlug);
+				if (lesIndex !== -1) {
+					const lesson = m.lessons[lesIndex];
+					const prevLesson = lesIndex > 0 ? m.lessons[lesIndex - 1] : null;
+					const nextLesson = lesIndex < m.lessons.length - 1 ? m.lessons[lesIndex + 1] : null;
+					const completedList = (parentData.completedLessonIds || []) as string[];
+					return {
+						lesson,
+						module: {
+							id: m.id,
+							slug: m.slug,
+							title: m.title,
+							module_number: m.module_number
+						},
+						prevLesson,
+						nextLesson,
+						isCompleted: completedList.includes(String(lesson.id)),
+						completedLessonIds: parentData.completedLessonIds,
+						allModules: parentData.modules
+					};
+				}
+			}
+		}
+		return null;
 	}
 
-	const { module: moduleSlug, lesson: lessonSlug } = params;
+	if (!supabase) {
+		const fallback = getFallbackData();
+		if (fallback) return fallback;
+		throw error(500, 'Database connection is not configured.');
+	}
 
 	// 1. Fetch current module
 	const { data: moduleData, error: modErr } = await supabase
@@ -18,6 +51,8 @@ export const load: PageServerLoad = async ({ params, locals, parent }) => {
 		.maybeSingle();
 
 	if (modErr || !moduleData) {
+		const fallback = getFallbackData();
+		if (fallback) return fallback;
 		throw error(404, `Module "${moduleSlug}" not found.`);
 	}
 
@@ -30,6 +65,8 @@ export const load: PageServerLoad = async ({ params, locals, parent }) => {
 		.maybeSingle();
 
 	if (lesErr || !lesson) {
+		const fallback = getFallbackData();
+		if (fallback) return fallback;
 		throw error(404, `Lesson "${lessonSlug}" not found.`);
 	}
 

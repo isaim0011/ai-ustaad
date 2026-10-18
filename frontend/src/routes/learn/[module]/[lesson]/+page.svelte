@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { enhance } from '$app/forms';
-	import { CheckCircle2, Clock, Sparkles, ArrowLeft, ArrowRight, BookOpen, Layers, Menu, X, Award } from 'lucide-svelte';
+	import { CheckCircle2, Clock, Sparkles, ArrowLeft, ArrowRight, BookOpen, Layers, Menu, X, Award, ExternalLink } from 'lucide-svelte';
 	import Sidebar from '$lib/components/Sidebar.svelte';
 	import Markdown from '$lib/components/Markdown.svelte';
 	import Diagram from '$lib/components/Diagram.svelte';
 	import CodeBlock from '$lib/components/CodeBlock.svelte';
+	import { getPracticeProject } from '$lib/data/fallback';
 	import type { ActionData, PageData } from './$types';
 
 	let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -18,6 +19,7 @@
 	let isOptimisticCompleted = $state(false);
 
 	const isCompleted = $derived(isOptimisticCompleted || data.isCompleted || form?.success);
+	const practiceProject = $derived(getPracticeProject(mod.slug || mod.module_number));
 </script>
 
 <div class="flex min-h-[calc(100vh-4rem)]">
@@ -130,6 +132,42 @@
 						Production Implementation
 					</div>
 					<CodeBlock code={lesson.code_example} language="python" title="PyTorch / Python Code" />
+				</div>
+			{/if}
+
+			<!-- Quick Practice Checkpoint -->
+			{#if practiceProject}
+				<div class="my-8 rounded-2xl border border-amber-500/30 bg-amber-500/5 p-5 dark:border-amber-500/20">
+					<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+						<div class="flex items-center gap-3">
+							<span class="text-2xl">🚀</span>
+							<div>
+								<div class="flex items-center gap-2">
+									<span class="rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-mono font-bold uppercase text-amber-800 dark:text-amber-300">
+										Module Practice Checkpoint
+									</span>
+									<span class="rounded bg-emerald-500/10 px-2 py-0.5 text-[10px] font-mono font-bold text-emerald-700 dark:text-emerald-400">
+										+{practiceProject.xp_reward} XP
+									</span>
+								</div>
+								<h4 class="mt-1 font-serif text-sm font-bold text-[#141413] dark:text-[#f5f4ed]">
+									{practiceProject.title} ({practiceProject.humorous_badge})
+								</h4>
+							</div>
+						</div>
+						<a
+							href={practiceProject.colab_url}
+							target="_blank"
+							rel="noopener noreferrer"
+							class="inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#c96442] px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-[#d97757] shrink-0"
+						>
+							<span>Open Colab Practice</span>
+							<ExternalLink class="h-3.5 w-3.5" />
+						</a>
+					</div>
+					<p class="mt-2 text-xs leading-relaxed text-[#6f6e69] dark:text-[#a19f97]">
+						{practiceProject.description_roman_urdu}
+					</p>
 				</div>
 			{/if}
 

@@ -1,3 +1,5 @@
-# allow crawling everything by default
+# AI Ustaad Production Robots Configuration
 User-agent: *
-Disallow:
+Allow: /
+
+Sitemap: https://ai-ustaad.pages.dev/sitemap.xml

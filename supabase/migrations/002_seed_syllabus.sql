@@ -7,6 +7,16 @@
 
 -- 1. GAMIFICATION BADGES
 insert into public.badges (slug, title, roman_urdu_subtitle, description, icon, xp_bonus, unlock_criteria)
+values ('chai-munshi', 'Chai Wala Munshi', 'Python Zero Se Hero', 'Completed Module 0: Python Zero Se Hero and solved the Chai Shop billing checkpoint!', '☕', 100, '{"type": "module_complete", "module_slug": "python-zero-se-hero"}'::jsonb)
+on conflict (slug) do update set
+  title = excluded.title,
+  roman_urdu_subtitle = excluded.roman_urdu_subtitle,
+  description = excluded.description,
+  icon = excluded.icon,
+  xp_bonus = excluded.xp_bonus,
+  unlock_criteria = excluded.unlock_criteria;
+
+insert into public.badges (slug, title, roman_urdu_subtitle, description, icon, xp_bonus, unlock_criteria)
 values ('pehla-prompt', 'Pehla Prompt', 'Safar Ka Aaghaz', 'Completed your very first lesson on AI Ustaad!', '🚀', 50, '{"type": "lesson_count", "threshold": 1}'::jsonb)
 on conflict (slug) do update set
   title = excluded.title,
@@ -139,13 +149,32 @@ on conflict (slug) do update set
   zero_gpu_guide = excluded.zero_gpu_guide;
 
 
--- 3. PHASES (5 PHASES)
+-- 3. PHASES (6 PHASES: PREREQUISITE + 5 AI PHASES)
 insert into public.phases (course_id, phase_number, slug, title, weeks_range, level, description, diagram_script, order_index)
-select id, 1, 'phase-1-foundations', 'Phase 1: Foundations & Python Mastery', 'Weeks 1-4', 'Beginner', 'Python fundamentals, NumPy tensors, Vector math, Prompt Engineering aur LLM mental models.', '@preset midnight
+select id, 0, 'phase-0-python-prerequisite', 'Prerequisite Track: Python Zero Se Hero', 'Weeks 0', 'Absolute Beginner', 'Naye hain aur Python nahi aati? Pehle Python Zero Se Hero complete karein, phir AI Mastery shuru karein! Variables, Loops, OOP, JSON, APIs aur NumPy foundations.', '@preset midnight
+@animate flow
+flow LR: Python Zero Se Hero Pipeline
+  p1[0.1: Variables & Logic] $terminal -> p2[0.2: Functions & Types] ~info $code
+  p2 -> p3[0.3: Lists & Dicts] ~purple $database
+  p3 -> p4[0.4: OOP & Dataclass] ~teal $brain
+  p4 -> p5[0.5: Files, JSON & APIs] ~warn $server
+  p5 -> p6[0.6: NumPy & Fast Math]* ~ok $cpu', 0
+from public.courses where slug = 'ai-mastery-zero-to-production'
+on conflict (slug) do update set
+  phase_number = excluded.phase_number,
+  title = excluded.title,
+  weeks_range = excluded.weeks_range,
+  level = excluded.level,
+  description = excluded.description,
+  diagram_script = excluded.diagram_script,
+  order_index = excluded.order_index;
+
+insert into public.phases (course_id, phase_number, slug, title, weeks_range, level, description, diagram_script, order_index)
+select id, 1, 'phase-1-foundations', 'Phase 1: Foundations & Python Mastery', 'Weeks 1-4', 'Beginner', 'Pehle Python (Module 0: Python Zero Se Hero), phir NumPy tensors, Vector math, Prompt Engineering aur LLM mental models.', '@preset midnight
 @animate flow
 flow LR: Phase 1 Foundations
-  py[Python 3.12 & NumPy] $python -> math[Linear Algebra & Calculus] $brain
-  math -> prompt[Prompt Engineering & LLMs] $terminal
+  py0[Module 0: Python Zero Se Hero] $python -> py[Module 1: NumPy & Fast Math] $cpu
+  py -> prompt[Module 2: Prompt Engineering & LLMs] $terminal
   prompt -> first_app[Pehla AI Prototype] $cube *', 1
 from public.courses where slug = 'ai-mastery-zero-to-production'
 on conflict (slug) do update set
@@ -330,11 +359,64 @@ on conflict (week_number) do update set
   xp_reward = excluded.xp_reward;
 
 
--- 6. MODULES (ALL 14 MODULES)
+-- 0. SCHEMA UPGRADES
+alter table public.modules add column if not exists practice_checkpoint jsonb default '{}'::jsonb;
+
+
+-- 6. MODULES (ALL 15 MODULES: MODULE 0 TO 14)
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
+)
+select
+  p.id,
+  0,
+  'python-zero-se-hero',
+  'Module 0: Python Zero Se Hero (Prerequisite Track: Pehle Python, Phir AI)',
+  'Prerequisite / Week 0',
+  12,
+  '["Python interpreter, REPL, aur dynamic typing mental model", "Core data structures: Lists, Tuples, Sets, Dictionaries aur List Comprehensions", "Clean modular functions: Scope, Closures, *args, **kwargs aur Lambdas", "Object-Oriented Programming (OOP) for AI: Classes, Inheritance, Dunder Methods aur @dataclass", "File I/O, JSON serialization, exception handling aur REST API calls with requests", "NumPy vector basics aur Pandas DataFrame tabular manipulation for AI data ingestion"]'::jsonb,
+  '["Chai Dhaba Billing CLI script with @dataclass & JSON storage likhein", "Nested dictionary se customer orders ka structured JSON report generate karein", "Pure Python list comprehension se complex data filter aur transform karein", "Custom class banayein with __repr__, __len__, aur custom property methods", "Public REST API se JSON data fetch karke Pandas DataFrame mein load karein"]'::jsonb,
+  '[{"title": "Python 3.12 Official Tutorial", "url": "https://docs.python.org/3/tutorial/"}, {"title": "Automate the Boring Stuff with Python", "url": "https://automatetheboringstuff.com/"}, {"title": "Google Colab Python Beginner Guide", "url": "https://colab.research.google.com/"}]'::jsonb,
+  '@preset midnight
+@animate flow
+flow LR: Python Zero Se Hero Learning Journey
+  syntax[0.1 Syntax & Mental Model] $code -> struct[0.2 Lists, Dicts & Tuples] $database
+  struct -> func[0.3 Functions & *args] $terminal
+  func -> oop[0.4 OOP & @dataclass] $box
+  oop -> io[0.5 File I/O & JSON APIs] $cloud
+  io -> np[0.6 NumPy & Pandas Intro] $cpu *',
+  'midnight',
+  'flow',
+  'chai-munshi',
+  'Chai Dhaba Billing Engine & Khata Management CLI',
+  '{"platform": "Local Terminal / Google Colab Free Tier", "vram_required": "0 GB (Any CPU / Laptop)", "estimated_cost": "$0.00 Free", "compute_units_tip": "Pure Python logic runs 100% locally on any basic laptop or Colab CPU without requiring GPU compute.", "one_click_command": "python -m pip install tabulate rich && python chai_billing.py"}'::jsonb,
+  '{"title": "Chai Shop Billing & Khata Management Engine", "urdu_title": "Chai Dhaba Billing & Munshi CLI", "description": "Dhabay aur chai shop ke liye real-time terminal billing tool. Har customer ka order (Doodh Patti, Elaichi Chai, Paratha), tax, discount calculate kare aur JSON khata file mein daily report append kare!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod0_chai_billing", "checklist": ["@dataclass for MenuItem & OrderBill with auto-validation", "Interactive while loop CLI with clean input sanitization", "JSON persistence for daily transactions khata", "Discount & sales tax automated calculation", "Summary report generator showing top-selling item & profit"], "xp_reward": 100, "badge_name": "chai-munshi"}'::jsonb,
+  0
+from public.phases p
+where p.slug = 'phase-1-foundations'
+on conflict (slug) do update set
+  module_number = excluded.module_number,
+  title = excluded.title,
+  weeks_range = excluded.weeks_range,
+  estimated_hours = excluded.estimated_hours,
+  learning_outcomes = excluded.learning_outcomes,
+  practical_tasks = excluded.practical_tasks,
+  resources = excluded.resources,
+  diagram_script = excluded.diagram_script,
+  diagram_preset = excluded.diagram_preset,
+  diagram_animation = excluded.diagram_animation,
+  badge_slug = excluded.badge_slug,
+  real_world_deliverable = excluded.real_world_deliverable,
+  zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
+  order_index = excluded.order_index;
+
+insert into public.modules (
+  phase_id, module_number, slug, title, weeks_range, estimated_hours,
+  learning_outcomes, practical_tasks, resources, diagram_script,
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -357,6 +439,7 @@ flow LR: Module 1 Fast Math & Vector Pipeline
   'pehla-prompt',
   '500k E-Commerce Order Sanitizer & Parquet Data Pipeline',
   '{"platform": "Local CPU / Google Colab Free Tier", "vram_required": "0 GB (CPU)", "estimated_cost": "$0.00 Free", "compute_units_tip": "NumPy AVX-512 vectorization runs blazing fast on standard Colab CPU without burning any GPU compute units.", "one_click_command": "python -m pip install numpy polars pyarrow pydantic && python main.py"}'::jsonb,
+  '{"title": "Biryani vs Pulao Sentiment & Price Vectorizer", "urdu_title": "Biryani vs Pulao Sentiment Analyzer", "description": "Karahi, Biryani aur Pulao ke 50,000 food reviews ko pure Python vs NumPy vectorized arrays se analyze karein. Cosine similarity se find karein ke kiske reviews mein sab se zyada ''Lazeez'' aur ''Mirchi'' ka vector overlap hai!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod1_biryani_sentiment", "checklist": ["NumPy SIMD vectorized dot product implementation", "Zero-copy broadcasting array operations", "Cosine similarity calculator without SciPy", "50x speedup benchmark vs Python nested loops"], "xp_reward": 150, "badge_name": "biryani-analyst"}'::jsonb,
   1
 from public.phases p
 where p.slug = 'phase-1-foundations'
@@ -374,12 +457,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -402,6 +486,7 @@ flow LR: Module 2 Prompt Mental Model
   'prompt-rookie',
   'Multi-Step Medical Triage Prompt Pipeline with JSON Schemas',
   '{"platform": "Groq Cloud / Google AI Studio Free Tier", "vram_required": "0 GB (API-Based)", "estimated_cost": "$0.00 Free Tier", "compute_units_tip": "Groq Cloud free tier provides 30 req/min for LLaMA-3.3-70B; Gemini 2.0 Flash provides 1,500 req/day with zero credit card.", "one_click_command": "curl https://api.groq.com/openai/v1/models -H \"Authorization: Bearer $GROQ_API_KEY\""}'::jsonb,
+  '{"title": "Rishta Matcher & Bio Compatibility Algorithm", "urdu_title": "Rishta Matcher Vector Distance Calculator", "description": "Candidate ke CV/Bio aur Mother-in-Law (Saas) ki strict 15-point demand list ke darmiyan high-dimensional embeddings calculate karein. Prompt engineering se ''Red Flags'' identify karein aur automated humorous compatibility score generate karein!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod2_rishta_matcher", "checklist": ["Few-Shot Chain of Thought prompt engineering", "Structured JSON output validation with Pydantic", "Negative constraints & Hallucination mitigation rules", "Automated compatibility score generation (0-100%)"], "xp_reward": 150, "badge_name": "rishta-whisperer"}'::jsonb,
   2
 from public.phases p
 where p.slug = 'phase-1-foundations'
@@ -419,12 +504,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -448,6 +534,7 @@ flow LR: Module 3 Classical ML Pipeline
   'ml-practitioner',
   'Production Customer Churn ML Service (XGBoost + Fast Scikit-Pipeline)',
   '{"platform": "Local CPU / Colab Free Tier", "vram_required": "0 GB (CPU-Optimized)", "estimated_cost": "$0.00 Free", "compute_units_tip": "Classical ML (XGBoost, LightGBM, Scikit-learn) runs with multi-threaded CPU OpenMP; no GPU compute units required.", "one_click_command": "pip install scikit-learn xgboost lightgbm polars optuna && python train.py"}'::jsonb,
+  '{"title": "PSL/IPL Match Outcome & Cricketer Performance Predictor", "urdu_title": "Cricketer Performance & Match Winner Predictor", "description": "Historical T20 pitch report, dew factor, strike rate, aur player matchups par LightGBM & XGBoost classifier train karein. Match ke 16th over mein live winning probability estimate karein!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod3_cricket_predictor", "checklist": ["Data leakage prevention with temporal split", "Feature engineering (Strike rate in death overs, economy against spin)", "Hyperparameter tuning with Optuna", "Precision-Recall & ROC-AUC evaluation"], "xp_reward": 150, "badge_name": "toss-ka-badshah"}'::jsonb,
   3
 from public.phases p
 where p.slug = 'phase-2-core-ml-deeplearning'
@@ -465,12 +552,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -494,6 +582,7 @@ flow LR: Module 4 PyTorch Deep Learning Graph
   'transformer-expert',
   'Mini-Autograd Deep Learning Engine & Multi-GPU Training Loop',
   '{"platform": "Google Colab Free Tier (Nvidia T4 15GB VRAM)", "vram_required": "2 GB VRAM", "estimated_cost": "$0.00 Free", "compute_units_tip": "PyTorch MLP and CNN training loops take less than 2 minutes on Colab T4 GPU; zero compute credits required.", "one_click_command": "python -c \"import torch; print(torch.cuda.is_available())\""}'::jsonb,
+  '{"title": "Desi Meme Classifier & Sarcastic Roast Bot", "urdu_title": "Meme Classifier & Roast Engine", "description": "PyTorch se custom convolutional/MLP neural network train karein jo viral memes ko detect kare (e.g. ''Sarfaraz Dhoka Nahi Dega'' vs ''Disappointed Pakistani Fan'') aur instant humorous roast dialogue generate kare.", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod4_meme_roast_bot", "checklist": ["Custom PyTorch Dataset & DataLoader", "CrossEntropyLoss with AdamW & CosineAnnealing", "Mixed Precision (AMP) training on Free Colab T4", "Model checkpointing and inference visualizer"], "xp_reward": 200, "badge_name": "meme-roaster"}'::jsonb,
   4
 from public.phases p
 where p.slug = 'phase-2-core-ml-deeplearning'
@@ -511,12 +600,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -544,6 +634,7 @@ arch LR: Full Transformer Block Pipeline
   'transformer-expert',
   'Mini-GPT Decoder-Only Language Model Trained on Urdu Poetry',
   '{"platform": "Google Colab Free Tier (T4 GPU)", "vram_required": "4 GB VRAM", "estimated_cost": "$0.00 Free", "compute_units_tip": "A 6-layer Mini-GPT trains on Colab Free T4 GPU in 12 minutes on Shakespeare/Urdu corpus without paid compute units.", "one_click_command": "pip install torch tiktoken datasets && python train_gpt.py"}'::jsonb,
+  '{"title": "Mirza Ghalib vs Allama Iqbal Urdu Poetry Rhyme Engine", "urdu_title": "Ghalib vs Iqbal Poetry Mini-GPT", "description": "Raw PyTorch tensors se multi-head self-attention transformer likhein jo classic Urdu ghazals ke meter aur qafiya (rhyme) ko seekh kar naye humorous shair complete kare!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod5_ghalib_gpt", "checklist": ["Custom Causal Self-Attention mask", "Rotary Position Embeddings (RoPE)", "Byte-Pair Encoding (BPE) tokenizer integration", "Next-token generation with temperature & top-p sampling"], "xp_reward": 200, "badge_name": "shayar-e-ai"}'::jsonb,
   5
 from public.phases p
 where p.slug = 'phase-2-core-ml-deeplearning'
@@ -561,12 +652,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -591,6 +683,7 @@ flow LR: Module 6 Modern Streaming AI Stack
   'app-builder',
   'WhatsApp/Web AI Customer Support Bot with SSE Streaming & Fallback',
   '{"platform": "Local CPU / Fly.io Free Tier / Render", "vram_required": "0 GB (CPU)", "estimated_cost": "$0.00 Free", "compute_units_tip": "Host async FastAPI or Rust Axum server on free tier connected to Groq API.", "one_click_command": "uvicorn main:app --workers 4"}'::jsonb,
+  '{"title": "Ami Ka WhatsApp Auto-Responder Bot", "urdu_title": "Ami Ka WhatsApp Reply Bot", "description": "''Beta kahan ho?'', ''Roti khayi?'', aur ''Dahi le aana'' jese WhatsApp messages ke liye production-ready FastAPI streaming server banayein with Server-Sent Events (SSE) and token-rate streaming.", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod6_ami_reply_bot", "checklist": ["FastAPI async route with StreamingResponse", "Pydantic V2 request & response schemas", "In-memory token-bucket rate limiter", "CORS & Bearer token authorization middleware"], "xp_reward": 200, "badge_name": "farmanbardar-beta"}'::jsonb,
   6
 from public.phases p
 where p.slug = 'phase-3-modern-genai-stack'
@@ -608,12 +701,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -637,6 +731,7 @@ flow LR: Module 7 Modern RAG Pipeline
   'rag-master',
   'Multimodal PDF/Report RAG with ColPali Multi-Vector Search & Reranking',
   '{"platform": "Colab T4 / Supabase pgvector / Qdrant Cloud Free", "vram_required": "0 GB - 4 GB (ColPali)", "estimated_cost": "$0.00 Free Tier", "compute_units_tip": "Supabase pgvector and Qdrant free tier provide 1M vectors for free. Run ColPali indexing on Colab T4.", "one_click_command": "docker run -p 6333:6333 qdrant/qdrant"}'::jsonb,
+  '{"title": "Grandma''s Secret Biryani Recipe RAG Engine", "urdu_title": "Nani Amma Biryani Recipe RAG Search", "description": "Scanned handwritten recipe notes aur secret spices PDF documents ko PostgreSQL pgvector hybrid search (BM25 + Dense) se index karein. Query: ''Agar namak tez ho jaye to kya karein?'' -> exact potaato trick cite kare!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod7_secret_biryani_rag", "checklist": ["pgvector HNSW index creation in PostgreSQL", "Reciprocal Rank Fusion (RRF) for Hybrid search", "Cross-Encoder re-ranking with FlashRank", "Strict source citation grounding prompt"], "xp_reward": 250, "badge_name": "bawarchi-rag"}'::jsonb,
   7
 from public.phases p
 where p.slug = 'phase-3-modern-genai-stack'
@@ -654,12 +749,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -684,6 +780,7 @@ flow LR: Module 8 Agentic Architecture
   'agent-architect',
   'Autonomous Multi-Agent Swarm with Anthropic MCP & Sandboxed Code Execution',
   '{"platform": "Local CPU / Groq Cloud / Gemini API Free Tier", "vram_required": "0 GB (Tool Use APIs)", "estimated_cost": "$0.00 Free Tier", "compute_units_tip": "Agent reasoning loops run on cloud API free tier (Groq / Gemini 2.0 Flash) with zero GPU cost.", "one_click_command": "pip install mcp smolagents langgraph langchain-core && python agent.py"}'::jsonb,
+  '{"title": "Aggressive Salary Negotiation AI Agent Swarm", "urdu_title": "Salary Negotiation Multi-Agent Swarm", "description": "Anthropic Model Context Protocol (MCP) aur smolagents use karte hue 3 agents ka swarm banayein (Analyst, Market Researcher, Hardball Negotiator) jo remote USD salary packages par counter-offers draft kare!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod8_salary_negotiator", "checklist": ["Custom MCP tool server (Tax Calculator, Glassdoor scraper)", "ReAct planning & execution loop", "Human-in-the-loop approval checkpoint", "Multi-turn counter-offer generation"], "xp_reward": 250, "badge_name": "dollar-earner"}'::jsonb,
   8
 from public.phases p
 where p.slug = 'phase-3-modern-genai-stack'
@@ -701,12 +798,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -730,6 +828,7 @@ flow LR: Module 9 Fine-Tuning Pipeline
   'finetuning-pro',
   'Fine-Tuned Domain Reasoning LLM with Unsloth LoRA & DeepSeek-R1 GRPO',
   '{"platform": "Google Colab Free Tier (T4 15GB) / Kaggle Dual T4", "vram_required": "6-12 GB (Unsloth 4-bit QLoRA)", "estimated_cost": "$0.00 Free", "compute_units_tip": "Unsloth 4-bit memory optimizations enable training 8B parameter models on a single free T4 GPU without OOM.", "one_click_command": "pip install unsloth \"xformers<0.0.27\" trl peft"}'::jsonb,
+  '{"title": "Roman Urdu Sarcasm & Roast Fine-Tuning Engine", "urdu_title": "Roman Urdu Sarcasm Detector (Unsloth QLoRA)", "description": "Free Google Colab T4 par Unsloth 4-bit QLoRA use karke Llama 3.2 3B ya Gemma 2 2B ko fine-tune karein. Model pehchane ke ''Bohot aala bhai!'' tareef hai ya taana!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod9_urdu_sarcasm", "checklist": ["Unsloth 4-bit FastLanguageModel setup", "ChatML dataset packing with assistant masking", "LoRA rank 16 / alpha 32 configuration", "GGUF Q4_K_M quant export for local inference"], "xp_reward": 300, "badge_name": "taana-master"}'::jsonb,
   9
 from public.phases p
 where p.slug = 'phase-4-production-mlops'
@@ -747,12 +846,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -777,6 +877,7 @@ flow LR: Module 10 Enterprise Safety Architecture
   'production-ready',
   'Enterprise Safety Firewall & Multi-Layer Guardrail Gateway with PII Redaction',
   '{"platform": "Local CPU / Render / Fly.io Free Tier", "vram_required": "0 GB (CPU)", "estimated_cost": "$0.00 Free", "compute_units_tip": "Microsoft Presidio, NeMo Guardrails, and Ragas evaluation runs efficiently on multi-core standard CPUs.", "one_click_command": "pip install presidio-analyzer presidio-anonymizer ragas nemoguardrails deepeval"}'::jsonb,
+  '{"title": "Phuppo-Proof Family Group Content Guardrail Firewall", "urdu_title": "Family Group PII & Jailbreak Firewall", "description": "Family WhatsApp groups mein fake news, toxic rishta gossip aur PII leaks ko rokne ke liye NeMo Guardrails + Microsoft Presidio firewall deploy karein jo toxic messages ko polite Roman Urdu mein rewrite kare.", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod10_family_firewall", "checklist": ["Presidio PII anonymizer (phone, CNIC, address)", "Semantic jailbreak detection rail", "Ragas faithfulness evaluation metric", "Automated GitHub Actions CI eval runner"], "xp_reward": 300, "badge_name": "sulah-joo"}'::jsonb,
   10
 from public.phases p
 where p.slug = 'phase-4-production-mlops'
@@ -794,12 +895,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -824,6 +926,7 @@ flow LR: Module 11 Production Serving Architecture
   'production-ready',
   'High-Throughput vLLM & Rust Axum LLM Gateway with Kubernetes KServe Autoscaling',
   '{"platform": "Fly.io / Render Free Tier / Local CPU", "vram_required": "0 GB (Gateway) / 16 GB+ (vLLM Production Host)", "estimated_cost": "$0.00 (Development & Proxy Gateway)", "compute_units_tip": "Develop and test high-concurrency Rust Axum reverse proxy locally on CPU connected to free Groq/Cerebras endpoints.", "one_click_command": "cargo run --release"}'::jsonb,
+  '{"title": "Sub-50ms High-Scale AI Microservice Gateway", "urdu_title": "Sub-50ms Rust Axum LLM Gateway", "description": "Rust Axum mein high-throughput proxy gateway banayein jo Groq, Cerebras aur vLLM clusters ke darmiyan round-robin load balance kare with automated failover aur sub-50ms latency.", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod11_rust_gateway", "checklist": ["Rust Axum async route handlers", "Token-bucket rate limiter per API key", "Multi-provider health check & circuit breaker", "OpenTelemetry distributed tracing"], "xp_reward": 350, "badge_name": "rocket-engineer"}'::jsonb,
   11
 from public.phases p
 where p.slug = 'phase-4-production-mlops'
@@ -841,12 +944,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -871,6 +975,7 @@ flow LR: Module 12 Multimodal Architecture
   'ai-graduate',
   'Multimodal Document & Video Intelligence Engine with Visual Grounding',
   '{"platform": "Google AI Studio (Gemini 2.0 Flash) / Colab Free T4", "vram_required": "0 GB (via Gemini API) / 8 GB (Local Moondream / Florence-2)", "estimated_cost": "$0.00 Free", "compute_units_tip": "Gemini 2.0 Flash on Google AI Studio provides 1,500 free multimodal requests per day with 1M context for video, audio and image processing.", "one_click_command": "pip install google-genai pillow opencv-python transformers"}'::jsonb,
+  '{"title": "Handwritten Doctor Prescription & Urdu Audio Transcriber", "urdu_title": "Doctor Prescription OCR & Audio Transcriber", "description": "Doctor ki tehrir (handwritten bad handwriting) aur tez bolay gaye Urdu audio notes ko Whisper Large v3 + Vision LLM se parse karke structured medicine dosage JSON generate karein.", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod12_doctor_ocr", "checklist": ["Whisper audio chunking & transcription", "Vision LLM multimodal prompt with dosage schema", "Pydantic JSON schema strict enforcement", "Medicine interaction warning system"], "xp_reward": 350, "badge_name": "hakeem-ai"}'::jsonb,
   12
 from public.phases p
 where p.slug = 'phase-5-specialization-capstone'
@@ -888,12 +993,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -917,6 +1023,7 @@ flow LR: Module 13 Local AI Execution Stack
   'production-ready',
   '100% Offline Autonomous Edge AI Assistant with Voice & Local RAG',
   '{"platform": "Local Consumer Laptop (Mac M-series / Intel / AMD) / Raspberry Pi", "vram_required": "0 GB GPU (Runs 100% on CPU RAM with AVX-512 / Metal)", "estimated_cost": "$0.00 Free", "compute_units_tip": "llama.cpp and Ollama run 3B and 8B quantized GGUF models directly on standard consumer CPU RAM with zero cloud dependency.", "one_click_command": "ollama run llama3.2:3b"}'::jsonb,
+  '{"title": "100% Offline Exam Crammer Chatbot", "urdu_title": "Offline WebGPU Exam Crammer", "description": "Transformers.js + WebGPU ke zariye student ke browser mein Llama-3.2-1B-Instruct model 100% offline run karein taake bina internet / load-shedding ke exam revision ki ja sake.", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod13_offline_crammer", "checklist": ["WebGPU device initialization in JavaScript", "ONNX / Transformers.js quantized model loading", "Zero-server edge inference loop", "Local browser IndexedDB chat persistence"], "xp_reward": 400, "badge_name": "bijli-proof"}'::jsonb,
   13
 from public.phases p
 where p.slug = 'phase-5-specialization-capstone'
@@ -934,12 +1041,13 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 insert into public.modules (
   phase_id, module_number, slug, title, weeks_range, estimated_hours,
   learning_outcomes, practical_tasks, resources, diagram_script,
-  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, order_index
+  diagram_preset, diagram_animation, badge_slug, real_world_deliverable, zero_gpu_recipe, practice_checkpoint, order_index
 )
 select
   p.id,
@@ -964,6 +1072,7 @@ flow LR: Module 14 Enterprise Architecture
   'ai-graduate',
   'Multi-Tenant Enterprise AI Platform with Auth, Billing, Observability & Live Defense',
   '{"platform": "Fly.io / Render / Cloudflare Pages / Supabase Free Tier", "vram_required": "0 GB (Cloud Serverless / Microservices Architecture)", "estimated_cost": "$0.00 Free Tier", "compute_units_tip": "Deploy multi-tenant frontend on Cloudflare Pages, backend on Render, and Postgres/pgvector on Supabase completely within free tier limits.", "one_click_command": "docker compose up -d"}'::jsonb,
+  '{"title": "Global AI Micro-SaaS Capstone Defense", "urdu_title": "Commercial AI SaaS Capstone Launch", "description": "Supabase Auth, PostgreSQL RLS, Stripe billing aur Cloudflare Pages deployment ke sath ek commercial AI SaaS banayein aur live internet par launch karein!", "colab_url": "https://colab.research.google.com/drive/1ai_ustaad_mod14_capstone_defense", "checklist": ["Multi-tenant Supabase schema with RLS", "Stripe webhook payment integration", "Production deployment on Cloudflare Pages", "Live 60-second video demo & GitHub repository"], "xp_reward": 500, "badge_name": "unicorn-founder"}'::jsonb,
   14
 from public.phases p
 where p.slug = 'phase-5-specialization-capstone'
@@ -981,11 +1090,570 @@ on conflict (slug) do update set
   badge_slug = excluded.badge_slug,
   real_world_deliverable = excluded.real_world_deliverable,
   zero_gpu_recipe = excluded.zero_gpu_recipe,
+  practice_checkpoint = excluded.practice_checkpoint,
   order_index = excluded.order_index;
 
 
 -- 7. LESSONS (DETAILED LESSONS FOR EVERY MODULE)
 delete from public.lessons;
+
+insert into public.lessons (
+  module_id, lesson_code, slug, title, duration_minutes,
+  lesson_type, roman_urdu_content, english_summary, code_example,
+  diagram_script, diagram_type, resources, xp_reward, order_index
+)
+select
+  m.id,
+  '0.1',
+  'python-mental-model-syntax',
+  'Python Mental Model, Setup & Fast Syntax (Interpreter, Variables & Conditionals)',
+  30,
+  'theory_and_code',
+  'Khush-Aamdeed! Yeh hamara **Python Zero Se Hero** track hai jo un doston ke liye design kiya gaya hai jinhon ne pehle kabhi coding nahi ki ya Python ka basic syntax refresh karna chahte hain.
+
+### 1. Python Ka Mental Model: Yeh Kaise Kaam Karta Hai?
+C++ ya Rust ke bar-aks, jahan code pehle machine code mein compile hota hai, Python ek **interpreted bytecode** language hai. Jab aap `python main.py` likhte hain, to:
+1. Python parser aapke code ko syntax tree mein convert karta hai.
+2. CPython compiler isay `.pyc` bytecode mein translate karta hai.
+3. CPython Virtual Machine (VM) is bytecode ko line-by-line execute karti hai.
+
+### 2. Variables & Dynamic Typing
+Python mein variables sirf ek pointer/label hote hain jo memory mein kisi object ki taraf point karte hain:
+```python
+x = 42          # x points to integer object 42
+x = "AI Ustaad" # Ab wahi x string object ki taraf point kar raha hai
+```
+Isay **Dynamic Typing** kehte hain. AI pipelines mein clean code ke liye hum modern Python 3.12 **Type Hints** use karte hain:
+```python
+model_name: str = "llama-3.2"
+batch_size: int = 32
+learning_rate: float = 0.001
+is_training: bool = True
+```
+
+### 3. Conditionals & Modern Match-Case
+Python 3.10+ mein modern structural pattern matching introduce hui jo complex if/else chains ko clean banati hai:
+```python
+def route_model(task: str) -> str:
+    match task:
+        case "chat" | "reasoning":
+            return "deepseek-r1"
+        case "vision":
+            return "siglip-clip"
+        case _:
+            return "llama-3.2-3b"
+```',
+  'Understand Python''s CPython bytecode VM architecture, dynamic typing, type annotations, truthy/falsy evaluation, and modern Python 3.10+ match-case syntax.',
+  '# Python Foundations: Mental Model & Fast Syntax
+import sys
+
+# 1. Type annotations & Variables
+app_name: str = "AI Ustaad Dhaba Billing"
+version: float = 1.0
+active_tables: int = 12
+
+print(f"[{app_name} v{version}] Python Interpreter: {sys.version.split()[0]}")
+
+# 2. Modern Walrus Operator (:=) for in-line evaluation
+while (user_input := input("Item code daalein (ya ''exit'' likhein): ").strip().lower()) != ''exit'':
+    # 3. Match-Case Pattern Matching
+    match user_input:
+        case "c1" | "chai":
+            price = 60
+            print(f"Doodh Patti Selected! Price: Rs {price}")
+        case "p1" | "paratha":
+            price = 120
+            print(f"Lachha Paratha Selected! Price: Rs {price}")
+        case _:
+            print("Invalid code! Try ''c1'' ya ''p1''.")
+    break',
+  '@preset midnight
+@animate flow
+flow LR: Python Bytecode Virtual Machine Loop
+  src[Python Source .py] $code -> comp[CPython Bytecode Compiler] $cpu
+  comp -> pyc[.pyc Bytecode Instructions] $database
+  pyc -> vm[CPython Execution Loop] $server
+  vm -> out[Console Output / State] $terminal *',
+  'flow',
+  '[{"title": "Python 3.12 Official Tutorial", "url": "https://docs.python.org/3/tutorial/"}]'::jsonb,
+  15,
+  1
+from public.modules m
+where m.slug = 'python-zero-se-hero'
+on conflict (slug) do update set
+  lesson_code = excluded.lesson_code,
+  title = excluded.title,
+  duration_minutes = excluded.duration_minutes,
+  lesson_type = excluded.lesson_type,
+  roman_urdu_content = excluded.roman_urdu_content,
+  english_summary = excluded.english_summary,
+  code_example = excluded.code_example,
+  diagram_script = excluded.diagram_script,
+  diagram_type = excluded.diagram_type,
+  resources = excluded.resources,
+  xp_reward = excluded.xp_reward,
+  order_index = excluded.order_index;
+
+insert into public.lessons (
+  module_id, lesson_code, slug, title, duration_minutes,
+  lesson_type, roman_urdu_content, english_summary, code_example,
+  diagram_script, diagram_type, resources, xp_reward, order_index
+)
+select
+  m.id,
+  '0.2',
+  'python-data-structures-deep-dive',
+  'Data Structures Deep-Dive: Lists, Tuples, Sets, Dictionaries & Comprehensions',
+  35,
+  'theory_and_code',
+  'AI Engineering mein data ko sahi structure mein rakhna sab se zaroori skill hai. Chaliye Python ke 4 bunyadi data structures ko first-principles se samjhein:
+
+### 1. Lists: Dynamic Arrays (Order Preserved, Mutable)
+Python ki `list` C-array of pointers hoti hai. Jab list bharti hai, Python automatically 1.125x capacity over-allocate kar leta hai taake har append par realloc na karna paray.
+* Lookup by index: $O(1)$ fast!
+* Append at end: $O(1)$ amortized fast!
+* Search by value (`x in my_list`): $O(N)$ slow!
+
+### 2. Tuples: Immutable Arrays
+Tuples list jese hote hain lekin banne ke baad badal nahi sakte (`immutable`). Iska faida:
+1. Memory overhead 30% kam hota hai.
+2. Dictionary ke keys ban sakte hain kyunke inka hash constant rehta hai.
+
+### 3. Sets: Unordered Unique Hash Tables
+Sets duplicate values ko allow nahi karte aur Hash Table par chalte hain.
+* Search (`x in my_set`): $O(1)$ instant!
+* AI vocabulary tokens deduplicate karne ke liye perfect!
+
+### 4. Dictionaries: Key-Value Hash Maps
+Python 3.7+ mein Dictionaries insertion order preserve karti hain.
+```python
+customer_orders = {
+    "order_101": {"item": "Doodh Patti", "qty": 2, "price": 60},
+    "order_102": {"item": "Karak Chai", "qty": 1, "price": 50}
+}
+```
+
+### 5. Comprehensions: Fast Pythonic Transformations
+Loop likhne ke bajaye single-line vectorized syntax:
+```python
+prices = [60, 120, 50, 40]
+discounted = [p * 0.9 for p in prices if p > 50]
+```',
+  'Deep dive into Python built-in collections: memory mechanics, algorithmic time complexity, hash tables, sets for token deduplication, and idiomatic comprehensions.',
+  '# Data Structures & Comprehensions
+import time
+
+# 1. List vs Set Lookup Benchmark
+dataset_size = 100_000
+raw_tokens = [f"token_{i}" for i in range(dataset_size)]
+token_set = set(raw_tokens)
+
+target = "token_99999"
+
+# Measure List scan O(N)
+t0 = time.perf_counter()
+found_in_list = target in raw_tokens
+t_list = time.perf_counter() - t0
+
+# Measure Set hash lookup O(1)
+t0 = time.perf_counter()
+found_in_set = target in token_set
+t_set = time.perf_counter() - t0
+
+print(f"List Lookup O(N): {t_list*1000:.4f} ms")
+print(f"Set Lookup O(1):  {t_set*1000:.4f} ms")
+print(f"Speedup: {t_list / max(t_set, 1e-9):.1f}x tez!")
+
+# 2. Dictionary Comprehension for Chai Menu
+menu = {"chai": 60, "paratha": 120, "bun_kabab": 150}
+taxed_menu = {item: round(price * 1.16, 2) for item, price in menu.items()}
+print("Menu with 16% GST:", taxed_menu)',
+  '@preset midnight
+@animate pulse
+flow LR: Data Structure Lookup Performance
+  list_scan[List Linear Scan O(N)] $code -> mem_slow[Sequential Pointer Chasing] $alert
+  set_hash[Set / Dict Hash Lookup O(1)] $database -> mem_fast[Direct Hash Bucket Jump] $ok *',
+  'flow',
+  '[{"title": "Python Time Complexity Documentation", "url": "https://wiki.python.org/moin/TimeComplexity"}]'::jsonb,
+  20,
+  2
+from public.modules m
+where m.slug = 'python-zero-se-hero'
+on conflict (slug) do update set
+  lesson_code = excluded.lesson_code,
+  title = excluded.title,
+  duration_minutes = excluded.duration_minutes,
+  lesson_type = excluded.lesson_type,
+  roman_urdu_content = excluded.roman_urdu_content,
+  english_summary = excluded.english_summary,
+  code_example = excluded.code_example,
+  diagram_script = excluded.diagram_script,
+  diagram_type = excluded.diagram_type,
+  resources = excluded.resources,
+  xp_reward = excluded.xp_reward,
+  order_index = excluded.order_index;
+
+insert into public.lessons (
+  module_id, lesson_code, slug, title, duration_minutes,
+  lesson_type, roman_urdu_content, english_summary, code_example,
+  diagram_script, diagram_type, resources, xp_reward, order_index
+)
+select
+  m.id,
+  '0.3',
+  'python-functions-scope-closures',
+  'Functions, Scope, Closures, *args/**kwargs & Lambda Functions',
+  30,
+  'theory_and_code',
+  'AI applications mein har model pipeline, inference engine, aur data cleaner modular functions par depend karta hai.
+
+### 1. Functions Are First-Class Citizens
+Python mein function koi alag makhlooq nahi hai, balki ek standard object hai! Iska matlab:
+* Aap function ko variable mein assign kar sakte hain.
+* Function ko doosre function ke andar argument ke taur par pass kar sakte hain (Callbacks).
+* Function se naya function return kar sakte hain (Higher-Order Functions & Closures).
+
+### 2. Variable Scope: LEGB Rule
+Python variable ko dhoondte waqt 4 darjaat check karta hai:
+1. **L (Local):** Function ke andar define kiya gaya variable.
+2. **E (Enclosing):** Nested function ke parent function ka scope.
+3. **G (Global):** File / Module level ka scope.
+4. **B (Built-in):** Python ke apne functions jese `print`, `len`, `range`.
+
+### 3. *args aur **kwargs: Flexible Parameter Dispatching
+Jab aapko pehle se pata na ho ke function mein kitne arguments aayenge (jese AI model inference parameters):
+* `*args`: Saare positional arguments ko **Tuple** bana kar accept karta hai.
+* `**kwargs`: Saare named keyword arguments ko **Dictionary** bana kar accept karta hai.
+
+### 4. Function Decorators: Logging & Telemetry
+Decorator ek aisa function hota hai jo kisi doosre function ke gird wrapper bana kar uski behavior ko extend karta hai bina original code ko chhere:
+```python
+def log_execution(fn):
+    def wrapper(*args, **kwargs):
+        print(f"Calling {fn.__name__}...")
+        return fn(*args, **kwargs)
+    return wrapper
+```',
+  'Master first-class functions, the LEGB scope hierarchy, variable arguments dispatching with *args/**kwargs, closures, and observability decorators.',
+  'import time
+from functools import wraps
+
+# 1. Production Decorator: Telemetry & Benchmark
+def benchmark(fn):
+    @wraps(fn)
+    def wrapper(*args, **kwargs):
+        t0 = time.perf_counter()
+        result = fn(*args, **kwargs)
+        duration = time.perf_counter() - t0
+        print(f"[Benchmark] {fn.__name__} executed in {duration*1000:.3f} ms")
+        return result
+    return wrapper
+
+# 2. Flexible Function with *args and **kwargs
+@benchmark
+def calculate_chai_bill(base_price: float, *extras, discount_pct: float = 0.0, **metadata):
+    total = base_price + sum(extras)
+    total -= total * (discount_pct / 100.0)
+    print(f"Order for {metadata.get(''customer'', ''Guest'')} at Table {metadata.get(''table'', ''Counter'')}")
+    return total
+
+bill = calculate_chai_bill(60.0, 20.0, 15.0, discount_pct=10.0, customer="Aslam Bhai", table=4)
+print(f"Final Bill Amount: Rs {bill:.2f}")',
+  '@preset midnight
+@animate wave
+flow LR: LEGB Scope Resolution Flow
+  l[Local Scope: Inside Function] $code -> e[Enclosing Scope: Parent Def] $box
+  e -> g[Global Scope: Module Level] $terminal
+  g -> b[Built-in Scope: Python Core] $database *',
+  'flow',
+  '[{"title": "Real Python: Python Decorators Guide", "url": "https://realpython.com/primer-on-python-decorators/"}]'::jsonb,
+  20,
+  3
+from public.modules m
+where m.slug = 'python-zero-se-hero'
+on conflict (slug) do update set
+  lesson_code = excluded.lesson_code,
+  title = excluded.title,
+  duration_minutes = excluded.duration_minutes,
+  lesson_type = excluded.lesson_type,
+  roman_urdu_content = excluded.roman_urdu_content,
+  english_summary = excluded.english_summary,
+  code_example = excluded.code_example,
+  diagram_script = excluded.diagram_script,
+  diagram_type = excluded.diagram_type,
+  resources = excluded.resources,
+  xp_reward = excluded.xp_reward,
+  order_index = excluded.order_index;
+
+insert into public.lessons (
+  module_id, lesson_code, slug, title, duration_minutes,
+  lesson_type, roman_urdu_content, english_summary, code_example,
+  diagram_script, diagram_type, resources, xp_reward, order_index
+)
+select
+  m.id,
+  '0.4',
+  'python-oop-classes-dataclasses',
+  'Object-Oriented Programming (OOP) for AI: Classes, Methods & @dataclass',
+  40,
+  'theory_and_code',
+  'PyTorch ka `nn.Module`, Hugging Face ke models, aur LangChain ke components sab Object-Oriented Programming (OOP) par bane hain! Agar aapko classes ki samajh nahi to AI code samajhna namumkin ho jata hai.
+
+### 1. Class Aur Object Ka Falsafa
+* **Class:** Blue-print ya Naqsha (jese Ghar ka blue-print).
+* **Object / Instance:** Us naqshe par bana hua haqeeqi ghar jo memory mein space leta hai.
+* `__init__`: Constructor jo object bante hi execute hota hai.
+* `self`: Current instance ka pointer.
+
+### 2. Dunder (Double Underscore) Magic Methods
+Python ki asli taqat dunder methods mein hai:
+* `__repr__`: Developer-friendly string representation.
+* `__len__`: `len(my_object)` call hone par kya return ho.
+* `__getitem__`: `my_object[0]` array indexing support karne ke liye (jese PyTorch Dataset).
+* `__call__`: Object ko function ki tarah execute karne ke liye `model(input_tensors)`.
+
+### 3. Modern @dataclass(slots=True)
+Traditional Python classes mein har instance ke sath ek dynamic dictionary `__dict__` jurti hai jo bohot memory leti hai.
+Python 3.10+ mein `@dataclass(slots=True)` use karne se:
+1. `__init__`, `__repr__`, aur `__eq__` khud ba khud generate ho jate hain.
+2. Memory 25% kam use hoti hai.
+3. Attribute lookup 20% fast ho jata hai.',
+  'Understand classes, inheritance, dunder protocols (__call__, __len__, __getitem__), and memory-optimized modern @dataclass with slots.',
+  'from dataclasses import dataclass, field
+from typing import List
+
+# Modern Python 3.12 @dataclass with slots
+@dataclass(slots=True)
+class MenuItem:
+    name: str
+    price: float
+    category: str = "beverage"
+
+@dataclass(slots=True)
+class DhabaOrder:
+    order_id: int
+    customer_name: str
+    items: List[MenuItem] = field(default_factory=list)
+
+    def add_item(self, item: MenuItem):
+        self.items.append(item)
+
+    @property
+    def total_bill(self) -> float:
+        return sum(item.price for item in self.items)
+
+    def __repr__(self) -> str:
+        return f"<Order #{self.order_id}: {self.customer_name} ({len(self.items)} items) -> Rs {self.total_bill}>"
+
+# Create Order
+order = DhabaOrder(order_id=1, customer_name="Hamza")
+order.add_item(MenuItem("Doodh Patti", 60.0))
+order.add_item(MenuItem("Samosa", 40.0, category="snack"))
+order.add_item(MenuItem("Special Elaichi Chai", 80.0))
+
+print(order)
+print(f"Total payable: Rs {order.total_bill:.2f}")',
+  '@preset midnight
+@animate flow
+flow LR: OOP Class Memory Optimization
+  standard[Standard Python Class] $code -> dict_mem[Instance __dict__ Dynamic Heap] $alert
+  dataclass_slot[@dataclass slots=True] $database -> fixed_struct[C-Aligned Fixed Offset Struct] $ok *',
+  'flow',
+  '[{"title": "Python Dataclasses Documentation", "url": "https://docs.python.org/3/library/dataclasses.html"}]'::jsonb,
+  25,
+  4
+from public.modules m
+where m.slug = 'python-zero-se-hero'
+on conflict (slug) do update set
+  lesson_code = excluded.lesson_code,
+  title = excluded.title,
+  duration_minutes = excluded.duration_minutes,
+  lesson_type = excluded.lesson_type,
+  roman_urdu_content = excluded.roman_urdu_content,
+  english_summary = excluded.english_summary,
+  code_example = excluded.code_example,
+  diagram_script = excluded.diagram_script,
+  diagram_type = excluded.diagram_type,
+  resources = excluded.resources,
+  xp_reward = excluded.xp_reward,
+  order_index = excluded.order_index;
+
+insert into public.lessons (
+  module_id, lesson_code, slug, title, duration_minutes,
+  lesson_type, roman_urdu_content, english_summary, code_example,
+  diagram_script, diagram_type, resources, xp_reward, order_index
+)
+select
+  m.id,
+  '0.5',
+  'python-files-json-apis',
+  'File Handling, JSON, Parquet & REST API Requests for Data Harvesting',
+  35,
+  'theory_and_code',
+  'AI models bina clean data ke bekaar hain. Is sabaq mein hum seekhein ge ke kaise disk se files read/write ki jati hain, JSON format handle hota hai, aur internet APIs se data harvest kiya jata hai.
+
+### 1. Context Managers: Resource Leaks Ko Khatam Karein
+File open karke close karna bhool jana sab se bara memory leak hai. Python ka `with` statement ensure karta hai ke file hamesha band ho chahe koi error hi kyun na aaye:
+```python
+with open("khata.json", "w", encoding="utf-8") as f:
+    f.write(data)
+```
+
+### 2. JSON & JSONL: LLM Ka Universal Language
+* **JSON:** Single document ya object ke liye perfect.
+* **JSONL (JSON Lines):** Har line par ek alag JSON object hota hai. LLM fine-tuning datasets (Unsloth, OpenAI, Anthropic) 100% JSONL format use karte hain kyunke isay pura memory mein load kiye baghair stream kiya ja sakta hai!
+
+### 3. REST API Requests With Error Handling
+Internet se data fetch karte waqt hamesha network errors aur API rate limits (429 Too Many Requests) ka khayal rakhna parta hai:
+```python
+try:
+    response = requests.get(api_url, timeout=5)
+    response.raise_for_status()
+    data = response.json()
+except requests.exceptions.RequestException as e:
+    print(f"API Error: {e}")
+```',
+  'Learn file stream safety with context managers, JSON/JSONL serialization for LLM datasets, robust try/except error handling, and REST API harvesting.',
+  'import json
+import tempfile
+import os
+
+# 1. JSON Persistence (Dhaba Khata File)
+khata_data = [
+    {"bill_id": 101, "customer": "Bimo", "items": ["Special Chai", "Paratha"], "total": 180},
+    {"bill_id": 102, "customer": "Ali", "items": ["Doodh Patti"], "total": 60}
+]
+
+with tempfile.NamedTemporaryFile(mode="w+", delete=False, suffix=".jsonl") as tmp:
+    # Write as JSON Lines (JSONL) - SOTA AI Dataset standard
+    for record in khata_data:
+        tmp.write(json.dumps(record) + "\n")
+    tmp_path = tmp.name
+
+print(f"JSONL Saved to temp file: {tmp_path}")
+
+# Read line-by-line streaming (Zero memory spike)
+print("\nStreaming records from disk:")
+with open(tmp_path, "r", encoding="utf-8") as f:
+    for line in f:
+        record = json.loads(line.strip())
+        print(f"Bill #{record[''bill_id'']} -> {record[''customer'']}: Rs {record[''total'']}")
+
+os.remove(tmp_path)',
+  '@preset midnight
+@animate flow
+flow LR: Data Harvesting & JSONL Storage
+  remote_api[Web REST API] $cloud -> parser[HTTP Client & JSON Parser] $terminal
+  parser -> validator[Schema Validation] $code
+  validator -> jsonl_disk[(Streaming JSONL On Disk)] $database *',
+  'flow',
+  '[{"title": "Python JSON Documentation", "url": "https://docs.python.org/3/library/json.html"}]'::jsonb,
+  25,
+  5
+from public.modules m
+where m.slug = 'python-zero-se-hero'
+on conflict (slug) do update set
+  lesson_code = excluded.lesson_code,
+  title = excluded.title,
+  duration_minutes = excluded.duration_minutes,
+  lesson_type = excluded.lesson_type,
+  roman_urdu_content = excluded.roman_urdu_content,
+  english_summary = excluded.english_summary,
+  code_example = excluded.code_example,
+  diagram_script = excluded.diagram_script,
+  diagram_type = excluded.diagram_type,
+  resources = excluded.resources,
+  xp_reward = excluded.xp_reward,
+  order_index = excluded.order_index;
+
+insert into public.lessons (
+  module_id, lesson_code, slug, title, duration_minutes,
+  lesson_type, roman_urdu_content, english_summary, code_example,
+  diagram_script, diagram_type, resources, xp_reward, order_index
+)
+select
+  m.id,
+  '0.6',
+  'python-numpy-pandas-foundations',
+  'NumPy & Pandas Foundations: Vectors, Matrices & Fast Tabular Manipulation',
+  45,
+  'theory_and_code',
+  'Mubarak ho! Aapne pure Python ke tamam zaroori pillars master kar liye hain. Ab hum qadam rakh rahe hain **Numerical & Tabular Python** mein jo AI Engineering ka gateway hai!
+
+### 1. NumPy: High-Performance Numerical Arrays
+Python list mein har number ek generic pointer hota hai. Jabke NumPy `ndarray` memory mein ek contiguous binary block hota hai.
+* 1D Array = **Vector** (e.g. word embeddings ya feature list)
+* 2D Array = **Matrix** (e.g. tabular dataset ya image pixels)
+* 3D+ Array = **Tensor** (e.g. batch of transformer attention weights)
+
+NumPy broadcasting se aap bina loop lagaye poore array ko multiply kar sakte hain:
+```python
+import numpy as np
+salaries = np.array([45000, 60000, 85000, 120000])
+with_bonus = salaries * 1.15 # Vectorized 15% increase in 1 CPU cycle!
+```
+
+### 2. Pandas: Data Analysis & Feature Wrangling
+Pandas tabular datasets (CSVs, Excel, SQL queries) ke liye Python ka sab se powerful tool hai:
+* `DataFrame`: Row aur Column table structure.
+* Filtering: `df[df[''sales''] > 1000]`
+* Groupby: `df.groupby(''city'')[''revenue''].mean()`
+
+Yeh foundation aapko Module 1: Python for AI & Fast Math ke liye 100% tayar kar deti hai!',
+  'The bridge from pure Python to AI Engineering: NumPy n-dimensional arrays, vector broadcasting, Boolean indexing, and Pandas DataFrame data wrangling.',
+  'import numpy as np
+import pandas as pd
+
+# 1. NumPy Vectorized Operations
+prices = np.array([60, 120, 50, 40, 80], dtype=np.float32)
+quantities = np.array([10, 4, 15, 8, 6], dtype=np.float32)
+
+# Vectorized Dot Product (Total Revenue)
+total_revenue = np.dot(prices, quantities)
+print(f"NumPy Vectorized Total Revenue: Rs {total_revenue:.2f}")
+
+# 2. Pandas DataFrame Manipulation
+sales_records = {
+    "item": ["Doodh Patti", "Lachha Paratha", "Elaichi Chai", "Samosa", "Bun Kabab"],
+    "category": ["Chai", "Food", "Chai", "Snack", "Food"],
+    "unit_price": [60, 120, 80, 40, 150],
+    "units_sold": [120, 45, 60, 80, 35]
+}
+
+df = pd.DataFrame(sales_records)
+df["total_sales"] = df["unit_price"] * df["units_sold"]
+
+print("\n--- Dhaba Sales DataFrame ---")
+print(df[["item", "category", "total_sales"]])
+
+print("\nCategory Wise Revenue Summary:")
+summary = df.groupby("category")["total_sales"].sum()
+print(summary)',
+  '@preset midnight
+@animate pulse
+flow LR: The AI Engineering Transition Bridge
+  py_syntax[Module 0: Python Core Syntax] $code -> np_vec[Module 0.6: NumPy Vectors] $cpu
+  np_vec -> pd_df[Module 0.6: Pandas DataFrames] $database
+  pd_df -> ai_math[Module 1: High-Performance Tensors & Fast Math] $brain *',
+  'flow',
+  '[{"title": "NumPy Quickstart", "url": "https://numpy.org/doc/stable/user/quickstart.html"}, {"title": "Pandas 10-Minute Guide", "url": "https://pandas.pydata.org/docs/user_guide/10min.html"}]'::jsonb,
+  30,
+  6
+from public.modules m
+where m.slug = 'python-zero-se-hero'
+on conflict (slug) do update set
+  lesson_code = excluded.lesson_code,
+  title = excluded.title,
+  duration_minutes = excluded.duration_minutes,
+  lesson_type = excluded.lesson_type,
+  roman_urdu_content = excluded.roman_urdu_content,
+  english_summary = excluded.english_summary,
+  code_example = excluded.code_example,
+  diagram_script = excluded.diagram_script,
+  diagram_type = excluded.diagram_type,
+  resources = excluded.resources,
+  xp_reward = excluded.xp_reward,
+  order_index = excluded.order_index;
 
 insert into public.lessons (
   module_id, lesson_code, slug, title, duration_minutes,
@@ -7198,6 +7866,110 @@ on conflict (slug) do update set
 
 -- 8. QUIZZES & QUESTIONS
 delete from public.quiz_questions;
+
+insert into public.quizzes (module_id, title, passing_score_pct, xp_reward)
+select m.id, 'Module 0 Quiz: Python Foundations & Data Structures', 70, 25
+from public.modules m
+where m.slug = 'python-zero-se-hero'
+on conflict (module_id) do update set
+  title = excluded.title,
+  passing_score_pct = excluded.passing_score_pct,
+  xp_reward = excluded.xp_reward;
+
+insert into public.quiz_questions (
+  quiz_id, question_number, question_roman_urdu, options, correct_option_index, explanation_roman_urdu
+)
+select
+  qz.id,
+  1,
+  'Python mein Mutable aur Immutable data types mein bunyadi farq kya hota hai?',
+  '["Lists aur Dictionaries mutable hain jabke Tuples aur Strings immutable hain", "Tamam Python data types mutable hoti hain", "Numbers mutable hote hain lekin Lists immutable", "Python mein types compile-time par fix ho jati hain"]'::jsonb,
+  0,
+  'Python mein Lists, Sets aur Dictionaries mutable hain (unhe in-place modify kiya ja sakta hai), jabke Tuples, Integers, Floats aur Strings immutable hain (unhe in-place modify nahi kiya ja sakta, naya object banta hai).'
+from public.quizzes qz
+join public.modules m on m.id = qz.module_id
+where m.slug = 'python-zero-se-hero'
+on conflict (quiz_id, question_number) do update set
+  question_roman_urdu = excluded.question_roman_urdu,
+  options = excluded.options,
+  correct_option_index = excluded.correct_option_index,
+  explanation_roman_urdu = excluded.explanation_roman_urdu;
+
+insert into public.quiz_questions (
+  quiz_id, question_number, question_roman_urdu, options, correct_option_index, explanation_roman_urdu
+)
+select
+  qz.id,
+  2,
+  'Classes mein `@dataclass(slots=True)` use karne ka sab se bara faida kya hota hai?',
+  '["Yeh dynamic `__dict__` overhead ko eliminate karke memory 20-30% save karta hai aur attribute lookup fast karta hai", "Yeh class ko automatic PyTorch model bana deta hai", "Yeh Python code ko Rust mein convert kar deta hai", "Is se class mein methods add nahi kiye ja sakte"]'::jsonb,
+  0,
+  '`slots=True` define karne se Python instance ke liye dictionary allocate karne ke bajaye fixed-size C array use karta hai, jisse memory usage kam hoti hai aur attribute access tez hota hai.'
+from public.quizzes qz
+join public.modules m on m.id = qz.module_id
+where m.slug = 'python-zero-se-hero'
+on conflict (quiz_id, question_number) do update set
+  question_roman_urdu = excluded.question_roman_urdu,
+  options = excluded.options,
+  correct_option_index = excluded.correct_option_index,
+  explanation_roman_urdu = excluded.explanation_roman_urdu;
+
+insert into public.quiz_questions (
+  quiz_id, question_number, question_roman_urdu, options, correct_option_index, explanation_roman_urdu
+)
+select
+  qz.id,
+  3,
+  'Expression `[x**2 for x in [1, 2, 3, 4] if x % 2 == 0]` ka final result kya hoga?',
+  '["[4, 16]", "[1, 9]", "[1, 4, 9, 16]", "[2, 4]"]'::jsonb,
+  0,
+  'Yeh list comprehension sirf even numbers (2 aur 4) ko filter karti hai (`if x % 2 == 0`) aur unka square (2**2 = 4, 4**2 = 16) generate karti hai.'
+from public.quizzes qz
+join public.modules m on m.id = qz.module_id
+where m.slug = 'python-zero-se-hero'
+on conflict (quiz_id, question_number) do update set
+  question_roman_urdu = excluded.question_roman_urdu,
+  options = excluded.options,
+  correct_option_index = excluded.correct_option_index,
+  explanation_roman_urdu = excluded.explanation_roman_urdu;
+
+insert into public.quiz_questions (
+  quiz_id, question_number, question_roman_urdu, options, correct_option_index, explanation_roman_urdu
+)
+select
+  qz.id,
+  4,
+  'Functions mein `*args` aur `**kwargs` ka kya maqsad hota hai?',
+  '["`*args` positional arguments ko tuple mein aur `**kwargs` keyword arguments ko dictionary mein collect karta hai", "`*args` sirf float numbers accept karta hai", "`**kwargs` function ko asynchronous worker bana deta hai", "Dono reserved keywords hain jo execute nahi ho sakte"]'::jsonb,
+  0,
+  '`*args` (non-keyword arguments) ko tuple ke taur par aur `**kwargs` (keyword arguments) ko key-value pairs wali dictionary ke taur par function ke andar pass karta hai.'
+from public.quizzes qz
+join public.modules m on m.id = qz.module_id
+where m.slug = 'python-zero-se-hero'
+on conflict (quiz_id, question_number) do update set
+  question_roman_urdu = excluded.question_roman_urdu,
+  options = excluded.options,
+  correct_option_index = excluded.correct_option_index,
+  explanation_roman_urdu = excluded.explanation_roman_urdu;
+
+insert into public.quiz_questions (
+  quiz_id, question_number, question_roman_urdu, options, correct_option_index, explanation_roman_urdu
+)
+select
+  qz.id,
+  5,
+  'JSON serialization ke waqt `json.dumps()` aur `json.dump()` mein kya farq hai?',
+  '["`json.dumps()` Python data ko string mein convert karta hai jabke `json.dump()` file handle mein write karta hai", "`json.dumps()` database mein query execute karta hai", "`json.dump()` sirf lists ke liye valid hai", "Dono bilkul same function ke alias hain"]'::jsonb,
+  0,
+  '`dumps` ka ''s'' String ke liye hai (serializes object to a JSON formatted str), jabke `dump()` pehla argument data aur doosra argument open file stream leta hai.'
+from public.quizzes qz
+join public.modules m on m.id = qz.module_id
+where m.slug = 'python-zero-se-hero'
+on conflict (quiz_id, question_number) do update set
+  question_roman_urdu = excluded.question_roman_urdu,
+  options = excluded.options,
+  correct_option_index = excluded.correct_option_index,
+  explanation_roman_urdu = excluded.explanation_roman_urdu;
 
 insert into public.quizzes (module_id, title, passing_score_pct, xp_reward)
 select m.id, 'Module 1 Quiz: Python & Linear Algebra Check', 70, 25

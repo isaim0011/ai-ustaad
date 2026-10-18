@@ -1,8 +1,79 @@
 # seed_quizzes.py
-# Comprehensive Roman Urdu Quizzes: 14 Modules x 5 Questions = Exactly 70 Questions Total
+# Comprehensive Roman Urdu Quizzes: 15 Modules x 5 Questions = Exactly 75 Questions Total
 
 def get_quizzes():
     return [
+        # =========================================================================
+        # MODULE 0: Python Zero Se Hero (Prerequisite Track)
+        # =========================================================================
+        {
+            "module_slug": "python-zero-se-hero",
+            "title": "Module 0 Quiz: Python Foundations & Data Structures",
+            "passing_score_pct": 70,
+            "xp_reward": 25,
+            "questions": [
+                {
+                    "question_number": 1,
+                    "question_roman_urdu": "Python mein Mutable aur Immutable data types mein bunyadi farq kya hota hai?",
+                    "options": [
+                        "Lists aur Dictionaries mutable hain jabke Tuples aur Strings immutable hain",
+                        "Tamam Python data types mutable hoti hain",
+                        "Numbers mutable hote hain lekin Lists immutable",
+                        "Python mein types compile-time par fix ho jati hain"
+                    ],
+                    "correct_option_index": 0,
+                    "explanation_roman_urdu": "Python mein Lists, Sets aur Dictionaries mutable hain (unhe in-place modify kiya ja sakta hai), jabke Tuples, Integers, Floats aur Strings immutable hain (unhe in-place modify nahi kiya ja sakta, naya object banta hai)."
+                },
+                {
+                    "question_number": 2,
+                    "question_roman_urdu": "Classes mein `@dataclass(slots=True)` use karne ka sab se bara faida kya hota hai?",
+                    "options": [
+                        "Yeh dynamic `__dict__` overhead ko eliminate karke memory 20-30% save karta hai aur attribute lookup fast karta hai",
+                        "Yeh class ko automatic PyTorch model bana deta hai",
+                        "Yeh Python code ko Rust mein convert kar deta hai",
+                        "Is se class mein methods add nahi kiye ja sakte"
+                    ],
+                    "correct_option_index": 0,
+                    "explanation_roman_urdu": "`slots=True` define karne se Python instance ke liye dictionary allocate karne ke bajaye fixed-size C array use karta hai, jisse memory usage kam hoti hai aur attribute access tez hota hai."
+                },
+                {
+                    "question_number": 3,
+                    "question_roman_urdu": "Expression `[x**2 for x in [1, 2, 3, 4] if x % 2 == 0]` ka final result kya hoga?",
+                    "options": [
+                        "[4, 16]",
+                        "[1, 9]",
+                        "[1, 4, 9, 16]",
+                        "[2, 4]"
+                    ],
+                    "correct_option_index": 0,
+                    "explanation_roman_urdu": "Yeh list comprehension sirf even numbers (2 aur 4) ko filter karti hai (`if x % 2 == 0`) aur unka square (2**2 = 4, 4**2 = 16) generate karti hai."
+                },
+                {
+                    "question_number": 4,
+                    "question_roman_urdu": "Functions mein `*args` aur `**kwargs` ka kya maqsad hota hai?",
+                    "options": [
+                        "`*args` positional arguments ko tuple mein aur `**kwargs` keyword arguments ko dictionary mein collect karta hai",
+                        "`*args` sirf float numbers accept karta hai",
+                        "`**kwargs` function ko asynchronous worker bana deta hai",
+                        "Dono reserved keywords hain jo execute nahi ho sakte"
+                    ],
+                    "correct_option_index": 0,
+                    "explanation_roman_urdu": "`*args` (non-keyword arguments) ko tuple ke taur par aur `**kwargs` (keyword arguments) ko key-value pairs wali dictionary ke taur par function ke andar pass karta hai."
+                },
+                {
+                    "question_number": 5,
+                    "question_roman_urdu": "JSON serialization ke waqt `json.dumps()` aur `json.dump()` mein kya farq hai?",
+                    "options": [
+                        "`json.dumps()` Python data ko string mein convert karta hai jabke `json.dump()` file handle mein write karta hai",
+                        "`json.dumps()` database mein query execute karta hai",
+                        "`json.dump()` sirf lists ke liye valid hai",
+                        "Dono bilkul same function ke alias hain"
+                    ],
+                    "correct_option_index": 0,
+                    "explanation_roman_urdu": "`dumps` ka 's' String ke liye hai (serializes object to a JSON formatted str), jabke `dump()` pehla argument data aur doosra argument open file stream leta hai."
+                }
+            ]
+        },
         # =========================================================================
         # MODULE 1: Python for AI & Fast Math
         # =========================================================================

@@ -20,31 +20,41 @@ fn test_syllabus_completeness() {
     // 1. Verify 5 Phases
     assert_eq!(store.phases.len(), 5, "Must have exactly 5 phases");
 
-    // 2. Verify 14 Modules
+    // 2. Verify 15 Modules
     let all_modules = store.get_all_modules();
-    assert_eq!(all_modules.len(), 14, "Must have exactly 14 modules");
-    assert_eq!(store.course.total_modules, 14);
+    assert_eq!(all_modules.len(), 15, "Must have exactly 15 modules");
+    assert_eq!(store.course.total_modules, 15);
 
-    // 3. Verify 84 Lessons (6 per module)
+    // 3. Verify 90 Lessons (6 per module)
     let total_lessons: usize = all_modules.iter().map(|m| m.lessons.len()).sum();
-    assert_eq!(total_lessons, 84, "Must have exactly 84 lessons (6 per module)");
-    assert_eq!(store.course.total_lessons, 84);
+    assert_eq!(total_lessons, 90, "Must have exactly 90 lessons (6 per module)");
+    assert_eq!(store.course.total_lessons, 90);
 
     // 4. Verify 3 Specialization Tracks
     assert_eq!(store.course.tracks.len(), 3, "Must have 3 specialization tracks");
 
-    // 5. Verify 10 Badges
-    assert_eq!(store.course.badges.len(), 10, "Must have 10 badges");
+    // 5. Verify 11 Badges
+    assert_eq!(store.course.badges.len(), 11, "Must have 11 badges");
 
     // 6. Verify Weekly Challenges
     assert!(!store.challenges.is_empty(), "Must have weekly challenges");
 
-    // 7. Verify Module lookup by slug
+    // 7. Verify Module lookup by slug & checkpoints
+    let mod0 = store.get_module("python-zero-se-hero");
+    assert!(mod0.is_some(), "Module 'python-zero-se-hero' must exist");
+    let m0 = mod0.unwrap();
+    assert_eq!(m0.lessons.len(), 6);
+    assert!(m0.practice_checkpoint.is_some());
+    let cp0 = m0.practice_checkpoint.as_ref().unwrap();
+    assert!(cp0.title.contains("Chai Shop"));
+    assert!(!cp0.colab_url.is_empty());
+
     let nlp_mod = store.get_module("nlp-transformers");
     assert!(nlp_mod.is_some(), "Module 'nlp-transformers' must exist");
     let nlp = nlp_mod.unwrap();
     assert_eq!(nlp.lessons.len(), 6);
     assert!(!nlp.urdu_title.is_empty());
+    assert!(nlp.practice_checkpoint.is_some());
 
     // 8. Verify Lesson lookup by slug
     let lesson_pair = store.get_lesson("self-attention-math");
@@ -385,9 +395,9 @@ async fn test_engineering_blogs_and_cloud_guide() {
     assert!(guide.google_one_compute_units_saver.saver_script.is_some());
     assert_eq!(guide.free_api_providers.len(), 3);
 
-    // 5. Verify all 14 modules have real-world deliverables & zero-gpu recipes
+    // 5. Verify all 15 modules have real-world deliverables, zero-gpu recipes & practice checkpoints
     let all_modules = store.get_all_modules();
-    assert_eq!(all_modules.len(), 14);
+    assert_eq!(all_modules.len(), 15);
     for m in all_modules {
         assert!(
             m.real_world_deliverable.is_some(),
@@ -399,6 +409,15 @@ async fn test_engineering_blogs_and_cloud_guide() {
             "Module {} must have zero_gpu_recipe",
             m.slug
         );
+        assert!(
+            m.practice_checkpoint.is_some(),
+            "Module {} must have practice_checkpoint",
+            m.slug
+        );
+        let cp = m.practice_checkpoint.as_ref().unwrap();
+        assert!(!cp.title.is_empty());
+        assert!(!cp.colab_url.is_empty());
+
         let recipe = m.zero_gpu_recipe.as_ref().unwrap();
         assert!(!recipe.platform.is_empty());
         assert!(!recipe.vram_required.is_empty());

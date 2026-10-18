@@ -18,7 +18,7 @@ def run_migrate(sql_files=None):
     pwd = get_pgpassword()
     env = os.environ.copy()
     env['PGPASSWORD'] = pwd
-    migrate_js = r"C:\Users\Bimo\.gemini\antigravity\brain\01af4479-cf50-4930-aa57-d072f50fa804\scratch\migrate\migrate.js"
+    migrate_js = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'migrate.js')
     args = ["node", migrate_js]
     if sql_files:
         args.extend(sql_files)

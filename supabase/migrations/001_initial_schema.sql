@@ -113,6 +113,7 @@ create table if not exists public.modules (
   badge_slug text,
   real_world_deliverable text,
   zero_gpu_recipe jsonb default '{}'::jsonb,
+  practice_checkpoint jsonb default '{}'::jsonb,
   order_index int not null default 0
 );
 

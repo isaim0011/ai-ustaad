@@ -51,6 +51,35 @@
 				</a>
 			</div>
 
+			<!-- Prerequisite Track Callout Banner -->
+			<div class="mt-8 rounded-2xl border border-amber-500/30 bg-amber-500/10 p-4 text-left shadow-xs backdrop-blur-sm sm:flex sm:items-center sm:justify-between dark:border-amber-500/20 dark:bg-amber-500/5">
+				<div class="flex items-center gap-3">
+					<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500/20 text-amber-700 dark:text-amber-400">
+						<Terminal class="h-5 w-5" />
+					</div>
+					<div>
+						<div class="flex items-center gap-2">
+							<span class="rounded bg-amber-500/20 px-2 py-0.5 text-[10px] font-mono font-bold uppercase text-amber-800 dark:text-amber-300">
+								Prerequisite Track
+							</span>
+							<span class="text-xs font-serif font-bold text-[#141413] dark:text-[#f5f4ed]">
+								Python Zero Se Hero
+							</span>
+						</div>
+						<p class="mt-1 text-xs text-[#2c2b28] dark:text-[#dcd9ce]">
+							<span class="font-semibold text-amber-800 dark:text-amber-300">Naye hain aur Python nahi aati?</span> Pehle Python Zero Se Hero complete karein, phir AI Mastery shuru karein!
+						</p>
+					</div>
+				</div>
+				<a
+					href="/learn/m00-python-zero-se-hero"
+					class="mt-3 inline-flex items-center justify-center gap-1.5 rounded-xl bg-amber-600 px-4 py-2 text-xs font-semibold text-white transition-all hover:bg-amber-700 sm:mt-0 sm:shrink-0"
+				>
+					<span>Pehle Python Seekhein</span>
+					<ArrowRight class="h-3.5 w-3.5" />
+				</a>
+			</div>
+
 			<!-- Live Key Metrics Banner -->
 			<div class="mt-12 grid grid-cols-2 gap-4 border-t border-[#e5e2d9] pt-8 sm:grid-cols-4 dark:border-[#343330]">
 				<div>
@@ -58,8 +87,8 @@
 					<div class="text-xs font-mono text-[#6f6e69] dark:text-[#a19f97]">Complete Roadmap</div>
 				</div>
 				<div>
-					<div class="font-serif text-2xl font-bold text-[#141413] dark:text-[#f5f4ed]">5 Phases</div>
-					<div class="text-xs font-mono text-[#6f6e69] dark:text-[#a19f97]">Zero to Hero</div>
+					<div class="font-serif text-2xl font-bold text-[#141413] dark:text-[#f5f4ed]">6 Phases</div>
+					<div class="text-xs font-mono text-[#6f6e69] dark:text-[#a19f97]">Python + AI Mastery</div>
 				</div>
 				<div>
 					<div class="font-serif text-2xl font-bold text-[#141413] dark:text-[#f5f4ed]">Zero-GPU</div>
@@ -78,11 +107,12 @@
 				script={`@preset midnight
 @animate flow
 flow LR: AI Ustaad Learning Trajectory
-  p1[Phase 1: Python & Math Foundations] $terminal -> p2[Phase 2: Core ML & Transformers] $brain
-  p2 -> p3[Phase 3: Modern RAG & Agents] $database
-  p3 -> p4[Phase 4: LoRA & DeepSeek GRPO] $cpu
-  p4 -> p5[Phase 5: Enterprise Capstone] $server *`}
-				title="Complete 20-Week Master Curriculum Architecture"
+  p0[Prerequisite: Python Zero Se Hero] $terminal -> p1[Phase 1: Math & Tensors] ~info $code
+  p1 -> p2[Phase 2: Core ML & Transformers] ~purple $brain
+  p2 -> p3[Phase 3: Modern RAG & Agents] ~teal $database
+  p3 -> p4[Phase 4: LoRA & DeepSeek GRPO] ~warn $cpu
+  p4 -> p5[Phase 5: Enterprise Capstone]* ~ok $server`}
+				title="Complete Learning Trajectory: Python Zero Se Production Tak"
 			/>
 		</div>
 	</section>
@@ -203,8 +233,9 @@ flow LR: AI Ustaad Learning Trajectory
 										{mod.title}
 									</div>
 									{#if mod.real_world_deliverable}
-										<div class="mt-1.5 line-clamp-1 text-xs text-[#6f6e69] dark:text-[#a19f97]">
-											📦 {mod.real_world_deliverable}
+										<div class="mt-1.5 flex items-center gap-1.5 line-clamp-1 text-xs text-[#6f6e69] dark:text-[#a19f97]">
+											<Layers class="h-3 w-3 shrink-0 text-[#c96442]" />
+											<span>{mod.real_world_deliverable}</span>
 										</div>
 									{/if}
 								</a>
